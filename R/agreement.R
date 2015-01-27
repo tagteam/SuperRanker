@@ -2,9 +2,10 @@
 ##' list of lists.
 ##' 
 ##' @title Measure agreement between a set of lists
-##' @param object Either matrix where each column is a list or a list of lists. Elements are integers between 1 and the length of the lists.
-##' @param metric Function used to be applied to the ranks
+##' @param object Either matrix where each column is a list or a list of lists. Elements are integers between 1 and the length of the lists. The lists need not be the same length, but the shorter lists need to be padded with NAs
+##' @param metric Function used to evaluate the agreement among the ranks
 ##' @param depth Interest margin, i.e., measurement of agreement is limited to the first \code{depth} elements of each list.
+##' @param B Number of resamples to use for missing items
 ##' @return Vector of lengths \code{depth} where element e contains the result
 ##' of metric applied to the ranks of the lists at position e.
 ##' @seealso 
@@ -87,24 +88,51 @@
 ##' 
 ##' @export 
 ##' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>, Thomas A. Gerds <tag@@biostat.ku.dk>
-agreement <- function(object, metric=var, depth=NULL) {
+ListAgreement <- function(object, metric=var, depth=NULL, listlength=NULL, B=10) {
     metric <- match.fun(metric)
+    if (missing(depth)) depth <- NROW(rankmat)
+    
     if (is.matrix(object))
         rankmat <- object
     else
         rankmat <- as.matrix(do.call("cbind",object))
-    if (missing(depth)) depth <- NROW(rankmat)
+    
+    # Now do sanity check of input
+    nseq <- seq(NROW(rankmat))
+    
     # Compute rank for each item per list
-    itemranks <- apply(rankmat, 2, order)
+    # Note NAs are pushed toward the end
+    missing.items <- sapply(seq(NCOL(rankmat)), function(x) { sum(is.na(rankmat[,x]))})
+    itemranks <- apply(rankmat, 2, function(x) { res <- order(c(nseq[x[!is.na(x)]], nseq[-x[!is.na(x)]])) ; res[nseq[-x[!is.na(x)]]] <- NA; res})
+        
     rankmat.l <- lapply(seq_len(nrow(rankmat)), function(i) rankmat[i,])  
     maxdepth <- min(nrow(rankmat), ifelse(is.null(depth), nrow(rankmat), depth))
     uniq.l <- lapply(rankmat.l, function(x) {sort(unique(x))})
-    res <- apply(itemranks, 1, metric)  
+    # Now be a nice boy and resample the missing list elements
+    
+    # Run through each column
+    # Insert the missing variables
+    # Compute the statistic
+    # Average
+    tmp.itemranks <- itemranks
+    ooo <- sapply(1:B, function(i) {
+      
+      # Fill up missing with a random permutation      
+      sapply(1:length(missing.items), function(i) { 
+        res <- itemranks[,i]
+        if (length(missing.items[[i]])>0) { 
+          res[is.na(itemranks[,i])] <- NROW(rankmat)+1-sample(seq(missing.items[i])) }          
+        res        
+        })
+    })
+
+    res <- apply(sapply(1:ncol(ooo), function(x) {apply(matrix(ooo[,x], ncol=NCOL(rankmat)), 1, metric)}), 1, mean)
+
     agreement <- sapply(1:maxdepth, function(x) {
         myvar <- unique(unlist(uniq.l[1:x]))
         mean(res[myvar])
     })
-    out <- list(agreement=agreement,metric=quote(metric),depth=maxdepth)
+    out <- list(agreement=agreement,metric=quote(metric),depth=maxdepth, B=B)
     class(out) <- "agreement"
     out
 }
