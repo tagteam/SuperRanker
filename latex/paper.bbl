@@ -1,0 +1,56 @@
+\begin{thebibliography}{}
+
+\bibitem[Bar-Ilan et~al., 2006]{bar2006methods}
+Bar-Ilan, J., Mat-Hassan, M., and Levene, M. (2006).
+\newblock Methods for comparing rankings of search engine results.
+\newblock {\em Computer networks}, 50(10):1448--1463.
+
+\bibitem[Carstensen, 2010]{cars:2010}
+Carstensen, B. (2010).
+\newblock {\em Comparing Clinical Measurement Methods: A Practical Guide}.
+\newblock Wiley.
+
+\bibitem[Fagin et~al., 2003]{fagin2003comparing}
+Fagin, R., Kumar, R., and Sivakumar, D. (2003).
+\newblock Comparing top k lists.
+\newblock {\em SIAM Journal on Discrete Mathematics}, 17(1):134--160.
+
+\bibitem[Ihnatova, 2013]{mama2013}
+Ihnatova, I. (2013).
+\newblock Mama: Meta-analysis of microarray.
+\newblock Technical report.
+\newblock R package version 2.2.1.
+
+\bibitem[Kendall, 1948]{kendall1948rank}
+Kendall, M.~G. (1948).
+\newblock Rank correlation methods.
+
+\bibitem[Killick and Eckley, 2011]{killick2011changepoint}
+Killick, R. and Eckley, I.~A. (2011).
+\newblock Changepoint: an r package for changepoint analysis.
+\newblock {\em R package version 0.6, URL http://CRAN. R-project. org/package=
+  changepoint}.
+
+\bibitem[Killick et~al., 2012]{killick2012optimal}
+Killick, R., Fearnhead, P., and Eckley, I. (2012).
+\newblock Optimal detection of changepoints with a linear computational cost.
+\newblock {\em Journal of the American Statistical Association},
+  107(500):1590--1598.
+
+\bibitem[Shieh, 1998]{shieh1998weighted}
+Shieh, G.~S. (1998).
+\newblock A weighted kendall's tau statistic.
+\newblock {\em Statistics \& Probability Letters}, 39(1):17--24.
+
+\bibitem[Smyth, 2005]{smyth2005limma}
+Smyth, G.~K. (2005).
+\newblock Limma: linear models for microarray data.
+\newblock In {\em Bioinformatics and computational biology solutions using R
+  and Bioconductor}, pages 397--420. Springer.
+
+\bibitem[Webber et~al., 2010]{webber2010similarity}
+Webber, W., Moffat, A., and Zobel, J. (2010).
+\newblock A similarity measure for indefinite rankings.
+\newblock {\em ACM Transactions on Information Systems (TOIS)}, 28(4):20.
+
+\end{thebibliography}
