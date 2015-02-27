@@ -23,6 +23,7 @@
 \newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
 
 \usepackage{framed}
+\usepackage{subcaption}
 \makeatletter
 \newenvironment{kframe}{%
  \def\at@end@of@kframe{}%
@@ -64,78 +65,111 @@
 
 \section{Introduction}
 
-Fra Kaspers PhD. Ikke rettet til endnu:
+Ranked lists occur in many applications of statistics. Regression
+methods rank predictor variables according to magnitude of association
+with outcome, prediction models rank subjects according to their risk
+of an event, and genetic studies rank genes according to their
+difference in expression across samples. A common research question is
+where to stop, i.e., to decide the maximal significant rank.  In the
+three examples this would correspond to the number of significantly
+associated predictor variables, the number of patients at high risk of
+an event, and the number of genes that are worth to pursue in further
+experiments, respectively.
 
-Comparison of ranked lists, though not a recently emerged subject has been receiving increased attention with the use of internet search engines, but lists of this kind are found in many areas. The advances in biotechnology have renewed this interest since many genetic studies are producing vast amounts of data that need to be sorted and evaluated. For example, studies of gene expression often rank genes according to their difference in expression across samples, while search engine results are presented with the best match first. Common for these types of lists is that it is up to the investigator to decide which k is relevant for a given problem when comparing top k lists. Typically, the items in the lists will be more similar at the top of the lists, since strong effects ensure that an item are more likely to be identified rather than further down where items consisting purely or mostly of noise are arranged more randomly.
+In this article we describe some new breakthrough tools for measuring
+agreement across a set of lists which soon will enter the state-of-the
+art. The methods should be useful whenever there are multiple rankings
+of the same list. The idea is to define agreement based on the ranks
+of the first k elements in each list.
+
 
 \section{Methods}
-Let there be given $L$ lists, $L\geq2$ of length $P$ that each rank the same set of $P$ items (variables) such that the first element of a list $l$ is the item with rank 1, the second element of $l$ is the item with rank 2 etc. Without any loss of generality we can assume that the predictors are numbered from $1$ to $P$ so that an ordered list, $l$, essentially is a permutation of the numbers from $1$ to $P$. This gives rise to a bijectiuve permutation function, $\pi_l(r) \in \{1, \ldots, P\}$ which returns the predictor that was found at rank $r$ in list $l$.
-Conversely, we can define the rank function
-\begin{equation}
-R_l(p) = \pi_l^{-1}(p)
-\end{equation}
-which returns the rank given to item $p$ in list $l$ (see Figure~\ref{fig:example} for a schematic example of these two functions).
 
-\begin{figure}[tb]
+Consider a set of $P$ different items $X=\{X_1,\dots,X_P\}$. An
+ordered list is a permutation of the numbers from $1$ to $P$, i.e., a
+mapping $R:X\mapsto \{1,\dots,P\}$, such that $1\le R(X_p)\le P$ is
+the rank of item $X_p$ in the list. Note that $R$ is equivalent to a
+permutation function (a bijection from $\{1,\dots,P\}$ to
+itself). Thus it has an inverse mapping $\pi=R^{-1}$ which assings to
+a rank $r\in\{1,\dots,P\}$ the item $\pi(r)$ found at that rank. The
+methods described below work for a set of $L$ lists $R_1,\dots,R_L$,
+$L\geq2$. Panels (a) and (b) of Table~\ref{tab:example} show a
+schematic example of these mappings.
 
+\begin{table}[tb]
+  \caption{Example set of ranked lists. (a) shows the ranked list of items for each of three lists, (b) presents the ranks obtained by each item in each of the three lists and (c) shows the cumulative set of items found between rank 1 and a given depths in the three lists.}
 \begin{center}
-\begin{minipage}{4cm}
-a)
-\begin{tabular}{cccc} \hline\hline
-  & \multicolumn{3}{c}{List} \\
-Rank  & 1 & 2 & 3 \\ \hline
-1 & A & A & B \\
-2 & B & C & A \\
-3 & C & D & E \\
-4 & D & B & C \\
-5 & E & E & D \\ \hline
-\end{tabular}
-\end{minipage}
-\begin{minipage}{4cm}b)
-\begin{tabular}{cccc} \hline\hline
-  & \multicolumn{3}{c}{List} \\
-Item  & 1 & 2 & 3 \\ \hline
-A & 1 & 1 & 2 \\
-B & 2 & 4 & 1 \\
-C & 3 & 2 & 4 \\
-D & 4 & 3 & 5 \\
-E & 5 & 5 & 3 \\ \hline
-\end{tabular}
-\end{minipage}
-\begin{minipage}{4cm}c)
+  \begin{subtable}{4cm}%
+    \caption{}
+      \begin{tabular}{cccc}
+        \hline\hline % & \multicolumn{3}{c}{List} \\
+        Rank & $\pi_1$ & $\pi_2$ & $\pi_3$ \\ \hline
+        1 & A & A & B \\
+        2 & B & C & A \\
+        3 & C & D & E \\
+        4 & D & B & C \\
+        5 & E & E & D \\ \hline
+    \end{tabular}
+  \end{subtable}
+% \hfill
+\hspace{1em}
+%%% 
+  \begin{subtable}{4cm}%
+    \caption{}
+    \begin{tabular}{cccc} \hline\hline
+  % & \multicolumn{3}{c}{List} \\
+    Item & $R_1$ & $R_2$ & $R_3$ \\ \hline
+    A & 1 & 1 & 2 \\
+    B & 2 & 4 & 1 \\
+    C & 3 & 2 & 4 \\
+    D & 4 & 3 & 5 \\
+    E & 5 & 5 & 3 \\ \hline
+  \end{tabular}
+\end{subtable}
+% \hfill
+\hspace{1em}
+%%%
+\begin{subtable}{4cm}%
+  \caption{}
 \begin{tabular}{cc} \hline\hline
-Depth   &     \\
-$d$  &  $S_d$ \\ \hline
+% Depth   &     \\
+Depth  &  $S_d$ \\ \hline
 1 & $\{$A, B$\}$\\
 2 & $\{$A, B, C$\}$ \\
 3 & $\{$A, B, C, D, E$\}$ \\
 4 & $\{$A, B, C, D, E$\}$ \\
 5 & $\{$A, B, C, D, E$\}$ \\ \hline
 \end{tabular}
-\end{minipage}
+\end{subtable}
 \end{center}
-\caption{Example set of ranked lists. a) presents the ranked list of predictors/items for each of three lists while b) presents the ranks obtained by each predictor/item in each of the three lists.}
-\label{fig:example}
-\end{figure}
+\label{tab:example}
+\end{table}
 
-For a rank $d$ we define the set of items that have been ranked less than or equal to $d$ in any of the $L$ lists as
+The agreement of the lists regarding the rank given to an item can be
+measured by
+\begin{equation}
+  A(p) = f(R_1(p), \ldots, R_L(p)),
+\end{equation}
+for a distance function $f$. Throughout this paper we will use the
+sample standard error as our function $f$,
+$$f(R_1(p), \ldots, R_L(p)) = \sqrt{\frac{\sum_{i=1}^L (R_i(p) - \bar{R}(p))^2}{L-1}},
+$$
+but other choices could be made (see the discussion). The sample
+standard error has an interpretation as the average distance of the
+individual rankings of the lists from the average ranking.
+
+We now describe what is exemplified in Panel (c) of Table
+\ref{tab:example} and how it can be used to define \emph{sequential
+  rank agreement}. For an integer $1\le d\le P$ we define the unique
+set of items found in the $L$ top $d$ parts of the lists, i.e., the
+set of items ranked less than or equal to $d$ in any of the lists:
 \begin{equation}
 S_d = \{\pi_l(r) ; r \leq d, l = 1, \ldots, L \}.
 \end{equation}
-$S_d$ contains the set of items found in the $L$ top $d$ lists.
-Finally, we define $A(p)$ as the measure of agreement of the rankings given to item $p$ in the $L$ lists,
+The \emph{sequential rank agreement} is the pooled standard deviation
+of the items found in the set $S_d$:
 \begin{equation}
-A(p) = f(R_1(p), \ldots, R_L(p)),
-\end{equation}
-for a given pre-specified function $f$. Throughout this paper we will use the sample standard error as our function $f$,
-$$f(R_1(p), \ldots, R_L(p)) = \sqrt{\frac{\sum_{i=1}^L (R_i(p) - \bar{R}(p))^2}{L-1}},
-$$
-but other choices could be made (see the discussion). The sample standard error has a nice interpretation as the average distance the individual rankings for item $p$ is from the average ranking of item $p$. Thus the investigator can base his or her assessment  ... on a ranking
-
-
-... define the \emph{sequential rank agreement} as the pooled standard deviation of the items found in the set $S_d$:
-\begin{equation}
-\textrm{SRA}(d)= \sqrt{\frac{\sum_{\{p \in S_d\}}(L-1)A(p)^2}{(L-1)\cdot|S_d|}}.
+\textrm{SRA}(d)= \sqrt{\frac{\sum_{\{p \in S_d\}}(L-1)A(p)^2}{(L-1) |S_d|}}.
 \end{equation}
 
 \subsection{All lists fully observed}

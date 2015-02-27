@@ -1,0 +1,11 @@
+Package: SuperRanker
+Title: Sequential Rank Agreement 
+Version: 1.5.4
+Author: Claus Ekstroem, Thomas A. Gerds
+Description: Tools to find changepoints in agreement
+Depends:
+    R (>= 2.9.0)
+Imports:
+    lava
+Maintainer: Claus and Thomas <tag@biostat.ku.dk>
+License: GPL (>= 2)

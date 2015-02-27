@@ -8,12 +8,10 @@
 ##' @param ylab y-axis lab
 ##' @param ... Processed by \code{\link{prodlim::SmartControl}}.
 ##' @return Graph
-##' @seealso 
 ##' @examples
 ##' a <- agreement(list(c(1,2,3,4,5,7,6,8,9,10,11,12,13), c(5,11,4,7,8,3,12,13,6,10,9,2,1)))
 ##' plot(a)
-#' @method plot agreement
-#' @S3method plot agreement
+#' @export
 ##' @author Thomas A. Gerds <tag@@biostat.ku.dk>
 plot.agreement <- function(x,xlim,ylim,xlab="List depth",ylab="Agreement",add=FALSE,...){
     if (missing(xlim)) xlim=c(0,x$depth)
