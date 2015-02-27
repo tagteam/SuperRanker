@@ -86,18 +86,17 @@ of the first k elements in each list.
 \section{Methods}
 
 Consider a set of $P$ different items $X=\{X_1,\dots,X_P\}$. An
-ordered list is a permutation of the numbers from $1$ to $P$, i.e., a
-mapping $R:X\mapsto \{1,\dots,P\}$, such that $1\le R(X_p)\le P$ is
-the rank of item $X_p$ in the list. Note that $R$ is equivalent to a
-permutation function (a bijection from $\{1,\dots,P\}$ to
-itself). Thus it has an inverse mapping $\pi=R^{-1}$ which assings to
-a rank $r\in\{1,\dots,P\}$ the item $\pi(r)$ found at that rank. The
-methods described below work for a set of $L$ lists $R_1,\dots,R_L$,
-$L\geq2$. Panels (a) and (b) of Table~\ref{tab:example} show a
+ordered list is a permutation function, $R: \{1,\dots,P\}\to
+\{1,\dots,P\}$, such that $R(X_p)$ is the rank of item $X_p$ in the
+list. The inverse mapping $\pi=R^{-1}$ assigns to rank
+$r\in\{1,\dots,P\}$ the item $\pi(r)$ found at that rank. The methods
+described below work for a set of $L$ lists $R_1,\dots,R_L$,
+$L\geq2$. We denote $\pi_l=R_l^{-1}$ for the corresponding inverse
+mappings. Panels (a) and (b) of Table~\ref{tab:example} show a
 schematic example of these mappings.
 
 \begin{table}[tb]
-  \caption{Example set of ranked lists. (a) shows the ranked list of items for each of three lists, (b) presents the ranks obtained by each item in each of the three lists and (c) shows the cumulative set of items found between rank 1 and a given depths in the three lists.}
+  \caption{Example set of ranked lists. (a) shows the ranked list of items for each of three lists, (b) presents the ranks obtained by each item in each of the three lists and (c) shows the cumulative set of items up to a given depth in the three lists.}
 \begin{center}
   \begin{subtable}{4cm}%
     \caption{}
@@ -151,8 +150,8 @@ measured by
   A(p) = f(R_1(p), \ldots, R_L(p)),
 \end{equation}
 for a distance function $f$. Throughout this paper we will use the
-sample standard error as our function $f$,
-$$f(R_1(p), \ldots, R_L(p)) = \sqrt{\frac{\sum_{i=1}^L (R_i(p) - \bar{R}(p))^2}{L-1}},
+sample standard error as our function $f$ and hence use
+$$A(p) = \sqrt{\frac{\sum_{i=1}^L (R_i(p) - \bar{R}(p))^2}{L-1}},
 $$
 but other choices could be made (see the discussion). The sample
 standard error has an interpretation as the average distance of the
@@ -169,7 +168,7 @@ S_d = \{\pi_l(r) ; r \leq d, l = 1, \ldots, L \}.
 The \emph{sequential rank agreement} is the pooled standard deviation
 of the items found in the set $S_d$:
 \begin{equation}
-\textrm{SRA}(d)= \sqrt{\frac{\sum_{\{p \in S_d\}}(L-1)A(p)^2}{(L-1) |S_d|}}.
+\textrm{SRA}(d)= \sqrt{\frac{\sum_{\{p \in S_d\}}(L-1)A(p)^2}{(L-1)|S_d|}}.
 \end{equation}
 
 \subsection{All lists fully observed}
@@ -182,25 +181,35 @@ Not uncommon for lists to be
 censored
 
 
-Let $\Lambda_l, l=1, \ldots, L$ be the set of items found in list $l$ so $\Lambda_l$ is the top $k_l$ list of items from list $l$ where $k_l = |\Lambda_l|$. Note that we observe the top $k$ items for each of the $L$ lists if $k_1=\cdots=k_L=k$. For censored lists the rank function becomes
+Let $\Lambda_l, l=1, \ldots, L$ be the set of items found in list $l$
+so $\Lambda_l$ is the top $k_l$ list of items from list $l$ where $k_l
+= |\Lambda_l|$. Note that we observe the top $k$ items for each of the
+$L$ lists if $k_1=\cdots=k_L=k$. For censored lists the rank function
+becomes
 \begin{equation}
-R_l(p) \text{ is } \left\{\begin{array}{cl} \pi_l^{-1}(p) & \text{ for } p\in \Lambda_l \\ 
-> k_l & \text{ for } p \not\in \Lambda_l\end{array}\right.
+\tilde R_l(p) = \left\{\begin{array}{cl} \{\pi_l^{-1}(p)\} & \text{ for } p\in \Lambda_l \\ 
+\{k_l+1,\dots,P\} & \text{ for } p \not\in \Lambda_l\end{array}\right.
 \end{equation}
 where we only know that the rank for the unobserved items in list $l$ must be larger than the largest rank observed in that list.
 
-In the case of censored lists it only makes sense to look at depths where we have corresponding observations so the largest rank we should consider will be 
+In the case of censored lists it is sufficient (FIXME: requires
+argument) to look at depths where we have corresponding observations
+so the largest rank we should consider will be
 \begin{equation}
 d \leq \max(k_1, \ldots, k_L).
 \end{equation}
 
-We cannot directly compute $A(p)$ for all predictors because we only observe a censored version of $R$ for some of the lists. Instead we assume that the rank assigned to predictor $p$ in list $l$ is uniformly distributed among the ranks that have been unassigned for list $l$. The ranks are clearly not independent since each of the lists essentially contains full set of ranks 
+We cannot directly compute $A(p)$ for all predictors because we only observe a censored version of $\tilde R$ for some of the lists. Instead we assume that the rank assigned to predictor $p$ in list $l$ is uniformly distributed among the ranks that have been unassigned for list $l$. The ranks are clearly not independent since each of the lists essentially contains full set of ranks 
 
 \begin{equation}
-A(p) = \frac{\sum_{r_1; r_1\in R_1(p)}  \cdots \sum_{r_L; r_L\in R_L(p)} f(r_1, \ldots, r_L)}{\prod_l |R_l(p)|}
+\tilde A(p) = \frac{\sum_{r_1; r_1\in \tilde R_1(p)}  \cdots \sum_{r_L; r_L\in \tilde R_L(p)} A(p)}{\prod_l |\tilde R_l(p)|}
 \end{equation}
 
-Notationen er ikke helt skarp da R jo returnerer delvist et tal og delvist en mængde, men det giver næppe anledning til misforståelser
+FIXME: If instead of running through all elements of $\tilde R_1(p)$
+one would use the average rank in $\tilde R_1(p)$ we would end up with
+a too small variance.
+
+\section{Benchmarks}
 
 \section{Applications}
 
