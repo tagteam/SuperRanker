@@ -8,7 +8,6 @@
 ##' @param B Number of resamples to use for missing items
 ##' @return Vector of lengths \code{depth} where element e contains the result
 ##' of metric applied to the ranks of the lists at position e.
-##' @seealso 
 ##' @examples
 ##' agreement(list(c(1,2,3,4,5,7,6,8), c(1,2,3,5,6,4,7,8)))
 ##' agreement(list(c(1,2,3,4,5,7,6,8,9,10,11,12,13), c(5,11,4,7,8,3,12,13,6,10,9,2,1)),depth=13,metric=sd)
