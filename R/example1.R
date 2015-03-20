@@ -81,21 +81,7 @@ nulleval <- sapply(1:2, function(i) {
 })
 
 nulleval1 <- sapply(1:2, function(i) {
-    mt.p <- sapply(index, function(i) { anova(lm(y ~ x[,i]))[1,5] } )
-    list1 <- order(mt.p)
-
-    #3
-    MIC <- sapply(index, function(i) { cc <- complete.cases(snps[,i],y) ; mine(x[cc,i], y[cc])$MIC})
-    list3 <- order(MIC, decreasing=TRUE)
-
-    #4
-    f1 <- rfsrc(y~., data=d, ntree=1000)
-    variables <- abs(f1$importance)
-    num.undecided <- sum(variables==0)
-    list4 <- order(variables, decreasing=TRUE)
-    list4[(length(variables)-num.undecided):length(variables)] <- 0
-
-    res <- sra(list(list1, list3))$agreement
-    res
+    nobs <- length(list1)
+    res <- sra(list(rep(0, nobs), rep(0, nobs), rep(0, nobs)), listlength=nobs)$agreement
 })
 
