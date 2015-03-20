@@ -212,6 +212,18 @@ a too small variance.
 
 \section{Benchmarks}
 
+\subsection{Independent lists}
+
+\subsection{Permuted outcomes + analyses}
+
+Do the following a large number of times
+\begin{enumerate}
+  \item Permute outcome vector
+  \item Redo analyses for all $L$ methods
+  \item Compute sequential rank agreement for 
+\end{enumerate}
+
+Lidt spøjs ting man matcher dem op imod
 \section{Applications}
 
 \subsection{Evaluating results from top-$k$ lists}
