@@ -1,0 +1,3 @@
+useDynLib(SuperRanker)
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
