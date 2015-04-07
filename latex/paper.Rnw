@@ -1,55 +1,18 @@
 \documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
 \usepackage[]{graphicx}
 \usepackage{amsmath}
 \usepackage[]{color}
-%% maxwidth is the original width if it is less than linewidth
-%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
-\makeatletter
-\def\maxwidth{ %
-  \ifdim\Gin@nat@width>\linewidth
-    \linewidth
-  \else
-    \Gin@nat@width
-  \fi
-}
-\makeatother
-
-\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
-\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
-\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
-\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
-\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
-\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
-\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
-\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
-\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
-\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
-
-\usepackage{framed}
 \usepackage{subcaption}
-\makeatletter
-\newenvironment{kframe}{%
- \def\at@end@of@kframe{}%
- \ifinner\ifhmode%
-  \def\at@end@of@kframe{\end{minipage}}%
-  \begin{minipage}{\columnwidth}%
- \fi\fi%
- \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
- \colorbox{shadecolor}{##1}\hskip-\fboxsep
-     % There is no \\@totalrightmargin, so:
-     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
- \MakeFramed {\advance\hsize-\width
-   \@totalleftmargin\z@ \linewidth\hsize
-   \@setminipage}}%
- {\par\unskip\endMakeFramed%
- \at@end@of@kframe}
-\makeatother
+\usepackage{natbib}
+\usepackage{xspace}
+\usepackage[noae]{Sweave}
 
-\definecolor{shadecolor}{rgb}{.97, .97, .97}
-\definecolor{messagecolor}{rgb}{0, 0, 0}
-\definecolor{warningcolor}{rgb}{1, 0, 1}
-\definecolor{errorcolor}{rgb}{1, 0, 0}
-\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+%
+% New commands
+%
+\newcommand{\ie}{\emph{i.e.,}\@\xspace}
+\newcommand{\eg}{\emph{e.g,}\@\xspace}
 
 
 \begin{document}
@@ -63,6 +26,9 @@
 \begin{abstract}
 
 \end{abstract}
+
+Key words: sequential rank agreement, rank agreement, order statistic,
+methods comparison, variable selection
 
 \section{Introduction}
 
@@ -169,11 +135,27 @@ S_d = \{\pi_l(r) ; r \leq d, l = 1, \ldots, L \}.
 The \emph{sequential rank agreement} is the pooled standard deviation
 of the items found in the set $S_d$:
 \begin{equation}
-\textrm{SRA}(d)= \sqrt{\frac{\sum_{\{p \in S_d\}}(L-1)A(p)^2}{(L-1)|S_d|}}.
+\textrm{SRA}(d)= \sqrt{\frac{\sum_{\{p \in
+      S_d\}}(L-1)A(p)^2}{(L-1)|S_d|}}, \label{def:sra}
 \end{equation}
+and small values close to zero suggests that the lists agree on the
+ordering while larger values suggests disagreement. If the ranked
+lists are identical then the value of SRA will be zero for all depths
+$d$.  The sequential rank agreement can be interpreted as the average
+distance of the individual rankings of the lists from the average
+ranking for each of the items we have seen until depth $d$.
+
 
 \subsection{All lists fully observed}
-We shall start by the simplest case where all $L$ lists are fully observed. 
+We shall start by the simplest case where all $L$ lists are fully
+observed, \ie, we have the rank of all $P$ items for all of the $L$
+lists. This situation occurs is common when we have the original
+dataset available and when we wish to, say, compare the results from
+different analysis methods.
+
+For the fully obseved list situation we can plot the sequantial
+rank agreement \eqref{def:sra} as a function of depth $d$. If there is
+a ... An example is seen in Figure~\ref{XX}
 
 \subsection{Analysis of top $k$ lists}
 Not uncommon for lists to be 
@@ -210,7 +192,12 @@ FIXME: If instead of running through all elements of $\tilde R_1(p)$
 one would use the average rank in $\tilde R_1(p)$ we would end up with
 a too small variance.
 
+
+Noget med 
+
 \section{Benchmarks}
+
+Three approaches 
 
 \subsection{Independent lists}
 
@@ -224,19 +211,40 @@ Do the following a large number of times
 \end{enumerate}
 
 Lidt spøjs ting man matcher dem op imod
-\section{Applications}
 
-\subsection{Evaluating results from top-$k$ lists}
+\subsection{Changepoint analysis}
+
+\section{Applications}
 
 \subsection{Comparing results across different method}
 
+In a classical paper by \citet{Golub1999} a dataset of 3051 gene
+expression values were measured on 38 tumor mRNA samples in order to
+improve the classification of acute leukemias between two types: acute
+lymphoblastic leukemia (ALL) or acute myeloid leukemia
+(AML). Preprocessing of the gene expression data was done as described
+in \citep{Dudoit2002}.
+
+We analyzed these gene expression data using five different
+approaches: 
+
+
+
 \subsection{Stability of results}
+
+\subsection{Evaluating results from top-$k$ lists}
+
+
 
 Bootstrap across a single method and compare results. Discuss collinearity
 
 \section{Discussion}
 
 Mention/discuss different measures. 
+
+
+\bibliographystyle{apalike}
+\bibliography{paperref}
 
 \end{document}
 
