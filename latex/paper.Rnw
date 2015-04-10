@@ -182,7 +182,14 @@ so the largest rank we should consider will be
 d \leq \max(k_1, \ldots, k_L).
 \end{equation}
 
-We cannot directly compute $A(p)$ for all predictors because we only observe a censored version of $\tilde R$ for some of the lists. Instead we assume that the rank assigned to predictor $p$ in list $l$ is uniformly distributed among the ranks that have been unassigned for list $l$. The ranks are clearly not independent since each of the lists essentially contains full set of ranks 
+We cannot directly compute $A(p)$ for all predictors because we only
+observe a censored version of $\tilde R$ for some of the
+lists. Instead we assume that the rank assigned to predictor $p$ in
+list $l$ is uniformly distributed among the ranks that have \emph{not}
+been assigned for list $l$. 
+
+The rankings within a single list are clearly not independent since each of the lists
+essentially contains full set of ranks
 
 \begin{equation}
 \tilde A(p) = \frac{\sum_{r_1; r_1\in \tilde R_1(p)}  \cdots \sum_{r_L; r_L\in \tilde R_L(p)} A(p)}{\prod_l |\tilde R_l(p)|}
@@ -228,6 +235,10 @@ in \citep{Dudoit2002}.
 We analyzed these gene expression data using five different
 approaches: 
 
+<<>>=
+library(SuperRanker)
+@ 
+
 
 
 \subsection{Stability of results}
@@ -237,6 +248,9 @@ approaches:
 
 
 Bootstrap across a single method and compare results. Discuss collinearity
+
+
+\section{Alternatives}
 
 \section{Discussion}
 
