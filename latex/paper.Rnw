@@ -11,8 +11,8 @@
 %
 % New commands
 %
-\newcommand{\ie}{\emph{i.e.,}\@\xspace}
-\newcommand{\eg}{\emph{e.g,}\@\xspace}
+\newcommand{\ie}{\emph{i.e.}\@\xspace}
+\newcommand{\eg}{\emph{e.g.}\@\xspace}
 
 
 \begin{document}
@@ -37,7 +37,7 @@ methods rank predictor variables according to magnitude of association
 with outcome, prediction models rank subjects according to their risk
 of an event, and genetic studies rank genes according to their
 difference in expression across samples. A common research question is
-where to stop, i.e., to decide the maximal significant rank.  In the
+where to stop, \ie, to decide the maximal significant rank.  In the
 three examples this would correspond to the number of significantly
 associated predictor variables, the number of patients at high risk of
 an event, and the number of genes that are worth to pursue in further
@@ -45,10 +45,27 @@ experiments, respectively.
 
 In this article we describe some new breakthrough tools for measuring
 agreement across a set of lists which soon will enter the state-of-the
-art. The methods should be useful whenever there are multiple rankings
-of the same list. The idea is to define agreement based on the ranks
-of the first k elements in each list.
+art (FIXME: denne sætning skal laves om). The methods should be useful
+whenever there are multiple rankings of the same list. The idea is to
+define agreement based on the ranks of the first $k$ elements in each
+list.
 
+Several other approaches have proposed to measure ... Of these, 
+Kendall's $\tau$ iis the most well-known but xxx and yyy have proposed
+methods that measure the ..
+
+
+The manuscript is ... as follows
+
+<<echo=FALSE>>=
+#note: always pass alpha on the 0-255 scale
+makeTransparent<-function(someColor, alpha=100)
+{
+  newColor<-col2rgb(someColor)
+  apply(newColor, 2, function(curcoldata){rgb(red=curcoldata[1], green=curcoldata[2],
+    blue=curcoldata[3],alpha=alpha, maxColorValue=255)})
+}
+@ %
 
 \section{Methods}
 
@@ -149,13 +166,15 @@ ranking for each of the items we have seen until depth $d$.
 \subsection{All lists fully observed}
 We shall start by the simplest case where all $L$ lists are fully
 observed, \ie, we have the rank of all $P$ items for all of the $L$
-lists. This situation occurs is common when we have the original
-dataset available and when we wish to, say, compare the results from
-different analysis methods.
+lists. Fully observed ranked lists are common and occur, for example,
+when we have a single dataset and apply different statistical analysis
+methods to produce lists of predictors ranked according to their
+importance, or if the same analysis method is applied to data from
+different populations.
 
 For the fully obseved list situation we can plot the sequantial
 rank agreement \eqref{def:sra} as a function of depth $d$. If there is
-a ... An example is seen in Figure~\ref{XX}
+a ... An example is seen in Figure~\ref{fig:example1}
 
 \subsection{Analysis of top $k$ lists}
 Not uncommon for lists to be 
@@ -235,7 +254,8 @@ in \citep{Dudoit2002}.
 We analyzed these gene expression data using five different
 approaches: 
 
-<<fig=TRUE, echo=FALSE>>=
+
+<<example1, echo=FALSE>>=
 library(SuperRanker)
 library(glmnet)
 library(minerva)
@@ -291,13 +311,35 @@ inputmatrix <- producelists(x, y)
 colnames(inputmatrix) <- c("T", "LogReg", "ElasticNet", "MIC", "RF")[1:ncol(inputmatrix)]
 
 res <- sqrt(sra(inputmatrix))
+@ 
 
-plot(res[1:1000], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement")
+
+\begin{figure}[tb]
+\begin{center}
+<<fig=TRUE,echo=FALSE>>=
+ysize <- 1000
+plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement")
 
 ## 
+# col1 <- makeTransparent()
 null <- sqrt(random_list_sra(inputmatrix, B=1, n=100))
-matlines(null, col="gray", lty=1)
-@ 
+matlines(null[1:ysize,], col="gray", lty=1)
+
+## 
+
+null2 <- sapply(1:40, function(i) {
+    sra(producelists(x, sample(y)), B=1)
+}
+                )
+matlines(null2[1:ysize,], col="lightblue", lty=1)
+
+@ %
+\end{center}
+ \label{fig:example1}
+ \caption{Sequential rank agreement for 4 different analysis methods
+   applied to the Golub data.}
+\end{figure}
+
 
 <<echo=FALSE, results=hide>>=
 xxx <- as.data.frame(inputmatrix[1:10,])
