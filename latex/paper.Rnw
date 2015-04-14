@@ -24,7 +24,21 @@
 \maketitle
 
 \begin{abstract}
-
+  The comparison of ranked lists has been studied for several decades
+  but since the advent of large data types it has received increased
+  interest. Computer science and genomics are just two areas that need
+  to compare ranked lists in order to in- vestigate similarities
+  between different analytical methods. Often the aim is to find a
+  measure of similarity for two or more ordered lists that comprise
+  the first k items from each list. Since ordered lists typically are
+  more similar at the top of the list another approach, which is taken
+  in this paper is to ask: for how long are the lists highly similar?
+  Using terminology from agreement analysis we derive the measure
+  depth of agreement using the standard deviation of the ranks, a
+  method that both provides an intuitive interpretation and can be
+  applied to any number of lists even if these are incomplete. The
+  finding are illustrated using simulations and applied to a publicly
+  available cancer dataset.
 \end{abstract}
 
 Key words: sequential rank agreement, rank agreement, order statistic,
@@ -36,12 +50,13 @@ Ranked lists occur in many applications of statistics. Regression
 methods rank predictor variables according to magnitude of association
 with outcome, prediction models rank subjects according to their risk
 of an event, and genetic studies rank genes according to their
-difference in expression across samples. A common research question is
-where to stop, \ie, to decide the maximal significant rank.  In the
-three examples this would correspond to the number of significantly
-associated predictor variables, the number of patients at high risk of
-an event, and the number of genes that are worth to pursue in further
-experiments, respectively.
+difference in expression across samples.
+
+A common research question is where to stop, \ie, to decide the
+maximal significant rank.  In the three examples this would correspond
+to the number of significantly associated predictor variables, the
+number of patients at high risk of an event, and the number of genes
+that are worth to pursue in further experiments, respectively.
 
 In this article we describe some new breakthrough tools for measuring
 agreement across a set of lists which soon will enter the state-of-the
@@ -55,7 +70,11 @@ Kendall's $\tau$ iis the most well-known but xxx and yyy have proposed
 methods that measure the ..
 
 
-The manuscript is ... as follows
+
+
+
+
+The manuscript is organized as follows: 
 
 <<echo=FALSE>>=
 #note: always pass alpha on the 0-255 scale
