@@ -1,68 +1,52 @@
 \documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
 \usepackage[]{graphicx}
 \usepackage{amsmath}
 \usepackage[]{color}
-%% maxwidth is the original width if it is less than linewidth
-%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
-\makeatletter
-\def\maxwidth{ %
-  \ifdim\Gin@nat@width>\linewidth
-    \linewidth
-  \else
-    \Gin@nat@width
-  \fi
-}
-\makeatother
-
-\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
-\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
-\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
-\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
-\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
-\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
-\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
-\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
-\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
-\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
-
-\usepackage{framed}
 \usepackage{subcaption}
-\makeatletter
-\newenvironment{kframe}{%
- \def\at@end@of@kframe{}%
- \ifinner\ifhmode%
-  \def\at@end@of@kframe{\end{minipage}}%
-  \begin{minipage}{\columnwidth}%
- \fi\fi%
- \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
- \colorbox{shadecolor}{##1}\hskip-\fboxsep
-     % There is no \\@totalrightmargin, so:
-     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
- \MakeFramed {\advance\hsize-\width
-   \@totalleftmargin\z@ \linewidth\hsize
-   \@setminipage}}%
- {\par\unskip\endMakeFramed%
- \at@end@of@kframe}
-\makeatother
+\usepackage{natbib}
+\usepackage{xspace}
+\usepackage[noae]{Sweave}
 
-\definecolor{shadecolor}{rgb}{.97, .97, .97}
-\definecolor{messagecolor}{rgb}{0, 0, 0}
-\definecolor{warningcolor}{rgb}{1, 0, 1}
-\definecolor{errorcolor}{rgb}{1, 0, 0}
-\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+%
+% New commands
+%
+\newcommand{\ie}{\emph{i.e.}\@\xspace}
+\newcommand{\eg}{\emph{e.g.}\@\xspace}
 
 
 \begin{document}
 %\SweaveOpts{concordance=TRUE}
 
 \title{Sequential rank agreement methods for comparison of ranked lists}
-\author{}
+\author{Claus Thorn Ekstrøm and Thomas Alexander Gerds and Kasper Brink-Jensen}
 
 \maketitle
 
 \begin{abstract}
-
+  The comparison of ranked lists has been studied for several decades
+  but since the advent of large data types it has received increased
+  interest. Computer science and genomics are just two areas that need
+  to compare ranked lists in order to in- vestigate similarities
+  between different analytical methods. Often the aim is to find a
+  measure of similarity for two or more ordered lists that comprise
+  the first k items from each list. Since ordered lists typically are
+  more similar at the top of the list another approach, which is taken
+  in this paper is to ask: for how long are the lists highly similar?
+  Using terminology from agreement analysis we derive the measure
+  depth of agreement using the standard deviation of the ranks, a
+  method that both provides an intuitive interpretation and can be
+  applied to any number of lists even if these are incomplete. The
+  finding are illustrated using simulations and applied to a publicly
+  available cancer dataset.
 \end{abstract}
+
+Key words: sequential rank agreement, rank agreement, order statistic,
+methods comparison, variable selection
+
+
+
+Multiple lists. Weigh top over bottom. Censoring. Interpretation
 
 \section{Introduction}
 
@@ -70,19 +54,109 @@ Ranked lists occur in many applications of statistics. Regression
 methods rank predictor variables according to magnitude of association
 with outcome, prediction models rank subjects according to their risk
 of an event, and genetic studies rank genes according to their
-difference in expression across samples. A common research question is
-where to stop, i.e., to decide the maximal significant rank.  In the
-three examples this would correspond to the number of significantly
-associated predictor variables, the number of patients at high risk of
-an event, and the number of genes that are worth to pursue in further
-experiments, respectively.
+difference in expression across samples.
+
+A common research question is where to stop, \ie, to decide the
+maximal significant rank.  In the three examples this would correspond
+to the number of significantly associated predictor variables, the
+number of patients at high risk of an event, and the number of genes
+that are worth to pursue in further experiments, respectively.
 
 In this article we describe some new breakthrough tools for measuring
 agreement across a set of lists which soon will enter the state-of-the
-art. The methods should be useful whenever there are multiple rankings
-of the same list. The idea is to define agreement based on the ranks
-of the first k elements in each list.
+art (FIXME: denne sætning skal laves om). The methods should be useful
+whenever there are multiple rankings of the same list. The idea is to
+define agreement based on the ranks of the first $k$ elements in each
+list.
 
+Several other approaches have proposed to measure ... Of these, 
+Kendall's $\tau$ is the most well-known but xxx and yyy have proposed
+methods that measure the ..
+
+
+Rank order statistics
+
+
+
+Classical pairwise similarity measures have been based on correlations
+as is the case for Kendall’s $\tau$ \citep{kendall1948} and Spearman’s
+$\rho$ \citep{Spearman1910}. Both correlations measure the similarity of two
+ranked lists on a correlation scale from -1 to 1, where 1 implies that
+the lists are completely similar and -1 implies that they are
+completely dissimilar, in the case of two lists that translates to one
+being the reverse of the other, while 0 correspond to random
+lists. Correlation based measures treat discrepancies at different
+depths of the lists equally, so that a difference at the end
+contributes as much as one in the top of the lists.
+
+
+Kendall's $\tau$ does not make any distinction between errors
+towards the top versus the errors towards the bottom
+
+
+Several modified versions of these measures has been proposed, such as
+weighted $\tau$ by Shieh (1998) where each pair of rankings can be
+assigned different weights, and the τap (Yilmaz et al., 2008) ap
+refers to average precision, which places higher emphasis on the top
+of the lists. Spearman’s ρ use the ranks of the variables for
+calculation of the correlation and the use of ranks are also employed
+in the M measure of Bar-Ilan et al. where the reciprocal rank
+differences are used to calculate the similarity measure.  Rather than
+looking at correlations between lists some recent papers use the
+inter- section of the lists as the basis for a similarity measure. It
+can be argued that intersection is a better measure when looking at
+non-conjoint lists, but the simple intersection places equal weights
+on all depths of the list. Thus, Fagin et al. (2003) and Webber et
+al. (2010) attempt to modify the simple intersection in a way that is
+top weighted by using the cu- mulative intersection divided by the
+depth as the basis for their similarity measures — in the following
+referred to as the average overlap (AO).Webber et al. (2010) define
+their rank-biased overlap (RBO) by weighting with a converging series
+thus ensuring the top is always weighted higher than the (potentially
+indefinite) bottom of the lists. The intersection metric by Fagin et
+al. (2003) uses the mean of the overlaps at all depths up to d.  While
+it is possible to calculate measures that describe how similar lists
+are at a given depth with some of the methods described above, the
+interpretation of the measures is unclear and as we will demonstrate
+it is not trivial to identify a depth at which the lists are no longer
+similar. We will use some terminology from agreement analysis as our 2
+method resembles this in some aspects. We will refer to the similar
+part of the lists, which is expected at the top if it exists, as
+having high agreement and the dissimilar part, where items are ranked
+randomly, as having low agreement. As a measure for agreement we will
+base this on the limits-of-agreement known from agreement between
+quantitative variables (Carstensen, 2011) . Since the
+limit-of-agreement essentially is a transformation of the pooled
+standard deviation of the ranked items we will use that, since it has
+a direct and simple interpretation: at given depth how far do the
+items deviate from the mean rank. Thus, twice the standard deviation
+is a measure of how far apart in ranks the methods classify the items.
+The rest of the paper is structured as follows, in the methods section
+we show how to calculate and apply the limits-of-agreement-based
+measure, sd, to a small example dataset and we perform a comparison to
+average overlap. We also present and discuss how changepoint methods
+can be applied to identify where a set of lists goes from high
+agreement to low agreement. The simulation section shows the
+performance of the measure under a number of different scenarios
+while the application shows calculations of agreement and average
+overlap on a publicly available colorectal cancer dataset. Finally the
+findings are discussed along with possible extensions.
+
+
+
+
+
+The manuscript is organized as follows: 
+
+<<echo=FALSE>>=
+#note: always pass alpha on the 0-255 scale
+makeTransparent<-function(someColor, alpha=100)
+{
+  newColor<-col2rgb(someColor)
+  apply(newColor, 2, function(curcoldata){rgb(red=curcoldata[1], green=curcoldata[2],
+    blue=curcoldata[3],alpha=alpha, maxColorValue=255)})
+}
+@ %
 
 \section{Methods}
 
@@ -169,11 +243,29 @@ S_d = \{\pi_l(r) ; r \leq d, l = 1, \ldots, L \}.
 The \emph{sequential rank agreement} is the pooled standard deviation
 of the items found in the set $S_d$:
 \begin{equation}
-\textrm{SRA}(d)= \sqrt{\frac{\sum_{\{p \in S_d\}}(L-1)A(p)^2}{(L-1)|S_d|}}.
+\textrm{SRA}(d)= \sqrt{\frac{\sum_{\{p \in
+      S_d\}}(L-1)A(p)^2}{(L-1)|S_d|}}, \label{def:sra}
 \end{equation}
+and small values close to zero suggests that the lists agree on the
+ordering while larger values suggests disagreement. If the ranked
+lists are identical then the value of SRA will be zero for all depths
+$d$.  The sequential rank agreement can be interpreted as the average
+distance of the individual rankings of the lists from the average
+ranking for each of the items we have seen until depth $d$.
+
 
 \subsection{All lists fully observed}
-We shall start by the simplest case where all $L$ lists are fully observed. 
+We shall start by the simplest case where all $L$ lists are fully
+observed, \ie, we have the rank of all $P$ items for all of the $L$
+lists. Fully observed ranked lists are common and occur, for example,
+when we have a single dataset and apply different statistical analysis
+methods to produce lists of predictors ranked according to their
+importance, or if the same analysis method is applied to data from
+different populations.
+
+For the fully obseved list situation we can plot the sequantial
+rank agreement \eqref{def:sra} as a function of depth $d$. If there is
+a ... An example is seen in Figure~\ref{fig:example1}
 
 \subsection{Analysis of top $k$ lists}
 Not uncommon for lists to be 
@@ -200,7 +292,14 @@ so the largest rank we should consider will be
 d \leq \max(k_1, \ldots, k_L).
 \end{equation}
 
-We cannot directly compute $A(p)$ for all predictors because we only observe a censored version of $\tilde R$ for some of the lists. Instead we assume that the rank assigned to predictor $p$ in list $l$ is uniformly distributed among the ranks that have been unassigned for list $l$. The ranks are clearly not independent since each of the lists essentially contains full set of ranks 
+We cannot directly compute $A(p)$ for all predictors because we only
+observe a censored version of $\tilde R$ for some of the
+lists. Instead we assume that the rank assigned to predictor $p$ in
+list $l$ is uniformly distributed among the ranks that have \emph{not}
+been assigned for list $l$. 
+
+The rankings within a single list are clearly not independent since each of the lists
+essentially contains full set of ranks
 
 \begin{equation}
 \tilde A(p) = \frac{\sum_{r_1; r_1\in \tilde R_1(p)}  \cdots \sum_{r_L; r_L\in \tilde R_L(p)} A(p)}{\prod_l |\tilde R_l(p)|}
@@ -210,7 +309,12 @@ FIXME: If instead of running through all elements of $\tilde R_1(p)$
 one would use the average rank in $\tilde R_1(p)$ we would end up with
 a too small variance.
 
+
+Noget med 
+
 \section{Benchmarks}
+
+Three approaches 
 
 \subsection{Independent lists}
 
@@ -224,19 +328,166 @@ Do the following a large number of times
 \end{enumerate}
 
 Lidt spøjs ting man matcher dem op imod
-\section{Applications}
 
-\subsection{Evaluating results from top-$k$ lists}
+\subsection{Changepoint analysis}
+
+\section{Applications}
 
 \subsection{Comparing results across different method}
 
+In a classical paper by \citet{Golub1999} a dataset of 3051 gene
+expression values were measured on 38 tumor mRNA samples in order to
+improve the classification of acute leukemias between two types: acute
+lymphoblastic leukemia (ALL) or acute myeloid leukemia
+(AML). Preprocessing of the gene expression data was done as described
+in \citep{Dudoit2002}.
+
+We analyzed these gene expression data using four different
+approaches: marginal two-sample $t$ tests, marginal logistic
+regression analyses, logistic regression eleastic net, and marginal
+maximum information content correlations (MIC) \citep{}. For the first
+two methods, the genes were ranked according to $p$ value. 
+
+
+<<example1, echo=FALSE>>=
+library(SuperRanker)
+library(glmnet)
+library(minerva)
+library(changepoint)
+library(randomForestSRC)
+
+# Read data
+library(multtest)
+data(golub)
+
+
+y <- golub.cl
+x <- golub 
+
+producelists <- function(x, y) {
+    index <- seq(1, nrow(golub))
+                                        # d <- data.frame(y, x)
+
+                                        # Marginale t-tests
+    mt.p <- sapply(index, function(i) { t.test(x[i,] ~ y)$p.value } )
+    list1 <- order(mt.p)
+    
+                                        # Marginale logreg-tests
+    mlogreg.p <- sapply(index, function(i) { drop1(glm(y ~ x[i,], family=binomial), test="Chisq")[2,5] } )
+    list2 <- order(mlogreg.p)
+    
+                                        # Elastic net
+    X <- scale(t(x))
+    enet <- glmnet(X, y, family="binomial", alpha=.8)
+    nyres <- cv.glmnet(X, y, family="binomial", alpha=.8)
+    coefficients <- coef(enet, s=nyres$lambda.1se)[-1]
+    nonzeros <- sum(coefficients!=0)
+    list3 <- order(abs(coefficients), decreasing=TRUE)
+    
+                                        # MIC
+    MIC <- sapply(index, function(i) { mine(x[i,], y)$MIC})
+    list4 <- order(MIC, decreasing=TRUE)
+    
+    
+                                        # Random Forest
+###    dd <- data.frame(y=factor(y), t(x))
+                                        # dd <- data.frame(y=y, t(x))
+###    f1 <- rfsrc(y ~ ., data=dd, ntree=100)
+###    variables <- abs(f1$importance[,1])
+###    num.undecided <- sum(variables==0)
+###    list5 <- order(variables, decreasing=TRUE)
+###    list5[(length(variables)-num.undecided):length(variables)] <- 0
+    
+    cbind(list1,list2,list3,list4)
+}
+
+inputmatrix <- producelists(x, y)
+colnames(inputmatrix) <- c("T", "LogReg", "ElasticNet", "MIC", "RF")[1:ncol(inputmatrix)]
+
+res <- sqrt(sra(inputmatrix))
+
+@ 
+
+
+\begin{figure}[tb]
+\begin{center}
+<<fig=TRUE,echo=FALSE>>=
+ysize <- 1000
+plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
+
+## 
+# col1 <- makeTransparent()
+null <- sqrt(random_list_sra(inputmatrix, B=1, n=400))
+## matlines(null[1:ysize,], col="gray", lty=1)
+
+## 
+
+##null2 <- sapply(1:40, function(i) {
+##    sra(producelists(x, sample(y)), B=1)
+##} )
+## matlines(null2[1:ysize,], col="lightblue", lty=1)
+
+load("R/fig1null.rda")
+
+bcolor <- makeTransparent("lightblue", alpha=80)
+bcolor2 <- makeTransparent("red", alpha=80)
+
+www <- smooth_sra(null2)
+polygon(c(1:length(www$lower), rev(1:length(www$lower))),
+        c(www$lower, rev(www$upper)),
+        col=bcolor, border=NA)
+
+www <- smooth_sra(null)
+polygon(c(1:length(www$lower), rev(1:length(www$lower))),
+        c(www$lower, rev(www$upper)),
+        col=bcolor2, border=NA)
+
+
+
+@ %
+\end{center}
+ \label{fig:example1}
+ \caption{Sequential rank agreement for 4 different analysis methods
+   applied to the Golub data (thick red line). The red and blue shaded
+ areas represent the pointwise 95\% normal areas for the XXX and XXY benchmarks,
+respectively.}
+\end{figure}
+
+
+<<echo=FALSE, results=hide>>=
+xxx <- as.data.frame(inputmatrix[1:10,])
+xxx
+
+@ 
+
+<<label=tab1,echo=FALSE,results=tex>>=
+library(xtable)
+print(xtable(xxx))
+#print(xtable(xxx, caption = "Top 10 list of results", label = "tab:one",
+#digits = c(0, 0, 2, 0, 2, 3, 3)), table.placement = "tbp",
+#caption.placement = "top")
+
+@
+
+
 \subsection{Stability of results}
 
+\subsection{Evaluating results from top-$k$ lists}
+
+
+
 Bootstrap across a single method and compare results. Discuss collinearity
+
+
+\section{Alternatives}
 
 \section{Discussion}
 
 Mention/discuss different measures. 
+
+
+\bibliographystyle{apalike}
+\bibliography{paperref}
 
 \end{document}
 

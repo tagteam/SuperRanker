@@ -1,79 +1,111 @@
-sra <- function(object, metric=var, depth=NULL, listlength=NULL, B=10) {
-    metric <- match.fun(metric)
-    
+#' Compute the sequential rank agreement
+#'
+#' @param obj Either matrix where each column is a ranked list of items or a list of ranked lists of items. Elements are integers between 1 and the length of the lists. The lists should have the same length but censoring can be used by setting the list to zero from a point onwards. See details for more information.
+#' @param B An integer giving the number of randomization to sample over in the case of censored observations
+#' @return A vector of the sequential rank agreement
+#' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
+#' @export
+sra <- function(object, B=1) {
+
     # Make sure that the input object ends up as a matrix with integer columns all
     # consisting of elements from 1 and up to listlength
     if (is.matrix(object))
         rankmat <- object
     else
         rankmat <- as.matrix(do.call("cbind",object))
-    
-    if (missing(depth)) depth <- NROW(rankmat)
-    
-    # Now do sanity check of input
-    # Check if there are dupliates in the columns
-    if (any(apply(rankmat, 2, duplicated, incomparables=c(0, NA)))) {
-      stop("an element must only occur exactly once in each list")
-    }
-    # Check and compute the maximum list length
-    ll <- max(c(NROW(rankmat), max(rankmat, na.rm=TRUE)))
-    if (is.null(listlength)) {
-      listlength <- ll
-    }    
-    if (listlength<ll) {
-      stop("You are requesting a list length that is smaller than the largest element found")
-    }    
-    # Should probably also check integers and such
-        
-    # Compute the full metric for each item in a full sized list
-    # The speed here could be increased (for example by converting everything to itemlist scale first)
-    full.list.metric <- function(m, metric) {
-      itemmatrix <- apply(m, 2, order)
-      apply(itemmatrix, 1, metric)
-    }
-    resample <- function(x, ...) x[sample.int(length(x), ...)]
 
-    
-    # General approach
-    # 1) Fill in missing items in each list
-    # 2) Compute the metric for the full lists
-    # 3) Compute agreement 
-    # 4) Finally average everything
-
-    nseq <- seq(listlength)
+    listlength <- nrow(rankmat)
     nlists <- NCOL(rankmat)
-  
+    nseq <- seq(listlength)
 
+    # Special version of sample needed
+    resample <- function(x, ...) x[sample.int(length(x), ...)]
+    
     # Compute a list of missing items for each list
     missing.items <- lapply(as.data.frame(rankmat), function(x) { nseq[-x] })
-    
-    fullrankmat <- matrix(rep(0, nlists*listlength), ncol=nlists)
-    fullrankmat[1:NROW(rankmat),] <- rankmat
-    maxdepth <- min(nrow(fullrankmat), ifelse(is.null(depth), nrow(fullrankmat), depth))
 
-      
+    ## Should make a sanity check that zeros are from a point onwards
+    if (!all(sapply(1:nlists, function(x) {  res <- TRUE
+                                             if (length(missing.items[[x]])>0) {
+                                                 if (any(rankmat[(nitems-missing.items[[x]]):nitems,x]) )
+                                                     { res <- FALSE }
+                                             }
+                                             res
+                                         }))) {
+        stop("Censored ranked lists should be coded 0 from a rank onwards")
+    }
+
+    ## If there is no censoring then we should set B to 1
+    if (max(sapply(missing.items, function(i) length(i) ))==0) {
+        B <- 1
+    }
+    
     tmpres <- sapply(1:B, function(i) {
-      # Ad 1)
-      for (j in 1:nlists) {
-          if (length(missing.items[[j]])>0) {
-          fullrankmat[(listlength-length(missing.items[[j]])+1):listlength,j] <- sample(missing.items[[j]])
+        for (j in 1:nlists) {
+            if (length(missing.items[[j]])>0) {      
+                rankmat[(listlength-length(missing.items[[j]])+1):listlength,j] <- resample(missing.items[[j]])
+            }
         }
-      }
-      res <- full.list.metric(fullrankmat, metric)
+        res <- sracppfull(rankmat)
+        res
+    })
 
-      rankmat.l <- lapply(seq_len(nrow(fullrankmat)), function(i) fullrankmat[i,])
-      uniq.l <- lapply(rankmat.l, function(x) {sort(unique(x))})
+    agreement <- apply(tmpres, 1, mean)
 
-      agreement <- sapply(1:maxdepth, function(x) {
-          myvar <- unique(unlist(uniq.l[1:x]))
-          mean(res[myvar])
-      })
-
-      agreement
-      
-  })
+    class(agreement) <- "sra"
+    attr(agreement, "B") <- B
     
-    out <- list(agreement=apply(tmpres, 1, mean), metric=quote(metric), depth=maxdepth, B=B)
-    class(out) <- "agreement"
-    out
+    agreement
+}
+
+
+
+#' Simulate sequential rank agreement for randomized unrelated lists
+#'
+#' @param obj Either a vector or matrix
+#' @param B Either a vector or matrix
+#' @param n the number of sequential rank agreement curves to produce
+#' @return A matrix with n columns each representing the sequential rank agreement obtained from 
+#' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
+#' @export
+random_list_sra <- function(object, B=1, n=1) {
+
+    ## Make sure that the input object ends up as a matrix with integer columns all
+    ## consisting of elements from 1 and up to listlength
+    if (!is.matrix(object))
+        object <- as.matrix(do.call("cbind",object))
+
+    nitems <- nrow(object)
+    notmiss <- apply(object, 2, function(x) {sum(x>0)} )
+    res <- sapply(1:n, function(i) {
+        ## Do a permutation with the same number of missing
+        for (j in 1:ncol(object)) {
+            object[,j] <- c(sample(nitems, size=notmiss[j]), rep(0, nitems-notmiss[j]))
+        }
+        sra(object, B=B)        
+    })
+    res
+    
+}
+
+
+
+
+
+
+#' Smooth quantiles of a matrix of sequential ranked agreements
+#'
+#' @param obj A matrix
+#' @param confidence the limits to compute
+#' @return A list containing two vectors for the smoothed lower and upper limits
+#' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
+#' @export
+smooth_sra <- function(object, confidence=0.95) {
+
+    alpha <- (1-confidence)/2
+    limits <- apply(object, 1, function(x) { quantile(x, probs=c(alpha, 1-alpha)) })
+#    res <- apply(limits, 1, function(x) { loess(x)} )
+    
+#    list(lower=res[[1]]$y, upper=res[[2]]$y)
+    list(lower=limits[1,], upper=limits[2,])
 }

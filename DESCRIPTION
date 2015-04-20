@@ -1,11 +1,12 @@
 Package: SuperRanker
-Title: Sequential Rank Agreement 
-Version: 1.5.4
-Author: Claus Ekstroem, Thomas A. Gerds
-Description: Tools to find changepoints in agreement
-Depends:
-    R (>= 2.9.0)
-Imports:
-    lava
-Maintainer: Claus and Thomas <tag@biostat.ku.dk>
+Type: Package
+Title: Sequential Rank Agreement
+Version: 1.0
+Date: 2015-04-07
+Author: Claus Thorn Ekstroem and Thomas Gerds
+Maintainer: Claus Ekstroem <ekstrom@sund.ku.dk>
+Description: Tools for analysis and comparison of ranked lists
 License: GPL (>= 2)
+Imports: Rcpp (>= 0.11.5)
+LinkingTo: Rcpp
+Packaged: 2015-04-10 23:44:50 UTC; cld189
