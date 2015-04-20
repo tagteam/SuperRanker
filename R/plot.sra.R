@@ -1,6 +1,6 @@
 ##' Plot the agreement between lists as a function of the list depth
 ##' 
-##' @title Plot agreement 
+##' @title Plot sequential rank agreement
 ##' @param x Agreement object
 ##' @param xlim x-axis limits
 ##' @param ylim y-axis limits
@@ -27,13 +27,13 @@
 ##' 
 #' @export
 ##' @author Thomas A. Gerds <tag@@biostat.ku.dk>
-plot.agreement <- function(x,xlim,ylim,xlab="List depth",ylab="Agreement",add=FALSE,...){
-    if (missing(xlim)) xlim=c(1,x$depth)
-    if (missing(ylim)) ylim=c(0,max(x$agreement))
+plot.sra <- function(x, xlim, ylim, xlab="List depth", ylab="Agreement", add=FALSE, ...){
+    if (missing(xlim)) xlim=c(1,length(x))
+    if (missing(ylim)) ylim=c(0,max(x))
     axis1.DefaultArgs <- list()
     axis2.DefaultArgs <- list(side=2)
     plot.DefaultArgs <- list(x=0,y=0,type = "n",ylim = ylim,xlim = xlim,xlab = xlab,ylab = ylab)
-    lines.DefaultArgs <- list(type="l",lwd=3,x=1:x$depth,y=x$agreement)
+    lines.DefaultArgs <- list(type="l",lwd=3,x=1:length(x),y=x)
     smartA <- prodlim::SmartControl(call=list(...),
                                     keys=c("plot","lines","axis1","axis2"),
                                     ignore=c("x","ylim","xlim","xlab","ylab"),

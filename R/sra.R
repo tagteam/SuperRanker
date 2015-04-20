@@ -53,7 +53,8 @@ sra <- function(object, B=1) {
     agreement <- apply(tmpres, 1, mean)
 
     class(agreement) <- "sra"
-
+    attr(agreement, "B") <- B
+    
     agreement
 }
 
