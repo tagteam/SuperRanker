@@ -45,8 +45,18 @@ NumericVector SdPerRow(NumericMatrix obj) {
 }
 
 
+//' Compute the sequential rank agreement between k ranked lists
+//' 
+//' @description Computes the sequential rank agreement (number of items present in all k lists divided by the current rank) for each rank in the k lists
+//' @param rankMat A matrix with k columns corresponding to the k ranked lists. Elements of each column are integers between 1 and the length of the lists
+//' @param maxlength The maximum depth that are needed XXX
+//' @param B The number of resamples to use in the presence of censored lists
+//' @param cens A vector of integer values that 
+//' @return A vector of the same length as the rows in rankMat containing the sequential rank agreement between the lists for each depth
+//' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
+//' @export
 //[[Rcpp::export]]
-NumericVector sra(IntegerMatrix rankMat, int maxlength, int B, IntegerVector cens) {
+NumericVector sracpp(IntegerMatrix rankMat, int maxlength, int B, IntegerVector cens) {
 
   // The number of lists
   int nLists = rankMat.ncol();
@@ -153,4 +163,67 @@ NumericVector sra(IntegerMatrix rankMat, int maxlength, int B, IntegerVector cen
     return(returnVector);
 }
 
+
+//' Compute the sequential rank agreement between k ranked lists
+//' 
+//' @description Computes the sequential rank agreement (number of items present in all k lists divided by the current rank) for each rank in the k lists
+//' @param rankMat A matrix with k columns corresponding to the k ranked lists. Elements of each column are integers between 1 and the length of the lists
+//' @return A vector of the same length as the rows in rankMat containing the sequential rank agreement between the lists for each depth
+//' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
+//' @export
+//[[Rcpp::export]]
+NumericVector sracppfull(IntegerMatrix rankMat) {
+
+  // The number of lists
+  int nLists = rankMat.ncol();
+  int maxlength=rankMat.nrow();
+
+  // Need a numeric copy of this for the sort function. Doesn't really make sense but
+  // keeping it for now 
+  NumericMatrix x(maxlength, nLists);
+  for (int l=0; l<nLists; l++) {
+    for (int i=0; i<std::min(maxlength, rankMat.nrow()); i++) {
+      x(i, l) = rankMat(i,l);
+    }
+  }
+  
+  // Keep the average result and the individual permutations
+  NumericVector returnVector(maxlength);
+
+    // Input validation
+
+    // Check that dim of x is less than maxlength
+
+    // Check for no duplicates in each list
+
+    NumericMatrix itemRank(maxlength, nLists);
+    NumericVector itemMetric(maxlength);
+    NumericVector res;
+
+    //    IntegerVector iv = seq_len(maxlength);
+
+    // The set of variables to keep per depth
+    LogicalVector keepDepth(maxlength, FALSE);
+      
+    for (int l = 0; l < nLists; l++) {
+      itemRank(_, l) = order_( x( _ , l) );
+    }
+    itemMetric = SdPerRow(itemRank);
+
+    // Now compute the agreement for each depth
+    for (int depth=0; depth<maxlength; depth++) {
+      
+      for (int l = 0; l < nLists; l++) {
+	// Add variable to keep
+	// -1 below because lists starts from 0 in C++
+	keepDepth[x(depth, l)-1] = TRUE;	  
+      }
+      
+      // Now weigh the metrics together
+      res = itemMetric[keepDepth];
+      returnVector[depth] = mean(res);
+    }
+    
+    return(returnVector);
+}
 

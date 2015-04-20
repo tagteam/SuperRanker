@@ -44,6 +44,10 @@
 Key words: sequential rank agreement, rank agreement, order statistic,
 methods comparison, variable selection
 
+
+
+Multiple lists. Weigh top over bottom. Censoring. Interpretation
+
 \section{Introduction}
 
 Ranked lists occur in many applications of statistics. Regression
@@ -66,16 +70,77 @@ define agreement based on the ranks of the first $k$ elements in each
 list.
 
 Several other approaches have proposed to measure ... Of these, 
-Kendall's $\tau$ iis the most well-known but xxx and yyy have proposed
+Kendall's $\tau$ is the most well-known but xxx and yyy have proposed
 methods that measure the ..
 
-Classical pairwise similarity measures have been based on correlations as is the case for Kendall’s τ (Kendall, 1948) and Spearman’s ρ (Spearman, 1910). Both correlations measure the similarity of two ranked lists on a correlation scale from -1 to 1, where 1 implies that the lists are completely similar and -1 implies that they are completely dissimilar, in the case of two lists that translates to one being the reverse of the other, while 0 correspond to random lists. Correlation based measures treat discrepancies at different depths of the lists equally, so that a difference at the end contributes as much as one in the top of the lists.
-Several modified versions of these measures has been proposed, such as weighted τ by Shieh (1998) where each pair of rankings can be assigned different weights, and the τap (Yilmaz et al., 2008) ap refers to average precision, which places higher emphasis on the top of the lists. Spearman’s ρ use the ranks of the variables for calculation of the correlation and the use of ranks are also employed in the M measure of Bar-Ilan et al. where the reciprocal rank differences are used to calculate the similarity measure.
-Rather than looking at correlations between lists some recent papers use the inter- section of the lists as the basis for a similarity measure. It can be argued that intersection is a better measure when looking at non-conjoint lists, but the simple intersection places equal weights on all depths of the list. Thus, Fagin et al. (2003) and Webber et al. (2010) attempt to modify the simple intersection in a way that is top weighted by using the cu- mulative intersection divided by the depth as the basis for their similarity measures — in the following referred to as the average overlap (AO).Webber et al. (2010) define their rank-biased overlap (RBO) by weighting with a converging series thus ensuring the top is always weighted higher than the (potentially indefinite) bottom of the lists. The intersection metric by Fagin et al. (2003) uses the mean of the overlaps at all depths up to d.
-While it is possible to calculate measures that describe how similar lists are at a given depth with some of the methods described above, the interpretation of the measures is unclear and as we will demonstrate it is not trivial to identify a depth at which the lists are no longer similar. We will use some terminology from agreement analysis as our
-2
-method resembles this in some aspects. We will refer to the similar part of the lists, which is expected at the top if it exists, as having high agreement and the dissimilar part, where items are ranked randomly, as having low agreement. As a measure for agreement we will base this on the limits-of-agreement known from agreement between quantitative variables (Carstensen, 2011) . Since the limit-of-agreement essentially is a transformation of the pooled standard deviation of the ranked items we will use that, since it has a direct and simple interpretation: at given depth how far do the items deviate from the mean rank. Thus, twice the standard deviation is a measure of how far apart in ranks the methods classify the items.
-The rest of the paper is structured as follows, in the methods section we show how to calculate and apply the limits-of-agreement-based measure, sd, to a small example dataset and we perform a comparison to average overlap. We also present and discuss how changepoint methods can be applied to identify where a set of lists goes from high agreement to low agreement. The simulation section shows the performance of the mea- sure under a number of different scenarios while the application shows calculations of agreement and average overlap on a publicly available colorectal cancer dataset. Finally the findings are discussed along with possible extensions.
+
+Rank order statistics
+
+
+
+Classical pairwise similarity measures have been based on correlations
+as is the case for Kendall’s $\tau$ \citep{kendall1948} and Spearman’s
+$\rho$ \citep{Spearman1910}. Both correlations measure the similarity of two
+ranked lists on a correlation scale from -1 to 1, where 1 implies that
+the lists are completely similar and -1 implies that they are
+completely dissimilar, in the case of two lists that translates to one
+being the reverse of the other, while 0 correspond to random
+lists. Correlation based measures treat discrepancies at different
+depths of the lists equally, so that a difference at the end
+contributes as much as one in the top of the lists.
+
+
+Kendall's $\tau$ does not make any distinction between errors
+towards the top versus the errors towards the bottom
+
+
+Several modified versions of these measures has been proposed, such as
+weighted $\tau$ by Shieh (1998) where each pair of rankings can be
+assigned different weights, and the τap (Yilmaz et al., 2008) ap
+refers to average precision, which places higher emphasis on the top
+of the lists. Spearman’s ρ use the ranks of the variables for
+calculation of the correlation and the use of ranks are also employed
+in the M measure of Bar-Ilan et al. where the reciprocal rank
+differences are used to calculate the similarity measure.  Rather than
+looking at correlations between lists some recent papers use the
+inter- section of the lists as the basis for a similarity measure. It
+can be argued that intersection is a better measure when looking at
+non-conjoint lists, but the simple intersection places equal weights
+on all depths of the list. Thus, Fagin et al. (2003) and Webber et
+al. (2010) attempt to modify the simple intersection in a way that is
+top weighted by using the cu- mulative intersection divided by the
+depth as the basis for their similarity measures — in the following
+referred to as the average overlap (AO).Webber et al. (2010) define
+their rank-biased overlap (RBO) by weighting with a converging series
+thus ensuring the top is always weighted higher than the (potentially
+indefinite) bottom of the lists. The intersection metric by Fagin et
+al. (2003) uses the mean of the overlaps at all depths up to d.  While
+it is possible to calculate measures that describe how similar lists
+are at a given depth with some of the methods described above, the
+interpretation of the measures is unclear and as we will demonstrate
+it is not trivial to identify a depth at which the lists are no longer
+similar. We will use some terminology from agreement analysis as our 2
+method resembles this in some aspects. We will refer to the similar
+part of the lists, which is expected at the top if it exists, as
+having high agreement and the dissimilar part, where items are ranked
+randomly, as having low agreement. As a measure for agreement we will
+base this on the limits-of-agreement known from agreement between
+quantitative variables (Carstensen, 2011) . Since the
+limit-of-agreement essentially is a transformation of the pooled
+standard deviation of the ranked items we will use that, since it has
+a direct and simple interpretation: at given depth how far do the
+items deviate from the mean rank. Thus, twice the standard deviation
+is a measure of how far apart in ranks the methods classify the items.
+The rest of the paper is structured as follows, in the methods section
+we show how to calculate and apply the limits-of-agreement-based
+measure, sd, to a small example dataset and we perform a comparison to
+average overlap. We also present and discuss how changepoint methods
+can be applied to identify where a set of lists goes from high
+agreement to low agreement. The simulation section shows the
+performance of the measure under a number of different scenarios
+while the application shows calculations of agreement and average
+overlap on a publicly available colorectal cancer dataset. Finally the
+findings are discussed along with possible extensions.
 
 
 
@@ -277,8 +342,11 @@ lymphoblastic leukemia (ALL) or acute myeloid leukemia
 (AML). Preprocessing of the gene expression data was done as described
 in \citep{Dudoit2002}.
 
-We analyzed these gene expression data using five different
-approaches: 
+We analyzed these gene expression data using four different
+approaches: marginal two-sample $t$ tests, marginal logistic
+regression analyses, logistic regression eleastic net, and marginal
+maximum information content correlations (MIC) \citep{}. For the first
+two methods, the genes were ranked according to $p$ value. 
 
 
 <<example1, echo=FALSE>>=
@@ -337,6 +405,7 @@ inputmatrix <- producelists(x, y)
 colnames(inputmatrix) <- c("T", "LogReg", "ElasticNet", "MIC", "RF")[1:ncol(inputmatrix)]
 
 res <- sqrt(sra(inputmatrix))
+
 @ 
 
 
@@ -344,32 +413,51 @@ res <- sqrt(sra(inputmatrix))
 \begin{center}
 <<fig=TRUE,echo=FALSE>>=
 ysize <- 1000
-plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement")
+plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
 
 ## 
 # col1 <- makeTransparent()
-null <- sqrt(random_list_sra(inputmatrix, B=1, n=100))
-matlines(null[1:ysize,], col="gray", lty=1)
+null <- sqrt(random_list_sra(inputmatrix, B=1, n=400))
+## matlines(null[1:ysize,], col="gray", lty=1)
 
 ## 
 
-null2 <- sapply(1:40, function(i) {
-    sra(producelists(x, sample(y)), B=1)
-}
-                )
-matlines(null2[1:ysize,], col="lightblue", lty=1)
+##null2 <- sapply(1:40, function(i) {
+##    sra(producelists(x, sample(y)), B=1)
+##} )
+## matlines(null2[1:ysize,], col="lightblue", lty=1)
+
+load("R/fig1null.rda")
+
+bcolor <- makeTransparent("lightblue", alpha=80)
+bcolor2 <- makeTransparent("red", alpha=80)
+
+www <- smooth_sra(null2)
+polygon(c(1:length(www$lower), rev(1:length(www$lower))),
+        c(www$lower, rev(www$upper)),
+        col=bcolor, border=NA)
+
+www <- smooth_sra(null)
+polygon(c(1:length(www$lower), rev(1:length(www$lower))),
+        c(www$lower, rev(www$upper)),
+        col=bcolor2, border=NA)
+
+
 
 @ %
 \end{center}
  \label{fig:example1}
  \caption{Sequential rank agreement for 4 different analysis methods
-   applied to the Golub data.}
+   applied to the Golub data (thick red line). The red and blue shaded
+ areas represent the pointwise 95\% normal areas for the XXX and XXY benchmarks,
+respectively.}
 \end{figure}
 
 
 <<echo=FALSE, results=hide>>=
 xxx <- as.data.frame(inputmatrix[1:10,])
 xxx
+
 @ 
 
 <<label=tab1,echo=FALSE,results=tex>>=
@@ -378,6 +466,7 @@ print(xtable(xxx))
 #print(xtable(xxx, caption = "Top 10 list of results", label = "tab:one",
 #digits = c(0, 0, 2, 0, 2, 3, 3)), table.placement = "tbp",
 #caption.placement = "top")
+
 @
 
 
