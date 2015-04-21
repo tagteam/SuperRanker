@@ -472,6 +472,13 @@ print(xtable(xxx))
 @
 
 
+
+<<>>=
+library(changepoint)
+cpt.mean(res)
+cpt.mean(res2)
+@ 
+
 \subsection{Stability of results}
 
 \subsection{Evaluating results from top-$k$ lists}
