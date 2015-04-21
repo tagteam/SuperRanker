@@ -110,7 +110,7 @@ which the lists are no longer similar.
 In this article we propose a method to measure similarity among ranked
 lists for each depth in the list. As a measure for similarity we will
 use the limits of agreement known from agreement between quantitative
-variables \citep{Carstensen2011} but will compute the agreement on the
+variables \citep{Carstensen2010} but will compute the agreement on the
 ranks of the items.  The proposed method allows for multiple lists
 simultaneously, provides a dynamic measure of agreement for each depth
 in the lists, places more weight on the top of the list, accommodates
@@ -164,7 +164,7 @@ described below work for a set of $L$ lists $R_1,\dots,R_L$,
 $L\geq2$. We denote $\pi_l=R_l^{-1}$ for the corresponding inverse
 mappings. Panels (a) and (b) of Table~\ref{tab:example} show a
 schematic example of these mappings. Thus if $\pi_l(1)=X_{34}$ then
-item $X_{34}$ is ranked first in list $l$.
+item $X_{34}$ is ranked first in list $l$, and similarly $R_l(X_{34})=1$.
 
 \begin{table}[tb]
   \caption{Example set of ranked lists. (a) shows the ranked list of items for each of three lists, (b) presents the ranks obtained by each item in each of the three lists and (c) shows the cumulative set of items up to a given depth in the three lists.}
@@ -341,8 +341,8 @@ in \citep{Dudoit2002}.
 We analyzed these gene expression data using four different
 approaches: marginal two-sample $t$ tests, marginal logistic
 regression analyses, logistic regression eleastic net, and marginal
-maximum information content correlations (MIC) \citep{}. For the first
-two methods, the genes were ranked according to $p$ value. 
+maximum information content correlations (MIC) \citep{Reshef2011}. For
+the first two methods, the genes were ranked according to $p$ value.
 
 
 <<example1, echo=FALSE>>=
