@@ -41,7 +41,7 @@
   available cancer dataset.
 \end{abstract}
 
-Key words: sequential rank agreement, rank agreement, order statistic,
+Key words: sequential rank agreement, top lists, rank agreement, order statistic,
 methods comparison, variable selection
 
 
@@ -49,104 +49,99 @@ methods comparison, variable selection
 Multiple lists. Weigh top over bottom. Censoring. Interpretation
 
 \section{Introduction}
-
-Ranked lists occur in many applications of statistics. Regression
-methods rank predictor variables according to magnitude of association
-with outcome, prediction models rank subjects according to their risk
-of an event, and genetic studies rank genes according to their
-difference in expression across samples.
-
-A common research question is where to stop, \ie, to decide the
-maximal significant rank.  In the three examples this would correspond
-to the number of significantly associated predictor variables, the
-number of patients at high risk of an event, and the number of genes
-that are worth to pursue in further experiments, respectively.
-
-In this article we describe some new breakthrough tools for measuring
-agreement across a set of lists which soon will enter the state-of-the
-art (FIXME: denne sætning skal laves om). The methods should be useful
-whenever there are multiple rankings of the same list. The idea is to
-define agreement based on the ranks of the first $k$ elements in each
-list.
-
-Several other approaches have proposed to measure ... Of these, 
-Kendall's $\tau$ is the most well-known but xxx and yyy have proposed
-methods that measure the ..
+Ranking of items or results is common in scientific research and
+ranked lists occur as the result of many applications in
+statistics. Regression methods rank predictor variables according to
+magnitude of association with outcome, prediction models rank subjects
+according to their risk of an event, and genetic studies rank genes
+according to their difference in gene expression levels across
+samples.
 
 
-Rank order statistics
+When several ranked lists are available a common research question is
+to what extent the lists agree on the ranking. In other words: is it
+possible to decide on a optimal rank until which the lists agree on
+the items?  A typical situation would arise in high-dimensional
+genomics studies where several analysis methods had been applied to a
+dataset or where a literature search provided differing tables of,
+say, top 10 lists of the most important genes associated to an
+outcome.  Similarly, this would correspond to the number of associated
+predictor variables that are found consistently over the lists, the
+number of patients at high risk of an event in all lists, and the
+number of genes that are worth to pursue in further experiments in the
+three examples above, respectively.
+
+The analysis of rankings is hardly new, and several other approaches
+have proposed a measure of the ``distance'' between two ranked
+lists. Of these, Kendall's $\tau$ 
+%\citep{kendall1948} 
+and Spearman’s footrule
+%$\rho$ \citep{Spearman1910} 
+are the most well-known. Both measure the similarity of two ranked
+lists but neither of them make any distinction between errors towards
+the top versus the errors towards the bottom of the lists.  Several
+modified versions of Kendall's $\tau$ and Spearman's footrule have been
+proposed. \citet{Shieh1998} proposed a weighted $\tau$ where each pair
+of rankings can be assigned different weights, and \citet{Yilmaz2008}
+proposed the $\tau_{ap}$ which places higher emphasis on the top of
+the lists.
+%
+Spearman’s footrule use the ranks of the variables for calculation of
+the distance and the use of ranks are also employed in the $M$
+measure of \citet{Bar-Ilan2006} where the reciprocal rank differences
+are used to calculate the similarity measure.
+
+More recent approaches consider the intersection of lists as the basis
+for a similarity measure. However, simple intersections also places
+equal weights on all depths of the list which led \citet{Fagin2003}
+and \citet{Webber2010} to modify the simple intersection to put more
+emphasis on the top of the lists by using the cumulative intersection
+divided by the depth as their similarity measures (denoted the average
+overlap (AO)). \citet{Webber2010} define their rank-biased overlap
+(RBO) by weighting with a converging series thus ensuring the top is
+always weighted higher than the (potentially indefinite) bottom of the
+lists.  While it is possible to calculate measures that describe how
+similar lists are at a given depth with some of the methods described
+above, the interpretation of the measures is unclear --- especially
+with multiple lists --- and it is difficult to identify a depth at
+which the lists are no longer similar.
 
 
-
-Classical pairwise similarity measures have been based on correlations
-as is the case for Kendall’s $\tau$ \citep{kendall1948} and Spearman’s
-$\rho$ \citep{Spearman1910}. Both correlations measure the similarity of two
-ranked lists on a correlation scale from -1 to 1, where 1 implies that
-the lists are completely similar and -1 implies that they are
-completely dissimilar, in the case of two lists that translates to one
-being the reverse of the other, while 0 correspond to random
-lists. Correlation based measures treat discrepancies at different
-depths of the lists equally, so that a difference at the end
-contributes as much as one in the top of the lists.
-
-
-Kendall's $\tau$ does not make any distinction between errors
-towards the top versus the errors towards the bottom
-
-
-Several modified versions of these measures has been proposed, such as
-weighted $\tau$ by Shieh (1998) where each pair of rankings can be
-assigned different weights, and the τap (Yilmaz et al., 2008) ap
-refers to average precision, which places higher emphasis on the top
-of the lists. Spearman’s ρ use the ranks of the variables for
-calculation of the correlation and the use of ranks are also employed
-in the M measure of Bar-Ilan et al. where the reciprocal rank
-differences are used to calculate the similarity measure.  Rather than
-looking at correlations between lists some recent papers use the
-inter- section of the lists as the basis for a similarity measure. It
-can be argued that intersection is a better measure when looking at
-non-conjoint lists, but the simple intersection places equal weights
-on all depths of the list. Thus, Fagin et al. (2003) and Webber et
-al. (2010) attempt to modify the simple intersection in a way that is
-top weighted by using the cu- mulative intersection divided by the
-depth as the basis for their similarity measures — in the following
-referred to as the average overlap (AO).Webber et al. (2010) define
-their rank-biased overlap (RBO) by weighting with a converging series
-thus ensuring the top is always weighted higher than the (potentially
-indefinite) bottom of the lists. The intersection metric by Fagin et
-al. (2003) uses the mean of the overlaps at all depths up to d.  While
-it is possible to calculate measures that describe how similar lists
-are at a given depth with some of the methods described above, the
-interpretation of the measures is unclear and as we will demonstrate
-it is not trivial to identify a depth at which the lists are no longer
-similar. We will use some terminology from agreement analysis as our 2
-method resembles this in some aspects. We will refer to the similar
-part of the lists, which is expected at the top if it exists, as
-having high agreement and the dissimilar part, where items are ranked
-randomly, as having low agreement. As a measure for agreement we will
-base this on the limits-of-agreement known from agreement between
-quantitative variables (Carstensen, 2011) . Since the
-limit-of-agreement essentially is a transformation of the pooled
-standard deviation of the ranked items we will use that, since it has
-a direct and simple interpretation: at given depth how far do the
-items deviate from the mean rank. Thus, twice the standard deviation
-is a measure of how far apart in ranks the methods classify the items.
-The rest of the paper is structured as follows, in the methods section
-we show how to calculate and apply the limits-of-agreement-based
-measure, sd, to a small example dataset and we perform a comparison to
-average overlap. We also present and discuss how changepoint methods
-can be applied to identify where a set of lists goes from high
-agreement to low agreement. The simulation section shows the
-performance of the measure under a number of different scenarios
-while the application shows calculations of agreement and average
-overlap on a publicly available colorectal cancer dataset. Finally the
-findings are discussed along with possible extensions.
+In this article we propose a method to measure similarity among ranked
+lists for each depth in the list. As a measure for similarity we will
+use the limits of agreement known from agreement between quantitative
+variables \citep{Carstensen2010} but will compute the agreement on the
+ranks of the items.  The proposed method allows for multiple lists
+simultaneously, provides a dynamic measure of agreement for each depth
+in the lists, places more weight on the top of the list, accommodates
+censored/incomplete lists of varying lengths, and has a natural
+interpretation that directly relates to the ranks. The general idea is
+to define agreement based on the sequence of ranks from the first $k$
+elements in each list. This approach allows us to estimate a potential
+change point in the agreement in order to determine an optimal $k$
+where there is a shift in the agreement among lists and enables us to
+use randomization approaches to evaluate the rank agreement. In this
+sense it is a combination and generalization of some of the ideas of
+\citet{Carterette2009} and \citet{Boulesteix2009}. The former compares
+two rankings based on the distance between them as measured by a
+multivariate Gaussian distribution and the latter presents an overview
+of approaches for aggregation of ranked lists including bootstrap and
+leave-one-out jackknife approaches.
 
 
 
 
+The manuscript is organized as follows: In the next section we will
+define the sequential rank agreement among multiple ranked lists and
+discuss how to handle incomplete/censored lists. In section 3 we
+present and discuss approaches to evaluate the sequential rank
+agreement obtained from an experiment and to identify the optimal
+depth $k$ for which the ranked lists agree. Finally we present three
+quite different applications of the proposed sequential rank agreement
+approach to real data before we discuss the findings along with
+possible extensions.
 
-The manuscript is organized as follows: 
+
 
 <<echo=FALSE>>=
 #note: always pass alpha on the 0-255 scale
@@ -168,7 +163,8 @@ $r\in\{1,\dots,P\}$ the item $\pi(r)$ found at that rank. The methods
 described below work for a set of $L$ lists $R_1,\dots,R_L$,
 $L\geq2$. We denote $\pi_l=R_l^{-1}$ for the corresponding inverse
 mappings. Panels (a) and (b) of Table~\ref{tab:example} show a
-schematic example of these mappings.
+schematic example of these mappings. Thus if $\pi_l(1)=X_{34}$ then
+item $X_{34}$ is ranked first in list $l$, and similarly $R_l(X_{34})=1$.
 
 \begin{table}[tb]
   \caption{Example set of ranked lists. (a) shows the ranked list of items for each of three lists, (b) presents the ranks obtained by each item in each of the three lists and (c) shows the cumulative set of items up to a given depth in the three lists.}
@@ -254,7 +250,7 @@ distance of the individual rankings of the lists from the average
 ranking for each of the items we have seen until depth $d$.
 
 
-\subsection{All lists fully observed}
+\subsection{Agreement among fully observed lists}
 We shall start by the simplest case where all $L$ lists are fully
 observed, \ie, we have the rank of all $P$ items for all of the $L$
 lists. Fully observed ranked lists are common and occur, for example,
@@ -267,7 +263,7 @@ For the fully obseved list situation we can plot the sequantial
 rank agreement \eqref{def:sra} as a function of depth $d$. If there is
 a ... An example is seen in Figure~\ref{fig:example1}
 
-\subsection{Analysis of top $k$ lists}
+\subsection{Analysis of incomplete/censored lists}
 Not uncommon for lists to be 
 
 
@@ -345,8 +341,8 @@ in \citep{Dudoit2002}.
 We analyzed these gene expression data using four different
 approaches: marginal two-sample $t$ tests, marginal logistic
 regression analyses, logistic regression eleastic net, and marginal
-maximum information content correlations (MIC) \citep{}. For the first
-two methods, the genes were ranked according to $p$ value. 
+maximum information content correlations (MIC) \citep{Reshef2011}. For
+the first two methods, the genes were ranked according to $p$ value.
 
 
 <<example1, echo=FALSE>>=
