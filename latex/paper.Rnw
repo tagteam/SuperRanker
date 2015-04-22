@@ -456,11 +456,11 @@ polygon(c(1:length(www$lower), rev(1:length(www$lower))),
 
 @ %
 \end{center}
- \label{fig:example1}
  \caption{Sequential rank agreement for 4 different analysis methods
    applied to the Golub data (thick red line). The red and blue shaded
  areas represent the pointwise 95\% normal areas for the XXX and XXY benchmarks,
 respectively.}
+ \label{fig:example1}
 \end{figure}
 
 
