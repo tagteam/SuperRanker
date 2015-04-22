@@ -420,6 +420,7 @@ lines(res2[1:ysize], lwd=2, col="purple")
 ## 
 # col1 <- makeTransparent()
 null <- sqrt(random_list_sra(inputmatrix, B=1, n=400))
+null3 <- sqrt(random_list_sra(inputmatrix, B=20, n=200))
 ## matlines(null[1:ysize,], col="gray", lty=1)
 
 ## 
@@ -433,6 +434,8 @@ load("R/fig1null.rda")
 
 bcolor <- makeTransparent("lightblue", alpha=80)
 bcolor2 <- makeTransparent("red", alpha=80)
+bcolor3 <- makeTransparent("green", alpha=80)
+
 
 www <- smooth_sra(null2)
 polygon(c(1:length(www$lower), rev(1:length(www$lower))),
@@ -443,6 +446,11 @@ www <- smooth_sra(null)
 polygon(c(1:length(www$lower), rev(1:length(www$lower))),
         c(www$lower, rev(www$upper)),
         col=bcolor2, border=NA)
+
+www <- smooth_sra(null3)
+polygon(c(1:length(www$lower), rev(1:length(www$lower))),
+        c(www$lower, rev(www$upper)),
+        col=bcolor3, border=NA)
 
 
 
