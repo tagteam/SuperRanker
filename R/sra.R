@@ -15,6 +15,7 @@ sra <- function(object, B=1) {
         rankmat <- as.matrix(do.call("cbind",object))
 
     listlength <- nrow(rankmat)
+    nitems <- nrow(rankmat)  # Sloppy programming
     nlists <- NCOL(rankmat)
     nseq <- seq(listlength)
 
@@ -27,7 +28,7 @@ sra <- function(object, B=1) {
     ## Should make a sanity check that zeros are from a point onwards
     if (!all(sapply(1:nlists, function(x) {  res <- TRUE
                                              if (length(missing.items[[x]])>0) {
-                                                 if (any(rankmat[(nitems-missing.items[[x]]):nitems,x]) )
+                                                 if (any(rankmat[(nitems-length(missing.items[[x]])+1):nitems,x]) )
                                                      { res <- FALSE }
                                              }
                                              res
