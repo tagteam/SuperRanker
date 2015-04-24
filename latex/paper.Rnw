@@ -259,9 +259,23 @@ methods to produce lists of predictors ranked according to their
 importance, or if the same analysis method is applied to data from
 different populations.
 
-For the fully obseved list situation we can plot the sequantial
-rank agreement \eqref{def:sra} as a function of depth $d$. If there is
-a ... An example is seen in Figure~\ref{fig:example1}
+For the fully obseved list situation we can plot the sequential rank
+agreement \eqref{def:sra} as a function of depth $d$.  An example is
+seen in Figure~\ref{fig:example1} where smaller values on the $y$ axis
+correspond to better agreement among the lists than larger values. The
+sequential rank agreement at depth $d$ can be interpreted as how many
+ranks apart do we on average expect the items found until depth $d$ to
+be.
+
+If the lists generally agree on all items then we expect the
+sequential rank agreement curve to be flat, but if there are changes
+in the rank agreement levels then this suggests that there are changes
+in the levels of agreement. In particular, we expect the agreement
+among the lists to be better towards the top of the lists and worse
+towards the end of the lists.
+
+\texttt{FIXME: Skal der et specifikt eksempel ind her eller kan vi
+  bare bruge det fra senere?} 
 
 \subsection{Analysis of incomplete/censored lists}
 Not uncommon for lists to be 
@@ -307,6 +321,11 @@ a too small variance.
 
 
 Noget med 
+
+
+FIXME: For censored lists we expect a change point around the depth
+where the lists are censored. This is an artefact stemming from the
+fact that 
 
 \section{Benchmarks}
 
@@ -413,8 +432,51 @@ res2 <- sqrt(sra(inputmatrix2, B=20))
 
 \begin{figure}[tb]
 \begin{center}
-<<fig=TRUE,echo=FALSE>>=
+<<fig=TRUE,echo=FALSE,width=3>>=
 ysize <- 1000
+plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
+lines(res2[1:ysize], lwd=2, col="purple")
+## 
+# col1 <- makeTransparent()
+null <- sqrt(random_list_sra(inputmatrix, B=1, n=400))
+null3 <- sqrt(random_list_sra(inputmatrix, B=20, n=200))
+## matlines(null[1:ysize,], col="gray", lty=1)
+
+## 
+
+##null2 <- sapply(1:40, function(i) {
+##    sra(producelists(x, sample(y)), B=1)
+##} )
+## matlines(null2[1:ysize,], col="lightblue", lty=1)
+
+load("R/fig1null.rda")
+
+bcolor <- makeTransparent("lightblue", alpha=80)
+bcolor2 <- makeTransparent("red", alpha=80)
+bcolor3 <- makeTransparent("green", alpha=80)
+
+
+www <- smooth_sra(null2)
+polygon(c(1:length(www$lower), rev(1:length(www$lower))),
+        c(www$lower, rev(www$upper)),
+        col=bcolor, border=NA)
+
+www <- smooth_sra(null)
+polygon(c(1:length(www$lower), rev(1:length(www$lower))),
+        c(www$lower, rev(www$upper)),
+        col=bcolor2, border=NA)
+
+www <- smooth_sra(null3)
+polygon(c(1:length(www$lower), rev(1:length(www$lower))),
+        c(www$lower, rev(www$upper)),
+        col=bcolor3, border=NA)
+
+
+
+@ %
+
+<<fig=TRUE,echo=FALSE,width=3>>=
+ysize <- 100
 plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
 lines(res2[1:ysize], lwd=2, col="purple")
 ## 
@@ -483,7 +545,7 @@ print(xtable(xxx))
 
 <<>>=
 library(changepoint)
-cpt.mean(res)
+cpt.mean(res, method="BinSeg")
 cpt.mean(res2)
 @ 
 
