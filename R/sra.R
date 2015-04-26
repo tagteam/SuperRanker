@@ -15,6 +15,7 @@ sra <- function(object, B=1) {
         rankmat <- as.matrix(do.call("cbind",object))
     
     listlength <- nrow(rankmat)
+    nitems <- nrow(rankmat)  # Sloppy programming
     nlists <- NCOL(rankmat)
     nseq <- seq(listlength)
     
