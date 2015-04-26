@@ -5,7 +5,7 @@
 #' between 1 and the length of the lists. The lists should have the
 #' same length but censoring can be used by setting the list to zero
 #' from a point onwards. See details for more information.
-#' @param cens.code Code for missing items 
+#' @param na.strings Code for missing items 
 #' @param B An integer giving the number of randomization to sample
 #' over in the case of censored observations
 #' @return A vector of the sequential rank agreement
@@ -22,19 +22,19 @@
 ##'               x2=c("h","c","f","g","b"),
 ##'               x3=c("d","e","a"))
 ##' set.seed(17)
-##' sra(clist,cens.code="z",B=10)
+##' sra(clist,na.strings="z",B=10)
 ##' 
 ##' ## or use a special code for missing elements
 ##' Clist <- list(x1=c("a","b","c","d","e","f","g","h"),
 ##'               x2=c("h","c","f","g","b","z","z","z"),
 ##'               x3=c("d","e","a","z","z","z","z","z"))
 ##' set.seed(17)
-##' sra(Clist,cens.code="z",B=10)
+##' sra(Clist,na.strings="z",B=10)
 ##' 
 #' @author Claus Ekstrøm <ekstrom@@sund.ku.dk> and Thomas A Gerds <tag@@biostat.ku.dk>
 #' 
 #' @export
-sra <- function(object, cens.code=NA, B=1) {
+sra <- function(object, na.strings=NA, B=1) {
     # Make sure that the input object ends up as a matrix with integer columns all
     # consisting of elements from 1 and up to listlength
     if (is.matrix(object))
@@ -47,9 +47,9 @@ sra <- function(object, cens.code=NA, B=1) {
     ## sanity checks
     object <- lapply(object,function(x){
                          out <- which(is.na(x))
-                         cens.code <- cens.code[!is.na(cens.code)]
-                         if (length(cens.code)>0)
-                             out <- c(out,grep(paste0("^",cens.code,"$"),x))
+                         na.strings <- na.strings[!is.na(na.strings)]
+                         if (length(na.strings)>0)
+                             out <- c(out,grep(paste0("^",na.strings,"$"),x))
                          ## remove censored items with side effect:
                          ## in case where all lists have trailing censored information
                          ## this is pruned
