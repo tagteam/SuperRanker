@@ -13,11 +13,11 @@ sra <- function(object, B=1) {
         rankmat <- object
     else
         rankmat <- as.matrix(do.call("cbind",object))
-
+    
     listlength <- nrow(rankmat)
     nlists <- NCOL(rankmat)
     nseq <- seq(listlength)
-
+    
     # Special version of sample needed
     resample <- function(x, ...) x[sample.int(length(x), ...)]
     
@@ -25,13 +25,14 @@ sra <- function(object, B=1) {
     missing.items <- lapply(as.data.frame(rankmat), function(x) { nseq[-x] })
 
     ## Should make a sanity check that zeros are from a point onwards
-    if (!all(sapply(1:nlists, function(x) {  res <- TRUE
-                                             if (length(missing.items[[x]])>0) {
-                                                 if (any(rankmat[(nitems-missing.items[[x]]):nitems,x]) )
-                                                     { res <- FALSE }
-                                             }
-                                             res
-                                         }))) {
+    if (!all(sapply(1:nlists, function(x) {
+                        res <- TRUE
+                        if (length(missing.items[[x]])>0) {
+                            if (any(rankmat[(listlength-missing.items[[x]]):listlength,x]) )
+                                { res <- FALSE }
+                        }
+                        res
+                    }))) {
         stop("Censored ranked lists should be coded 0 from a rank onwards")
     }
 
@@ -87,9 +88,6 @@ random_list_sra <- function(object, B=1, n=1) {
     res
     
 }
-
-
-
 
 
 
