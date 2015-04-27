@@ -142,7 +142,7 @@ random_list_sra <- function(object, B=1, n=1) {
         for (j in 1:ncol(object)) {
             object[,j] <- c(sample(nitems, size=notmiss[j]), rep(0, nitems-notmiss[j]))
         }
-        sra(object, B=B) 
+        sra(object, na.strings="0", B=B) 
     })
     res
     
