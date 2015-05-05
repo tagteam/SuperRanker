@@ -14,9 +14,10 @@
 \newcommand{\ie}{\emph{i.e.}\@\xspace}
 \newcommand{\eg}{\emph{e.g.}\@\xspace}
 
+\SweaveOpts{prefix.string=paper, keep.source=TRUE}
+
 
 \begin{document}
-%\SweaveOpts{concordance=TRUE}
 
 \title{Sequential rank agreement methods for comparison of ranked lists}
 \author{Claus Thorn Ekstrøm and Thomas Alexander Gerds and Kasper Brink-Jensen}
@@ -272,12 +273,30 @@ in the levels of agreement. In particular, we expect the agreement
 among the lists to be better towards the top of the lists and worse
 towards the end of the lists.
 
-\texttt{FIXME: Skal der et specifikt eksempel ind her eller kan vi
-  bare bruge det fra senere?} 
+
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=.45\textwidth]{paper-fig1a}
+\includegraphics[width=.45\textwidth]{paper-fig1b}
+\end{center}
+ \caption{Sequential rank agreement for 4 different analysis methods
+   applied to the Golub data (thick red line). The red and blue shaded
+ areas represent the pointwise 95\% normal areas for the XXX and XXY benchmarks,
+respectively.}
+ \label{fig:example1}
+\end{figure}
+
 
 \subsection{Analysis of incomplete/censored lists}
-Not uncommon for lists to be 
+Incomplete lists are also a common occurrence that arise from, for
+example, comparison of top $k$ lists, when some methods only rank some
+of the items (e.g., penalized regression based on the Lasso provides a
+sparse set of predictors that have non-zero coefficients. There is no
+obvious ordering of the predictors that have been shrunk to zero), or
+if 
 
+Top $k$, methods only provide information on some ranking (Lasso),
+only interested in significant ...predictors 
 
 censored
 
@@ -448,9 +467,25 @@ res2 <- sqrt(sra(inputmatrix2, B=20))
 @ 
 
 
-\begin{figure}[tb]
-\begin{center}
-<<fig=TRUE,echo=FALSE,width=3>>=
+<<fig1a, fig=TRUE,echo=FALSE,include=FALSE>>=
+ysize <- 1000
+plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
+lines(res2[1:ysize], lwd=2, col="purple")
+
+@ %
+
+<<fig1b, fig=TRUE,echo=FALSE,include=FALSE >>=
+ysize <- 80
+plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
+lines(res2[1:ysize], lwd=2, col="purple")
+
+
+@ %
+
+
+
+
+<<fig2a, fig=TRUE,echo=FALSE,include=FALSE>>=
 ysize <- 1000
 plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
 lines(res2[1:ysize], lwd=2, col="purple")
@@ -493,8 +528,8 @@ polygon(c(1:length(www$lower), rev(1:length(www$lower))),
 
 @ %
 
-<<fig=TRUE,echo=FALSE,width=3>>=
-ysize <- 100
+<<fig2b, fig=TRUE,echo=FALSE,include=FALSE >>=
+ysize <- 80
 plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
 lines(res2[1:ysize], lwd=2, col="purple")
 ## 
@@ -535,6 +570,13 @@ polygon(c(1:length(www$lower), rev(1:length(www$lower))),
 
 
 @ %
+
+
+
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=.45\textwidth]{paper-fig2a}
+\includegraphics[width=.45\textwidth]{paper-fig2b}
 \end{center}
  \caption{Sequential rank agreement for 4 different analysis methods
    applied to the Golub data (thick red line). The red and blue shaded
@@ -563,8 +605,12 @@ print(xtable(xxx))
 
 <<>>=
 library(changepoint)
-cpt.mean(res, method="BinSeg")
-cpt.mean(res2)
+cp1 <- cpt.mean(res, method="BinSeg")
+cp2 <- cpt.mean(res2, method="BinSeg")
+cp1@cpts
+cp1@param.est
+cp2@cpts
+cp2@param.est
 @ 
 
 \subsection{Stability of results}
