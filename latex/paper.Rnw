@@ -45,11 +45,10 @@
 Key words: sequential rank agreement, top lists, rank agreement, order statistic,
 methods comparison, variable selection
 
-
-
 Multiple lists. Weigh top over bottom. Censoring. Interpretation
 
 \section{Introduction}
+
 Ranking of items or results is common in scientific research and
 ranked lists occur as the result of many applications in
 statistics. Regression methods rank predictor variables according to
@@ -57,7 +56,6 @@ magnitude of association with outcome, prediction models rank subjects
 according to their risk of an event, and genetic studies rank genes
 according to their difference in gene expression levels across
 samples.
-
 
 When several ranked lists are available a common research question is
 to what extent the lists agree on the ranking. In other words: is it
@@ -348,7 +346,27 @@ fact that
 
 \section{Benchmarks}
 
-Three approaches 
+To interpretate the sequential rank agreement scale we propose by
+several different benchmark values. Our data free benchmark value is
+obtained by computing the sequential rank agreement of $L$ lists each
+containing a permutation of $P$ items. Practically this benchmark
+value can be obtained by averaging the result of repeated computer
+experiments. In the uncensored case each experiment contains $L$ lists
+of random permutations of the numbers $1,\dots,P$. In the censored
+case only the uncensored part of the orginal lists is randomly
+permuted.
+
+In our experience XX repetitions are sufficient to reduce Monte Carlo
+error. Table Appendix A shows benchmark values obtained with
+
+Our no-information benchmark can be applied in situations where each
+list is an importance ranking of $P$ predictors resulting from
+regression analyses. The idea is to repeat the regression analyses in
+modified data where the outcome vector is randomly permuted. This
+artificially removes any potential information regarding the
+regression that the real data may contain.
+
+- third approach? 
 
 \subsection{Independent lists}
 
