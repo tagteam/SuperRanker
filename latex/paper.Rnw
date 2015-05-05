@@ -7,6 +7,7 @@
 \usepackage{natbib}
 \usepackage{xspace}
 \usepackage[noae]{Sweave}
+\usepackage{authblk}
 
 %
 % New commands
@@ -19,8 +20,14 @@
 
 \begin{document}
 
-\title{Sequential rank agreement methods for comparison of ranked lists}
-\author{Claus Thorn Ekstrøm and Thomas Alexander Gerds and Kasper Brink-Jensen}
+\title{Sequential rank agreement methods for comparison of ranked
+  lists}
+\author{Claus Thorn Ekstrøm}
+\author{Thomas Alexander Gerds}
+\author{Kasper Brink-Jensen}
+\affil{Biostatistics, University of Copenhagen}
+
+% Use square brackets for numbering affiliations
 
 \maketitle
 
@@ -250,28 +257,31 @@ ranking for each of the items we have seen until depth $d$.
 
 
 \subsection{Agreement among fully observed lists}
-We shall start by the simplest case where all $L$ lists are fully
-observed, \ie, we have the rank of all $P$ items for all of the $L$
-lists. Fully observed ranked lists are common and occur, for example,
-when we have a single dataset and apply different statistical analysis
-methods to produce lists of predictors ranked according to their
+The simplest case occurs when all $L$ lists are fully
+observed, \ie, we have observed the rank of all $P$ items for all $L$
+lists. Fully observed ranked lists are common and arise, for example,
+when different statistical analysis methods are applied to a single
+dataset to produce lists of predictors ranked according to their
 importance, or if the same analysis method is applied to data from
 different populations.
 
-For the fully obseved list situation we can plot the sequential rank
-agreement \eqref{def:sra} as a function of depth $d$.  An example is
-seen in Figure~\ref{fig:example1} where smaller values on the $y$ axis
-correspond to better agreement among the lists than larger values. The
-sequential rank agreement at depth $d$ can be interpreted as how many
-ranks apart do we on average expect the items found until depth $d$ to
-be.
+With fully observed lists we can plot the sequential rank agreement
+\eqref{def:sra} as a function of depth $d$.  An example is seen in the
+left panel of Figure~\ref{fig:example1} where four analysis methods
+were used to rank genes (for further detail see the application
+section below). The sequential rank agreement at depth $d$ can be
+interpreted as how many ranks apart do we on average expect the items
+found until depth $d$ to be so smaller values on the $y$ axis
+correspond to better agreement among the lists than larger values.
 
 If the lists generally agree on all items then we expect the
 sequential rank agreement curve to be flat, but if there are changes
-in the rank agreement levels then this suggests that there are changes
-in the levels of agreement. In particular, we expect the agreement
-among the lists to be better towards the top of the lists and worse
-towards the end of the lists.
+in the levels of rank agreement then this suggests that there are changes
+in the levels of agreement. In particular, we generally expect the
+agreement among the lists to be better towards the top of the lists
+and worse towards the end of the lists, and in this case the sequential rank
+agreement curve will start at a low level, and then have an increase
+before it levels off.
 
 
 \begin{figure}[tb]
@@ -279,10 +289,11 @@ towards the end of the lists.
 \includegraphics[width=.45\textwidth]{paper-fig1a}
 \includegraphics[width=.45\textwidth]{paper-fig1b}
 \end{center}
- \caption{Sequential rank agreement for 4 different analysis methods
-   applied to the Golub data (thick red line). The red and blue shaded
- areas represent the pointwise 95\% normal areas for the XXX and XXY benchmarks,
-respectively.}
+ \caption{Left panel: Sequential rank agreement for 4 different analysis methods
+   applied to the 3051 genes in the Golub data (solid line). The dashed line shows the
+   corresponding estimated sequential rank agreement for censored
+   lists based purely on the top 50 ranked genes. Right panel contains
+   the same information but has zoomed in on the first part of the $x$-axis.}
  \label{fig:example1}
 \end{figure}
 
@@ -582,7 +593,7 @@ polygon(c(1:length(www$lower), rev(1:length(www$lower))),
    applied to the Golub data (thick red line). The red and blue shaded
  areas represent the pointwise 95\% normal areas for the XXX and XXY benchmarks,
 respectively.}
- \label{fig:example1}
+ \label{fig:case1}
 \end{figure}
 
 
