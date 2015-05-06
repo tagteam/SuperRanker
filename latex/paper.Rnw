@@ -331,13 +331,27 @@ The agreement, $A(X_p)$, cannot be computed directly for all
 predictors because we only observe a censored version of $\tilde R$
 for some of the lists. Instead we assume that the rank assigned to
 item $X_p$ in list $l$ is uniformly distributed among the ranks that
-have \emph{not} been assigned for list $l$,
+have \emph{not} been assigned for list $l$, so the augmented agreement
+becomes
 \begin{equation}
-\tilde A(X_p) = \frac{\sum_{r_1; r_1\in \tilde R_1(X_p)}  \cdots \sum_{r_L; r_L\in \tilde R_L(X_p)} A(X_p)}{\prod_l |\tilde R_l(X_p)|}.
+\tilde A(X_p) = \frac{\sum_{r_1; r_1\in \tilde R_1(X_p)}  \cdots
+  \sum_{r_L; r_L\in \tilde R_L(X_p)} A(X_p)}{\prod_l |\tilde
+  R_l(X_p)|}. \label{formula:censored-agreement}
+\end{equation}
+Similarly, the sequential rank agreement becomes
+\begin{equation}
+XXX \textrm{SRA}(d)= \sqrt{\frac{\sum_{\{p \in S_d\}}(L-1)\tilde{A}(X_p)^2}{(L-1)|S_d|}}, \label{def:sra-censored}
 \end{equation}
 
 The rankings within a single list are clearly not independent since
-each of the lists essentially contains full set of ranks and by
+each rank must appear exactly in each list. Thus, by randomizing
+unobserved items as described in \eqref{formula:censored-agreement}
+
+
+ ess contains full set of ranks and by using
+the ... instead of applying the average ...
+
+the mean then we 
 
 FIXME: If instead of running through all elements of $\tilde R_1(X_p)$
 one would use the average rank in $\tilde R_1(X_p)$ we would end up with
