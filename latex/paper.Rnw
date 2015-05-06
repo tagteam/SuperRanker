@@ -162,7 +162,7 @@ makeTransparent<-function(someColor, alpha=100)
 \section{Methods}
 
 Consider a set of $P$ different items $X=\{X_1,\dots,X_P\}$. An
-ordered list is a permutation function, $R: \{1,\dots,P\}\to
+ordered list is a permutation function, $R: \{X_1,\dots,X_P\}\to
 \{1,\dots,P\}$, such that $R(X_p)$ is the rank of item $X_p$ in the
 list. The inverse mapping $\pi=R^{-1}$ assigns to rank
 $r\in\{1,\dots,P\}$ the item $\pi(r)$ found at that rank. The methods
@@ -221,14 +221,14 @@ Depth  &  $S_d$ \\ \hline
 \label{tab:example}
 \end{table}
 
-The agreement of the lists regarding the rank given to an item can be
+The agreement of the lists regarding the rank given to an item $X_p$ can be
 measured by
 \begin{equation}
-  A(p) = f(R_1(p), \ldots, R_L(p)),
+  A(X_p) = f(R_1(X_p), \ldots, R_L(X_p)),
 \end{equation}
 for a distance function $f$. Throughout this paper we will use the
 sample standard error as our function $f$ and hence use
-$$A(p) = \sqrt{\frac{\sum_{i=1}^L (R_i(p) - \bar{R}(p))^2}{L-1}},
+$$A(X_p) = \sqrt{\frac{\sum_{i=1}^L (R_i(X_p) - \bar{R}(X_p))^2}{L-1}},
 $$
 but other choices could be made (see the discussion). The sample
 standard error has an interpretation as the average distance of the
@@ -246,7 +246,7 @@ The \emph{sequential rank agreement} is the pooled standard deviation
 of the items found in the set $S_d$:
 \begin{equation}
 \textrm{SRA}(d)= \sqrt{\frac{\sum_{\{p \in
-      S_d\}}(L-1)A(p)^2}{(L-1)|S_d|}}, \label{def:sra}
+      S_d\}}(L-1)A(X_p)^2}{(L-1)|S_d|}}, \label{def:sra}
 \end{equation}
 and small values close to zero suggests that the lists agree on the
 ordering while larger values suggests disagreement. If the ranked
@@ -276,10 +276,11 @@ correspond to better agreement among the lists than larger values.
 
 If the lists generally agree on all items then we expect the
 sequential rank agreement curve to be flat, but if there are changes
-in the levels of rank agreement then this suggests that there are changes
-in the levels of agreement. In particular, we generally expect the
-agreement among the lists to be better towards the top of the lists
-and worse towards the end of the lists, and in this case the sequential rank
+in the levels of rank agreement then this suggests that there are sets
+of items that the lists agree on and other sets where they rank the
+items differently. In particular, we generally expect the agreement
+among the lists to be better towards the top of the lists and worse
+towards the end of the lists, and in this case the sequential rank
 agreement curve will start at a low level, and then have an increase
 before it levels off.
 
@@ -300,56 +301,47 @@ before it levels off.
 
 \subsection{Analysis of incomplete/censored lists}
 Incomplete lists are also a common occurrence that arise from, for
-example, comparison of top $k$ lists, when some methods only rank some
-of the items (e.g., penalized regression based on the Lasso provides a
+example, comparison of top $k$ lists, or when some methods only rank a
+subset of the items (e.g., penalized regression based on the Lasso provides a
 sparse set of predictors that have non-zero coefficients. There is no
-obvious ordering of the predictors that have been shrunk to zero), or
-if 
+obvious ordering of the predictors that have all been shrunk to zero).
 
-Top $k$, methods only provide information on some ranking (Lasso),
-only interested in significant ...predictors 
-
-censored
-
-
-Let $\Lambda_l, l=1, \ldots, L$ be the set of items found in list $l$
-so $\Lambda_l$ is the top $k_l$ list of items from list $l$ where $k_l
-= |\Lambda_l|$. Note that we observe the top $k$ items for each of the
-$L$ lists if $k_1=\cdots=k_L=k$. For censored lists the rank function
-becomes
+Sequential rank agreement can be generalized to incomplete/censored
+lists in the following way.  Let $\Lambda_l, l=1, \ldots, L$ be the
+set of items found in list $l$ so $\Lambda_l$ is the top $k_l$ list of
+items from list $l$ where $k_l = |\Lambda_l|$. Note that if
+$k_1=\cdots=k_L=k$ then we observe the top $k$ items for each of the
+$L$ lists. For censored lists the rank function becomes
 \begin{equation}
-\tilde R_l(p) = \left\{\begin{array}{cl} \{\pi_l^{-1}(p)\} & \text{ for } p\in \Lambda_l \\ 
+\tilde R_l(X_p) = \left\{\begin{array}{cl} \{\pi_l^{-1}(p)\} & \text{ for } p\in \Lambda_l \\ 
 \{k_l+1,\dots,P\} & \text{ for } p \not\in \Lambda_l\end{array}\right.
 \end{equation}
-where we only know that the rank for the unobserved items in list $l$ must be larger than the largest rank observed in that list.
-
-In the case of censored lists it is sufficient (FIXME: requires
-argument) to look at depths where we have corresponding observations
-so the largest rank we should consider will be
+where we only know that the rank for the unobserved items in list $l$
+must be larger than the largest rank observed in that list.
+Unless we have additional prior knowledge about the distribution of the
+unranked items then we can restrict attention of the sequential rank
+agreement to 
 \begin{equation}
-d \leq \max(k_1, \ldots, k_L).
+d \leq \max(k_1, \ldots, k_L),
+\end{equation}
+since we have no information about the ordering of the items after a
+depth $d$ where all lists are censored.
+
+The agreement, $A(X_p)$, cannot be computed directly for all
+predictors because we only observe a censored version of $\tilde R$
+for some of the lists. Instead we assume that the rank assigned to
+item $X_p$ in list $l$ is uniformly distributed among the ranks that
+have \emph{not} been assigned for list $l$,
+\begin{equation}
+\tilde A(X_p) = \frac{\sum_{r_1; r_1\in \tilde R_1(X_p)}  \cdots \sum_{r_L; r_L\in \tilde R_L(X_p)} A(X_p)}{\prod_l |\tilde R_l(X_p)|}.
 \end{equation}
 
-We cannot directly compute $A(p)$ for all predictors because we only
-observe a censored version of $\tilde R$ for some of the
-lists. Instead we assume that the rank assigned to predictor $p$ in
-list $l$ is uniformly distributed among the ranks that have \emph{not}
-been assigned for list $l$. 
+The rankings within a single list are clearly not independent since
+each of the lists essentially contains full set of ranks and by
 
-The rankings within a single list are clearly not independent since each of the lists
-essentially contains full set of ranks
-
-\begin{equation}
-\tilde A(p) = \frac{\sum_{r_1; r_1\in \tilde R_1(p)}  \cdots \sum_{r_L; r_L\in \tilde R_L(p)} A(p)}{\prod_l |\tilde R_l(p)|}
-\end{equation}
-
-FIXME: If instead of running through all elements of $\tilde R_1(p)$
-one would use the average rank in $\tilde R_1(p)$ we would end up with
+FIXME: If instead of running through all elements of $\tilde R_1(X_p)$
+one would use the average rank in $\tilde R_1(X_p)$ we would end up with
 a too small variance.
-
-
-Noget med 
-
 
 FIXME: For censored lists we expect a change point around the depth
 where the lists are censored. This is an artefact stemming from the
