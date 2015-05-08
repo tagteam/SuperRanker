@@ -2,13 +2,16 @@
 \usepackage[utf8]{inputenc}
 \usepackage[]{graphicx}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage[]{color}
 \usepackage{subcaption}
 \usepackage{natbib}
 \usepackage{xspace}
+\usepackage{calc}
 \usepackage[noae]{Sweave}
 \usepackage{authblk}
-
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 %
 % New commands
 %
@@ -328,24 +331,52 @@ since we have no information about the ordering of the items after a
 depth $d$ where all lists are censored.
 
 The agreement, $A(X_p)$, cannot be computed directly for all
-predictors because we only observe a censored version of $\tilde R$
+predictors because we only observe the censored version of $R(X_p)$
 for some of the lists. Instead we assume that the rank assigned to
 item $X_p$ in list $l$ is uniformly distributed among the ranks that
-have \emph{not} been assigned for list $l$, so the augmented agreement
-becomes
-\begin{equation}
-\tilde A(X_p) = \frac{\sum_{r_1; r_1\in \tilde R_1(X_p)}  \cdots
-  \sum_{r_L; r_L\in \tilde R_L(X_p)} A(X_p)}{\prod_l |\tilde
-  R_l(X_p)|}. \label{formula:censored-agreement}
-\end{equation}
-Similarly, the sequential rank agreement becomes
-\begin{equation}
-XXX \textrm{SRA}(d)= \sqrt{\frac{\sum_{\{p \in S_d\}}(L-1)\tilde{A}(X_p)^2}{(L-1)|S_d|}}, \label{def:sra-censored}
-\end{equation}
+have \emph{not} been assigned for list $l$. The algorithm is described
+in detail in Algorithm~\ref{sra-algorithm}.
+
+
+%, so the augmented agreement
+%becomes
+%\begin{equation}
+%\bar{A}(X_p) = \frac{\sum_{r_1; r_1\in \tilde R_1(X_p)}  \cdots
+%  \sum_{r_L; r_L\in \tilde R_L(X_p)} A(X_p)}{\prod_l |\tilde
+%  R_l(X_p)|}. \label{formula:censored-agreement}
+%\end{equation}
+%Similarly, the sequential rank agreement becomes
+%\begin{equation}
+%XXX \textrm{SRA}(d)= \sqrt{\frac{\sum_{\{p \in S_d\}}(L-1)\tilde{A}(X_p)^2}{(L-1)|S_d|}}, \label{def:sra-censored}
+%\end{equation}
 
 The rankings within a single list are clearly not independent since
 each rank must appear exactly in each list. Thus, by randomizing
 unobserved items as described in \eqref{formula:censored-agreement}
+
+
+
+\begin{algorithm}
+\caption{Sequential rank agreement algorithm for censored lists}
+\label{sra-algorithm}
+\begin{algorithmic}[1]
+\Procedure{Censored rank agreement}{}
+\State Let $B$ be the number of permutations to use
+\For{each $b \in B$}
+\For{each censored list $l \in L$}
+\State \parbox[t]{\dimexpr\linewidth-\algorithmicindent-2cm}{Permute the unassigned ranks, $k_l+1, \ldots, P$ and assign
+them randomly to the items \emph{not} found in the list, i.e.,
+$\Lambda^\complement$, in order to fill out the lists.}
+\EndFor
+\State \parbox[t]{\dimexpr\linewidth-\algorithmicindent-1cm}{Let sra($b$) be the sequential rank agreement computed from the
+filled out lists.}
+\EndFor
+\State Return element-wise averages across all $B$ permutations of sra($b$).
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
 
 
  ess contains full set of ranks and by using
