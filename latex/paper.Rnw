@@ -487,7 +487,7 @@ y <- golub.cl
 x <- golub 
 
 producelists <- function(x, y) {
-    nitems <- ncol(x)
+    nitems <- nrow(x)
     index <- seq(1, nrow(golub))
                                         # d <- data.frame(y, x)
 

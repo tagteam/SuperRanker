@@ -71,7 +71,7 @@ sra.default <- function(object, B=1) {
     if (!all(sapply(1:nlists, function(x) {
                         res <- TRUE
                         if (nmissing.items[x]>0) {
-                            if (sum(rankmat[(listlength-nmissing.items[[x]]):listlength,x]) )
+                            if (sum(rankmat[(listlength-nmissing.items[[x]]+1):listlength,x])>0)
                                 { res <- FALSE }
                         }
                         res
