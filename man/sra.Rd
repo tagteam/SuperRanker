@@ -2,9 +2,15 @@
 % Please edit documentation in R/sra.R
 \name{sra}
 \alias{sra}
+\alias{sra.default}
+\alias{sra.list}
 \title{Compute the sequential rank agreement}
 \usage{
-sra(object, B = 1, ...)
+sra(object, B = 1)
+
+\method{sra}{}(object, B = 1)
+
+\method{sra}{}(object, B = 1, na.strings = c(NA, 0))
 }
 \arguments{
 \item{object}{Either matrix where each column is a ranked list of

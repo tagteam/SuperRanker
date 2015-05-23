@@ -36,21 +36,21 @@
 ##' 
 #' @author Claus Ekstrøm <ekstrom@@sund.ku.dk> and Thomas A Gerds <tag@@biostat.ku.dk>
 #' 
+#' @rdname sra
 #' @export
 sra <- function(object, B=1) {
   UseMethod("sra")
 }
 
 #' @rdname sra
-#' @method sra default
-#' @S3method sra default
+#' @method sra
 sra.default <- function(object, B=1) {
     # Make sure that the input object ends up as a matrix with integer columns all
     # consisting of elements from 1 and up to listlength
-    if (is.matrix(object))
-        rankmat <- object
-    else
-        rankmat <- as.matrix(do.call("cbind",object))
+    if (!is.matrix(object))
+       stop("Input must be a matrix")
+
+    rankmat <- object
     
     listlength <- nrow(rankmat)
     nlists <- NCOL(rankmat)
@@ -61,12 +61,17 @@ sra.default <- function(object, B=1) {
     
     # Compute a list of missing items for each list
     missing.items <- lapply(as.data.frame(rankmat), function(x) { nseq[-x] })
+    nmissing.items <- sapply(missing.items, length)
+   
+    ## Checking that all values are non-negative
+    if (min(rankmat)<0) 
+        stop("Negative items not allowed")
 
     ## Should make a sanity check that zeros are from a point onwards
     if (!all(sapply(1:nlists, function(x) {
                         res <- TRUE
-                        if (length(missing.items[[x]])>0) {
-                            if (any(rankmat[(listlength-missing.items[[x]]):listlength,x]) )
+                        if (nmissing.items[x]>0) {
+                            if (sum(rankmat[(listlength-nmissing.items[[x]]):listlength,x]) )
                                 { res <- FALSE }
                         }
                         res
@@ -99,8 +104,7 @@ sra.default <- function(object, B=1) {
 
 
 #' @rdname sra
-#' @method sra list
-#' @S3method sra list
+#' @method sra
 sra.list <- function(object, B=1, na.strings=c(NA, 0)) {
     # Make sure that the input object ends up as a matrix with integer columns all
     # consisting of elements from 1 and up to listlength
