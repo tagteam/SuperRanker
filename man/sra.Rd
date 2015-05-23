@@ -4,7 +4,7 @@
 \alias{sra}
 \title{Compute the sequential rank agreement}
 \usage{
-sra(object, B = 1, na.strings = c(NA, 0))
+sra(object, B = 1, ...)
 }
 \arguments{
 \item{object}{Either matrix where each column is a ranked list of
