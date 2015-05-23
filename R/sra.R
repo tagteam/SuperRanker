@@ -90,9 +90,9 @@ sra <- function(object, na.strings=c(NA, 0), B=1) {
     ## set B to 1, if there is no censoring
     ##             or if only one element is censored
     iscensored <- any(nmiss!=0)
-    if (B!=1 && (!iscensored || (max(nmiss)==1))) {B <- 1}
+    if (B!=1 && (!iscensored || (max(nmiss)==1))) {B <- 1 ; cat ("UHUHUH")}
 
-    # Special version of sample needed
+    ## Special version of sample needed
     resample <- function(x, ...) x[sample.int(length(x), ...)]
     tmpres <- sapply(1:B, function(b) {
                          obj.b <- lapply(1:nlists,function(j){
