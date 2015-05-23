@@ -1,8 +1,8 @@
 Package: SuperRanker
 Type: Package
 Title: Sequential Rank Agreement
-Version: 0.1-1
-Date: 2015-04-07
+Version: 0.2-1
+Date: 2015-05-23
 Author: Claus Thorn Ekstroem and Thomas Gerds
 Maintainer: Claus Ekstroem <ekstrom@sund.ku.dk>
 Description: Tools for analysis and comparison of ranked lists

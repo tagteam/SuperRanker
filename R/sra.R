@@ -221,7 +221,7 @@ random_list_sra <- function(object, B=1, n=1) {
         for (j in 1:ncol(object)) {
             object[,j] <- c(sample(nitems, size=notmiss[j]), rep(0, nitems-notmiss[j]))
         }
-        sra(object, na.strings="0", B=B) 
+        sra(object, B=B) 
     })
     res
     
@@ -240,7 +240,5 @@ smooth_sra <- function(object, confidence=0.95) {
 
     alpha <- (1-confidence)/2
     limits <- apply(object, 1, function(x) { quantile(x, probs=c(alpha, 1-alpha)) })
-#    res <- apply(limits, 1, function(x) { loess(x)} )
-#    list(lower=res[[1]]$y, upper=res[[2]]$y)
     list(lower=limits[1,], upper=limits[2,])
 }
