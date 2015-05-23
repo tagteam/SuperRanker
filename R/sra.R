@@ -38,9 +38,9 @@ sra <- function(object, na.strings=NA, B=1) {
     # Make sure that the input object ends up as a matrix with integer columns all
     # consisting of elements from 1 and up to listlength
     if (is.matrix(object))
-        object <- apply(object,2,function(x)x)
+        object <- split(object, c(col(object)))  # Convert matrix to list
     else
-        stopifnot(is.list(object)) # data.frame is a list
+        stopifnot(is.list(object)) # object is not a list
 
     nlists <- length(object)
 
@@ -58,7 +58,7 @@ sra <- function(object, na.strings=NA, B=1) {
                          # stop at duplicated items
                          if (any(duplicated(x)))
                              stop(paste0("Duplicated items found in list ",n))
-                         print(x)
+                         # print(x)  Shouldn't be in production software
                          x
                      })
     ## check class of elements, then coerce to integer
