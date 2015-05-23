@@ -465,7 +465,7 @@ y <- golub.cl
 x <- golub 
 
 producelists <- function(x, y) {
-    nitems <- length(y)
+    nitems <- ncol(x)
     index <- seq(1, nrow(golub))
                                         # d <- data.frame(y, x)
 
@@ -484,7 +484,7 @@ producelists <- function(x, y) {
     coefficients <- coef(enet, s=nyres$lambda.1se)[-1]
     nonzeros <- sum(coefficients!=0)
     list3 <- order(abs(coefficients), decreasing=TRUE)
-    if (nonzeros==0) {
+    if (nonzeros<nitems) {
         list3[(nonzeros+1):nitems] <- 0
     } 
                                         # MIC
