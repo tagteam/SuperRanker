@@ -20,15 +20,37 @@
 
 \SweaveOpts{prefix.string=paper, keep.source=TRUE}
 
+%%% RSS specific items
+
+\title[Sequential rank agreement]{Sequential rank agreement methods for comparison of ranked
+  lists}
+\author[Ekstrøm {\it et al.}]{Claus Thorn Ekstrøm}
+\address{Affiliation,
+City,
+Country.}
+\email{Author@emailaddress.com}
+\author{Thomas Alexander Gerds}
+\address{Affiliation,
+City,
+Country.}
+\author{Andreas Kryger Jensen}
+\address{Affiliation,
+City,
+Country.}
+\author{Kasper Brink-Jensen}
+\address{Affiliation,
+City,
+Country.}
+
 
 \begin{document}
 
-\title{Sequential rank agreement methods for comparison of ranked
+% \title{Sequential rank agreement methods for comparison of ranked
   lists}
-\author{Claus Thorn Ekstrøm}
-\author{Thomas Alexander Gerds}
-\author{Kasper Brink-Jensen}
-\affil{Biostatistics, University of Copenhagen}
+% \author{Claus Thorn Ekstrøm}
+% \author{Thomas Alexander Gerds}
+% \author{Kasper Brink-Jensen}
+% \affil{Biostatistics, University of Copenhagen}
 
 % Use square brackets for numbering affiliations
 

@@ -4,7 +4,7 @@
 \alias{sra}
 \title{Compute the sequential rank agreement}
 \usage{
-sra(object, na.strings = NA, B = 1)
+sra(object, B = 1, na.strings = c(NA, 0))
 }
 \arguments{
 \item{object}{Either matrix where each column is a ranked list of
@@ -13,10 +13,10 @@ between 1 and the length of the lists. The lists should have the
 same length but censoring can be used by setting the list to zero
 from a point onwards. See details for more information.}
 
-\item{na.strings}{Code for missing items}
-
 \item{B}{An integer giving the number of randomization to sample
 over in the case of censored observations}
+
+\item{na.strings}{Code for missing items}
 }
 \value{
 A vector of the sequential rank agreement
@@ -25,6 +25,9 @@ A vector of the sequential rank agreement
 Compute the sequential rank agreement
 }
 \examples{
+mlist <- matrix(cbind(1:8,c(1,2,3,5,6,7,4,8),c(1,5,3,4,2,8,7,6)),ncol=3)
+sra(mlist)
+
 alist <- list(a=1:8,b=sample(1:8),c=sample(1:8))
 sra(alist)
 
