@@ -8,9 +8,9 @@
 \usage{
 sra(object, B = 1)
 
-\method{sra}{}(object, B = 1)
+\method{sra}{default}(object, B = 1)
 
-\method{sra}{}(object, B = 1, na.strings = c(NA, 0))
+\method{sra}{list}(object, B = 1, na.strings = c(NA, 0))
 }
 \arguments{
 \item{object}{Either matrix where each column is a ranked list of
