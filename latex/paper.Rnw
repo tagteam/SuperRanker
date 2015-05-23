@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[12pt,a4paper]{statsoc}
 \usepackage[utf8]{inputenc}
 \usepackage[]{graphicx}
 \usepackage{amsmath}
@@ -364,7 +364,7 @@ unobserved items as described in \eqref{formula:censored-agreement}
 \State Let $B$ be the number of permutations to use
 \For{each $b \in B$}
 \For{each censored list $l \in L$}
-\State \parbox[t]{\dimexpr\linewidth-\algorithmicindent-2cm}{Permute the unassigned ranks, $k_l+1, \ldots, P$ and assign
+\State \parbox[t]{\dimexpr\linewidth-\algorithmicindent-1.7cm}{Permute the unassigned ranks, $k_l+1, \ldots, P$ and assign
 them randomly to the items \emph{not} found in the list, i.e.,
 $\Lambda^\complement$, in order to fill out the lists.}
 \EndFor
@@ -677,7 +677,7 @@ Bootstrap across a single method and compare results. Discuss collinearity
 Mention/discuss different measures. 
 
 
-\bibliographystyle{apalike}
+\bibliographystyle{rss}
 \bibliography{paperref}
 
 \end{document}
