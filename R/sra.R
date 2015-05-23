@@ -37,11 +37,13 @@
 #' @author Claus Ekstrøm <ekstrom@@sund.ku.dk> and Thomas A Gerds <tag@@biostat.ku.dk>
 #' 
 #' @export
-sra <- function(object, B=1, ...) {
+sra <- function(object, B=1) {
   UseMethod("sra")
 }
 
-
+#' @rdname sra
+#' @method sra default
+#' @S3method sra default
 sra.default <- function(object, B=1) {
     # Make sure that the input object ends up as a matrix with integer columns all
     # consisting of elements from 1 and up to listlength
@@ -96,6 +98,9 @@ sra.default <- function(object, B=1) {
 }
 
 
+#' @rdname sra
+#' @method sra list
+#' @S3method sra list
 sra.list <- function(object, B=1, na.strings=c(NA, 0)) {
     # Make sure that the input object ends up as a matrix with integer columns all
     # consisting of elements from 1 and up to listlength
