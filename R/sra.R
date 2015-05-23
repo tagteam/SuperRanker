@@ -34,7 +34,7 @@
 #' @author Claus Ekstrøm <ekstrom@@sund.ku.dk> and Thomas A Gerds <tag@@biostat.ku.dk>
 #' 
 #' @export
-sra <- function(object, na.strings=NA, B=1) {
+sra <- function(object, na.strings=c(NA, 0), B=1) {
     # Make sure that the input object ends up as a matrix with integer columns all
     # consisting of elements from 1 and up to listlength
     if (is.matrix(object))
