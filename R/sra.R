@@ -38,29 +38,28 @@ sra <- function(object, na.strings=NA, B=1) {
     # Make sure that the input object ends up as a matrix with integer columns all
     # consisting of elements from 1 and up to listlength
     if (is.matrix(object))
-        object <- apply(object,2,function(x)x)
+        object <- lapply(1:NCOL(object),function(j)object[,j]) # Convert matrix to list
     else
         stopifnot(is.list(object)) # data.frame is a list
-
     nlists <- length(object)
 
     ## sanity checks
-    object <- lapply(object,function(x){
-                         out <- which(is.na(x))
-                         na.strings <- na.strings[!is.na(na.strings)]
-                         if (length(na.strings)>0)
-                             out <- c(out,grep(paste0("^",na.strings,"$"),x))
-                         ## remove censored items with side effect:
-                         ## in case where all lists have trailing censored information
-                         ## this is pruned
-                         if (length(out)>0)
-                             x <- x[-out]
-                         # stop at duplicated items
-                         if (any(duplicated(x)))
-                             stop(paste0("Duplicated items found in list ",n))
-                         print(x)
-                         x
-                     })
+    object <- lapply(1:length(object),function(j){
+                                 x <- object[[j]]
+                                 out <- which(is.na(x))
+                                 na.strings <- na.strings[!is.na(na.strings)]
+                                 if (length(na.strings)>0)
+                                     out <- c(out,grep(paste0("^",na.strings,"$"),x))
+                                 ## remove censored items with side effect:
+                                 ## in case where all lists have trailing censored information
+                                 ## this is pruned
+                                 if (length(out)>0)
+                                     x <- x[-out]
+                                 # stop at duplicated items
+                                 if (any(duplicated(x)))
+                                     stop(paste0("Duplicated items found in list ",j))
+                                 x
+                             })
     ## check class of elements, then coerce to integer
     cc <- sapply(object,class)
     if (length(cc <- unique(cc))>1) stop(paste("All elements of object must have the same class. Found:",paste(cc,collapse=", ")))
@@ -83,9 +82,9 @@ sra <- function(object, na.strings=NA, B=1) {
     ## fill too short lists with 0 (code for missing)
     ll <- sapply(object,length)
     listlength <- max(ll)
-    tooshort <- any(ll<max(listlength))
+    tooshort <- any(ll<nitems)
     if (tooshort)
-        object <- lapply(object,function(x){c(x,rep(0,listlength-length(x)))})
+        object <- lapply(object,function(x){c(x,rep(0,nitems-length(x)))})
 
     ## set B to 1, if there is no censoring
     ##             or if only one element is censored
@@ -161,7 +160,7 @@ smooth_sra <- function(object, confidence=0.95) {
 
     alpha <- (1-confidence)/2
     limits <- apply(object, 1, function(x) { quantile(x, probs=c(alpha, 1-alpha)) })
-#    res <- apply(limits, 1, function(x) { loess(x)} )
-#    list(lower=res[[1]]$y, upper=res[[2]]$y)
+    #    res <- apply(limits, 1, function(x) { loess(x)} )
+    #    list(lower=res[[1]]$y, upper=res[[2]]$y)
     list(lower=limits[1,], upper=limits[2,])
 }
