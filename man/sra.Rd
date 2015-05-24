@@ -4,11 +4,14 @@
 \alias{sra}
 \alias{sra.default}
 \alias{sra.list}
+\alias{sra.matrix}
 \title{Compute the sequential rank agreement}
 \usage{
 sra(object, B = 1)
 
 \method{sra}{default}(object, B = 1)
+
+\method{sra}{matrix}(object, B = 1, na.strings = c(NA, 0))
 
 \method{sra}{list}(object, B = 1, na.strings = c(NA, 0))
 }

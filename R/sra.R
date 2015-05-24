@@ -80,7 +80,7 @@ sra.default <- function(object, B=1) {
     }
 
     ## If there is no censoring then we should set B to 1
-    if (max(sapply(missing.items, function(i) length(i) ))==0) {
+    if (max(nmissing.items)==0) {
         B <- 1
     }
     
@@ -101,6 +101,29 @@ sra.default <- function(object, B=1) {
     
     agreement
 }
+
+
+#' @rdname sra
+#' @export
+sra.matrix <- function(object, B=1, na.strings=c(NA, 0)) {
+    if (!is.matrix(object))
+        stop("Input object must be a matrix")
+
+    ## Convert all missing types to zeros
+    object[object %in% na.strings] <- 0
+
+    ## Check that we dont have more unique values than rows
+    if (length(unique(object[object != 0]))>nrow(object)) {
+        warning("Found more unique items in the matrix than rows. Expanding the number of rows to match")
+        unique.items <- length(unique(object[object != 0]))
+        # Expand the columns in the matrix to have length unique.items
+        glue <- matrix(rep(0, ncol(object)*(unique.items - nrow(object))), ncol=ncol(object))
+        object <- rbind(object, glue)
+    }
+
+    sra.default(object, B=B)
+}
+
 
 
 #' @rdname sra
@@ -159,6 +182,11 @@ sra.list <- function(object, B=1, na.strings=c(NA, 0)) {
     if (tooshort)
         object <- lapply(object,function(x){c(x,rep(0,nitems-length(x)))})
 
+
+
+    print(matrix(unlist(z), ncol = 10, byrow = TRUE))
+
+
     ## set B to 1, if there is no censoring
     ##             or if only one element is censored
     iscensored <- any(nmiss!=0)
@@ -191,7 +219,10 @@ sra.list <- function(object, B=1, na.strings=c(NA, 0)) {
 }
 
 
+oldstuff <- function() {
 
+
+}
 
 
 
