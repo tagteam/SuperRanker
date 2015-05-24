@@ -7,7 +7,7 @@
 \alias{sra.matrix}
 \title{Compute the sequential rank agreement}
 \usage{
-sra(object, B = 1)
+sra(object, B = 1, ...)
 
 \method{sra}{default}(object, B = 1)
 

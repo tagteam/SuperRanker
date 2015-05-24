@@ -38,7 +38,7 @@
 #' 
 #' @rdname sra
 #' @export
-sra <- function(object, B=1) {
+sra <- function(object, B=1, ...) {
   UseMethod("sra")
 }
 
