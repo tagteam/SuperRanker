@@ -45,8 +45,7 @@ Country.}
 
 \begin{document}
 
-% \title{Sequential rank agreement methods for comparison of ranked
-  lists}
+% \title{Sequential rank agreement methods for comparison of ranked lists}
 % \author{Claus Thorn Ekstrøm}
 % \author{Thomas Alexander Gerds}
 % \author{Kasper Brink-Jensen}

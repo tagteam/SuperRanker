@@ -38,7 +38,7 @@
 #' 
 #' @rdname sra
 #' @export
-sra <- function(object, B=1) {
+sra <- function(object, B=1, ...) {
   UseMethod("sra")
 }
 
@@ -80,7 +80,7 @@ sra.default <- function(object, B=1) {
     }
 
     ## If there is no censoring then we should set B to 1
-    if (max(sapply(missing.items, function(i) length(i) ))==0) {
+    if (max(nmissing.items)==0) {
         B <- 1
     }
     
@@ -101,6 +101,29 @@ sra.default <- function(object, B=1) {
     
     agreement
 }
+
+
+#' @rdname sra
+#' @export
+sra.matrix <- function(object, B=1, na.strings=c(NA, 0)) {
+    if (!is.matrix(object))
+        stop("Input object must be a matrix")
+
+    ## Convert all missing types to zeros
+    object[object %in% na.strings] <- 0
+
+    ## Check that we dont have more unique values than rows
+    if (length(unique(object[object != 0]))>nrow(object)) {
+        warning("Found more unique items in the matrix than rows. Expanding the number of rows to match")
+        unique.items <- length(unique(object[object != 0]))
+        # Expand the columns in the matrix to have length unique.items
+        glue <- matrix(rep(0, ncol(object)*(unique.items - nrow(object))), ncol=ncol(object))
+        object <- rbind(object, glue)
+    }
+
+    sra.default(object, B=B)
+}
+
 
 
 #' @rdname sra
@@ -148,7 +171,7 @@ sra.list <- function(object, B=1, na.strings=c(NA, 0)) {
 
     ## Compute a list of missing items for each list
     missing.items <- lapply(object, function(x) {items[match(items,x,nomatch=0)==0]})
-    missing.items1 <- lapply(object, function(x) {items[-x]})
+    ### missing.items1 <- lapply(object, function(x) {items[-x]})
     nmiss <- sapply(missing.items,length)
     
 
@@ -164,38 +187,12 @@ sra.list <- function(object, B=1, na.strings=c(NA, 0)) {
     iscensored <- any(nmiss!=0)
     if (B!=1 && (!iscensored || (max(nmiss)==1))) {B <- 1}
 
-    ## Special version of sample needed
-    resample <- function(x, ...) x[sample.int(length(x), ...)]
-    tmpres <- sapply(1:B, function(b) {
-                         obj.b <- lapply(1:nlists,function(j){
-                                             list <- object[[j]]
-                                             if (nmiss[[j]]>0){
-                                                 if (nmiss[[j]]==1){ ## fill in missing item
-                                                     list[list==0] <- missing.items[[j]]
-                                                 } else{ ## replace censored items with random order
-                                                       list[list==0] <- resample(missing.items[[j]])
-                                                   }
-                                             }
-                                             list
-                                         })
-                         ## bind lists
-                         rankmat <- do.call("cbind",obj.b)
-                         res <- sracppfull(rankmat)
-                         res
-                     })
-    agreement <- rowMeans(tmpres)
-    ### names(agreement) <- labels
-    class(agreement) <- "sra"
-    attr(agreement, "B") <- B
-    agreement
+    ## Fast conversion from list to matrix
+    object <- matrix(unlist(object), ncol = nlists)
+    
+    ## Call the computation
+    sra.default(object, B=B)
 }
-
-
-
-
-
-
-
 
 
 
