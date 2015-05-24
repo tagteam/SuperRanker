@@ -171,7 +171,7 @@ sra.list <- function(object, B=1, na.strings=c(NA, 0)) {
 
     ## Compute a list of missing items for each list
     missing.items <- lapply(object, function(x) {items[match(items,x,nomatch=0)==0]})
-    missing.items1 <- lapply(object, function(x) {items[-x]})
+    ### missing.items1 <- lapply(object, function(x) {items[-x]})
     nmiss <- sapply(missing.items,length)
     
 
@@ -182,51 +182,17 @@ sra.list <- function(object, B=1, na.strings=c(NA, 0)) {
     if (tooshort)
         object <- lapply(object,function(x){c(x,rep(0,nitems-length(x)))})
 
-
-
-    print(matrix(unlist(z), ncol = 10, byrow = TRUE))
-
-
     ## set B to 1, if there is no censoring
     ##             or if only one element is censored
     iscensored <- any(nmiss!=0)
     if (B!=1 && (!iscensored || (max(nmiss)==1))) {B <- 1}
 
-    ## Special version of sample needed
-    resample <- function(x, ...) x[sample.int(length(x), ...)]
-    tmpres <- sapply(1:B, function(b) {
-                         obj.b <- lapply(1:nlists,function(j){
-                                             list <- object[[j]]
-                                             if (nmiss[[j]]>0){
-                                                 if (nmiss[[j]]==1){ ## fill in missing item
-                                                     list[list==0] <- missing.items[[j]]
-                                                 } else{ ## replace censored items with random order
-                                                       list[list==0] <- resample(missing.items[[j]])
-                                                   }
-                                             }
-                                             list
-                                         })
-                         ## bind lists
-                         rankmat <- do.call("cbind",obj.b)
-                         res <- sracppfull(rankmat)
-                         res
-                     })
-    agreement <- rowMeans(tmpres)
-    ### names(agreement) <- labels
-    class(agreement) <- "sra"
-    attr(agreement, "B") <- B
-    agreement
+    ## Fast conversion from list to matrix
+    object <- matrix(unlist(object), ncol = nlists)
+    
+    ## Call the computation
+    sra.default(object, B=B)
 }
-
-
-oldstuff <- function() {
-
-
-}
-
-
-
-
 
 
 
