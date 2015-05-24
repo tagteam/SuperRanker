@@ -1,25 +1,58 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[12pt,a4paper]{statsoc}
 \usepackage[utf8]{inputenc}
 \usepackage[]{graphicx}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage[]{color}
 \usepackage{subcaption}
 \usepackage{natbib}
 \usepackage{xspace}
+\usepackage{calc}
 \usepackage[noae]{Sweave}
-
+\usepackage{authblk}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 %
 % New commands
 %
 \newcommand{\ie}{\emph{i.e.}\@\xspace}
 \newcommand{\eg}{\emph{e.g.}\@\xspace}
 
+\SweaveOpts{prefix.string=paper, keep.source=TRUE}
+
+%%% RSS specific items
+
+\title[Sequential rank agreement]{Sequential rank agreement methods for comparison of ranked
+  lists}
+\author[Ekstrøm {\it et al.}]{Claus Thorn Ekstrøm}
+\address{Affiliation,
+City,
+Country.}
+\email{Author@emailaddress.com}
+\author{Thomas Alexander Gerds}
+\address{Affiliation,
+City,
+Country.}
+\author{Andreas Kryger Jensen}
+\address{Affiliation,
+City,
+Country.}
+\author{Kasper Brink-Jensen}
+\address{Affiliation,
+City,
+Country.}
+
 
 \begin{document}
-%\SweaveOpts{concordance=TRUE}
 
-\title{Sequential rank agreement methods for comparison of ranked lists}
-\author{Claus Thorn Ekstrøm and Thomas Alexander Gerds and Kasper Brink-Jensen}
+% \title{Sequential rank agreement methods for comparison of ranked
+  lists}
+% \author{Claus Thorn Ekstrøm}
+% \author{Thomas Alexander Gerds}
+% \author{Kasper Brink-Jensen}
+% \affil{Biostatistics, University of Copenhagen}
+
+% Use square brackets for numbering affiliations
 
 \maketitle
 
@@ -154,7 +187,7 @@ makeTransparent<-function(someColor, alpha=100)
 \section{Methods}
 
 Consider a set of $P$ different items $X=\{X_1,\dots,X_P\}$. An
-ordered list is a permutation function, $R: \{1,\dots,P\}\to
+ordered list is a permutation function, $R: \{X_1,\dots,X_P\}\to
 \{1,\dots,P\}$, such that $R(X_p)$ is the rank of item $X_p$ in the
 list. The inverse mapping $\pi=R^{-1}$ assigns to rank
 $r\in\{1,\dots,P\}$ the item $\pi(r)$ found at that rank. The methods
@@ -213,14 +246,14 @@ Depth  &  $S_d$ \\ \hline
 \label{tab:example}
 \end{table}
 
-The agreement of the lists regarding the rank given to an item can be
+The agreement of the lists regarding the rank given to an item $X_p$ can be
 measured by
 \begin{equation}
-  A(p) = f(R_1(p), \ldots, R_L(p)),
+  A(X_p) = f(R_1(X_p), \ldots, R_L(X_p)),
 \end{equation}
 for a distance function $f$. Throughout this paper we will use the
 sample standard error as our function $f$ and hence use
-$$A(p) = \sqrt{\frac{\sum_{i=1}^L (R_i(p) - \bar{R}(p))^2}{L-1}},
+$$A(X_p) = \sqrt{\frac{\sum_{i=1}^L (R_i(X_p) - \bar{R}(X_p))^2}{L-1}},
 $$
 but other choices could be made (see the discussion). The sample
 standard error has an interpretation as the average distance of the
@@ -238,7 +271,7 @@ The \emph{sequential rank agreement} is the pooled standard deviation
 of the items found in the set $S_d$:
 \begin{equation}
 \textrm{SRA}(d)= \sqrt{\frac{\sum_{\{p \in
-      S_d\}}(L-1)A(p)^2}{(L-1)|S_d|}}, \label{def:sra}
+      S_d\}}(L-1)A(X_p)^2}{(L-1)|S_d|}}, \label{def:sra}
 \end{equation}
 and small values close to zero suggests that the lists agree on the
 ordering while larger values suggests disagreement. If the ranked
@@ -249,77 +282,133 @@ ranking for each of the items we have seen until depth $d$.
 
 
 \subsection{Agreement among fully observed lists}
-We shall start by the simplest case where all $L$ lists are fully
-observed, \ie, we have the rank of all $P$ items for all of the $L$
-lists. Fully observed ranked lists are common and occur, for example,
-when we have a single dataset and apply different statistical analysis
-methods to produce lists of predictors ranked according to their
+The simplest case occurs when all $L$ lists are fully
+observed, \ie, we have observed the rank of all $P$ items for all $L$
+lists. Fully observed ranked lists are common and arise, for example,
+when different statistical analysis methods are applied to a single
+dataset to produce lists of predictors ranked according to their
 importance, or if the same analysis method is applied to data from
 different populations.
 
-For the fully obseved list situation we can plot the sequential rank
-agreement \eqref{def:sra} as a function of depth $d$.  An example is
-seen in Figure~\ref{fig:example1} where smaller values on the $y$ axis
-correspond to better agreement among the lists than larger values. The
-sequential rank agreement at depth $d$ can be interpreted as how many
-ranks apart do we on average expect the items found until depth $d$ to
-be.
+With fully observed lists we can plot the sequential rank agreement
+\eqref{def:sra} as a function of depth $d$.  An example is seen in the
+left panel of Figure~\ref{fig:example1} where four analysis methods
+were used to rank genes (for further detail see the application
+section below). The sequential rank agreement at depth $d$ can be
+interpreted as how many ranks apart do we on average expect the items
+found until depth $d$ to be so smaller values on the $y$ axis
+correspond to better agreement among the lists than larger values.
 
 If the lists generally agree on all items then we expect the
 sequential rank agreement curve to be flat, but if there are changes
-in the rank agreement levels then this suggests that there are changes
-in the levels of agreement. In particular, we expect the agreement
+in the levels of rank agreement then this suggests that there are sets
+of items that the lists agree on and other sets where they rank the
+items differently. In particular, we generally expect the agreement
 among the lists to be better towards the top of the lists and worse
-towards the end of the lists.
+towards the end of the lists, and in this case the sequential rank
+agreement curve will start at a low level, and then have an increase
+before it levels off.
 
-\texttt{FIXME: Skal der et specifikt eksempel ind her eller kan vi
-  bare bruge det fra senere?} 
+
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=.45\textwidth]{paper-fig1a}
+\includegraphics[width=.45\textwidth]{paper-fig1b}
+\end{center}
+ \caption{Left panel: Sequential rank agreement for 4 different analysis methods
+   applied to the 3051 genes in the Golub data (solid line). The dashed line shows the
+   corresponding estimated sequential rank agreement for censored
+   lists based purely on the top 50 ranked genes. Right panel contains
+   the same information but has zoomed in on the first part of the $x$-axis.}
+ \label{fig:example1}
+\end{figure}
+
 
 \subsection{Analysis of incomplete/censored lists}
-Not uncommon for lists to be 
+Incomplete lists are also a common occurrence that arise from, for
+example, comparison of top $k$ lists, or when some methods only rank a
+subset of the items (e.g., penalized regression based on the Lasso provides a
+sparse set of predictors that have non-zero coefficients. There is no
+obvious ordering of the predictors that have all been shrunk to zero).
 
-
-censored
-
-
-Let $\Lambda_l, l=1, \ldots, L$ be the set of items found in list $l$
-so $\Lambda_l$ is the top $k_l$ list of items from list $l$ where $k_l
-= |\Lambda_l|$. Note that we observe the top $k$ items for each of the
-$L$ lists if $k_1=\cdots=k_L=k$. For censored lists the rank function
-becomes
+Sequential rank agreement can be generalized to incomplete/censored
+lists in the following way.  Let $\Lambda_l, l=1, \ldots, L$ be the
+set of items found in list $l$ so $\Lambda_l$ is the top $k_l$ list of
+items from list $l$ where $k_l = |\Lambda_l|$. Note that if
+$k_1=\cdots=k_L=k$ then we observe the top $k$ items for each of the
+$L$ lists. For censored lists the rank function becomes
 \begin{equation}
-\tilde R_l(p) = \left\{\begin{array}{cl} \{\pi_l^{-1}(p)\} & \text{ for } p\in \Lambda_l \\ 
+\tilde R_l(X_p) = \left\{\begin{array}{cl} \{\pi_l^{-1}(p)\} & \text{ for } p\in \Lambda_l \\ 
 \{k_l+1,\dots,P\} & \text{ for } p \not\in \Lambda_l\end{array}\right.
 \end{equation}
-where we only know that the rank for the unobserved items in list $l$ must be larger than the largest rank observed in that list.
-
-In the case of censored lists it is sufficient (FIXME: requires
-argument) to look at depths where we have corresponding observations
-so the largest rank we should consider will be
+where we only know that the rank for the unobserved items in list $l$
+must be larger than the largest rank observed in that list.
+Unless we have additional prior knowledge about the distribution of the
+unranked items then we can restrict attention of the sequential rank
+agreement to 
 \begin{equation}
-d \leq \max(k_1, \ldots, k_L).
+d \leq \max(k_1, \ldots, k_L),
 \end{equation}
+since we have no information about the ordering of the items after a
+depth $d$ where all lists are censored.
 
-We cannot directly compute $A(p)$ for all predictors because we only
-observe a censored version of $\tilde R$ for some of the
-lists. Instead we assume that the rank assigned to predictor $p$ in
-list $l$ is uniformly distributed among the ranks that have \emph{not}
-been assigned for list $l$. 
+The agreement, $A(X_p)$, cannot be computed directly for all
+predictors because we only observe the censored version of $R(X_p)$
+for some of the lists. Instead we assume that the rank assigned to
+item $X_p$ in list $l$ is uniformly distributed among the ranks that
+have \emph{not} been assigned for list $l$. The algorithm is described
+in detail in Algorithm~\ref{sra-algorithm}.
 
-The rankings within a single list are clearly not independent since each of the lists
-essentially contains full set of ranks
 
-\begin{equation}
-\tilde A(p) = \frac{\sum_{r_1; r_1\in \tilde R_1(p)}  \cdots \sum_{r_L; r_L\in \tilde R_L(p)} A(p)}{\prod_l |\tilde R_l(p)|}
-\end{equation}
+%, so the augmented agreement
+%becomes
+%\begin{equation}
+%\bar{A}(X_p) = \frac{\sum_{r_1; r_1\in \tilde R_1(X_p)}  \cdots
+%  \sum_{r_L; r_L\in \tilde R_L(X_p)} A(X_p)}{\prod_l |\tilde
+%  R_l(X_p)|}. \label{formula:censored-agreement}
+%\end{equation}
+%Similarly, the sequential rank agreement becomes
+%\begin{equation}
+%XXX \textrm{SRA}(d)= \sqrt{\frac{\sum_{\{p \in S_d\}}(L-1)\tilde{A}(X_p)^2}{(L-1)|S_d|}}, \label{def:sra-censored}
+%\end{equation}
 
-FIXME: If instead of running through all elements of $\tilde R_1(p)$
-one would use the average rank in $\tilde R_1(p)$ we would end up with
+The rankings within a single list are clearly not independent since
+each rank must appear exactly in each list. Thus, by randomizing
+unobserved items as described in \eqref{formula:censored-agreement}
+
+
+
+\begin{algorithm}
+\caption{Sequential rank agreement algorithm for censored lists}
+\label{sra-algorithm}
+\begin{algorithmic}[1]
+\Procedure{Censored rank agreement}{}
+\State Let $B$ be the number of permutations to use
+\For{each $b \in B$}
+\For{each censored list $l \in L$}
+\State \parbox[t]{\dimexpr\linewidth-\algorithmicindent-1.7cm}{Permute the unassigned ranks, $k_l+1, \ldots, P$ and assign
+them randomly to the items \emph{not} found in the list, i.e.,
+$\Lambda^\complement$, in order to fill out the lists.}
+\EndFor
+\State \parbox[t]{\dimexpr\linewidth-\algorithmicindent-1cm}{Let sra($b$) be the sequential rank agreement computed from the
+filled out lists.}
+\EndFor
+\State Return element-wise averages across all $B$ permutations of sra($b$).
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
+ ess contains full set of ranks and by using
+the ... instead of applying the average ...
+
+the mean then we 
+
+FIXME: If instead of running through all elements of $\tilde R_1(X_p)$
+one would use the average rank in $\tilde R_1(X_p)$ we would end up with
 a too small variance.
-
-
-Noget med 
-
 
 FIXME: For censored lists we expect a change point around the depth
 where the lists are censored. This is an artefact stemming from the
@@ -398,7 +487,7 @@ y <- golub.cl
 x <- golub 
 
 producelists <- function(x, y) {
-    nitems <- length(y)
+    nitems <- nrow(x)
     index <- seq(1, nrow(golub))
                                         # d <- data.frame(y, x)
 
@@ -417,7 +506,7 @@ producelists <- function(x, y) {
     coefficients <- coef(enet, s=nyres$lambda.1se)[-1]
     nonzeros <- sum(coefficients!=0)
     list3 <- order(abs(coefficients), decreasing=TRUE)
-    if (nonzeros==0) {
+    if (nonzeros<nitems) {
         list3[(nonzeros+1):nitems] <- 0
     } 
                                         # MIC
@@ -448,9 +537,25 @@ res2 <- sqrt(sra(inputmatrix2, B=20))
 @ 
 
 
-\begin{figure}[tb]
-\begin{center}
-<<fig=TRUE,echo=FALSE,width=3>>=
+<<fig1a, fig=TRUE,echo=FALSE,include=FALSE>>=
+ysize <- 1000
+plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
+lines(res2[1:ysize], lwd=2, col="purple")
+
+@ %
+
+<<fig1b, fig=TRUE,echo=FALSE,include=FALSE >>=
+ysize <- 80
+plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
+lines(res2[1:ysize], lwd=2, col="purple")
+
+
+@ %
+
+
+
+
+<<fig2a, fig=TRUE,echo=FALSE,include=FALSE>>=
 ysize <- 1000
 plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
 lines(res2[1:ysize], lwd=2, col="purple")
@@ -493,8 +598,8 @@ polygon(c(1:length(www$lower), rev(1:length(www$lower))),
 
 @ %
 
-<<fig=TRUE,echo=FALSE,width=3>>=
-ysize <- 100
+<<fig2b, fig=TRUE,echo=FALSE,include=FALSE >>=
+ysize <- 80
 plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
 lines(res2[1:ysize], lwd=2, col="purple")
 ## 
@@ -535,12 +640,19 @@ polygon(c(1:length(www$lower), rev(1:length(www$lower))),
 
 
 @ %
+
+
+
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=.45\textwidth]{paper-fig2a}
+\includegraphics[width=.45\textwidth]{paper-fig2b}
 \end{center}
  \caption{Sequential rank agreement for 4 different analysis methods
    applied to the Golub data (thick red line). The red and blue shaded
  areas represent the pointwise 95\% normal areas for the XXX and XXY benchmarks,
 respectively.}
- \label{fig:example1}
+ \label{fig:case1}
 \end{figure}
 
 
@@ -563,8 +675,12 @@ print(xtable(xxx))
 
 <<>>=
 library(changepoint)
-cpt.mean(res, method="BinSeg")
-cpt.mean(res2)
+cp1 <- cpt.mean(res, method="BinSeg")
+cp2 <- cpt.mean(res2, method="BinSeg")
+cp1@cpts
+cp1@param.est
+cp2@cpts
+cp2@param.est
 @ 
 
 \subsection{Stability of results}
@@ -583,7 +699,7 @@ Bootstrap across a single method and compare results. Discuss collinearity
 Mention/discuss different measures. 
 
 
-\bibliographystyle{apalike}
+\bibliographystyle{rss}
 \bibliography{paperref}
 
 \end{document}
