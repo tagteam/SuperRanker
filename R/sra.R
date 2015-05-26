@@ -105,19 +105,23 @@ sra.default <- function(object, B=1) {
 
 #' @rdname sra
 #' @export
-sra.matrix <- function(object, B=1, na.strings=c(NA, 0)) {
+sra.matrix <- function(object, B=1, na.strings=c(NA, 0), nitems=rows(object)) {
     if (!is.matrix(object))
         stop("Input object must be a matrix")
 
     ## Convert all missing types to zeros
     object[object %in% na.strings] <- 0
 
+    unique.items <- length(unique(object[object != 0]))
+
     ## Check that we dont have more unique values than rows
-    if (length(unique(object[object != 0]))>nrow(object)) {
-        warning("Found more unique items in the matrix than rows. Expanding the number of rows to match")
-        unique.items <- length(unique(object[object != 0]))
-        # Expand the columns in the matrix to have length unique.items
-        glue <- matrix(rep(0, ncol(object)*(unique.items - nrow(object))), ncol=ncol(object))
+    if (unique.items > nitems) {
+        stop("Found more unique items in the matrix than rows/nitems. Increase nitems to match")
+    }
+
+    ## Expand the columns in the matrix to have length unique.items
+    if (nitems>nrow(object)) {
+        glue <- matrix(rep(0, ncol(object)*(nitems - nrow(object))), ncol=ncol(object))
         object <- rbind(object, glue)
     }
 
@@ -128,13 +132,12 @@ sra.matrix <- function(object, B=1, na.strings=c(NA, 0)) {
 
 #' @rdname sra
 #' @export
-sra.list <- function(object, B=1, na.strings=c(NA, 0)) {
+sra.list <- function(object, B=1, na.strings=c(NA, 0), nitems=max(sapply(object, length))) {
+
     # Make sure that the input object ends up as a matrix with integer columns all
     # consisting of elements from 1 and up to listlength
-    if (is.matrix(object))
-        object <- lapply(1:NCOL(object),function(j)object[,j]) # Convert matrix to list
-    else
-        stopifnot(is.list(object)) # data.frame is a list
+
+    stopifnot(is.list(object)) # data.frame is a list
     nlists <- length(object)
 
     ## sanity checks
@@ -163,7 +166,7 @@ sra.list <- function(object, B=1, na.strings=c(NA, 0)) {
     labels <- unique(unlist(object,recursive=TRUE,use.names=FALSE))
     nitems <- length(labels)
     ### if (match(c("sraNULL"),labels,nomatch=0)>0) stop("Item name sraNULL is reserved for missing items")
-    object <- lapply(object,function(x){as.integer(factor(x,levels=c("sraNULL",labels)))-1})
+    object <- lapply(object,function(x){as.integer(factor(x,levels=labels))})
 
     ## items are coded as 1, 2, 3, ...
     ## missing items (sraNULL) are coded as 0
