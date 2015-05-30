@@ -6,5 +6,5 @@ To install the development version of SuperRanker run the following commands
 from within R
 ```{r}
 library(devtools)
-install_github('ekstroem/SuperRanker')
+install_github('TagTeam/SuperRanker')
 ```
