@@ -514,7 +514,7 @@ colnames(inputmatrix) <- c("T", "LogReg", "ElasticNet", "MIC", "RF")[1:ncol(inpu
 
 res <- sqrt(sra(inputmatrix, B=20))
 inputmatrix2 <- inputmatrix
-inputmatrix2[51:nrow(inputmatrix),] <- 0
+inputmatrix2[51:nrow(inputmatrix),] <- NA
 res2 <- sqrt(sra(inputmatrix2, B=20))
 
 @
@@ -538,7 +538,7 @@ lines(res2[1:ysize], lwd=2, col="purple")
 
 
 
-<<fig2a, fig=TRUE,echo=FALSE,include=FALSE>>=
+<<fig2a, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE>>=
 ysize <- 1000
 plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
 lines(res2[1:ysize], lwd=2, col="purple")
@@ -581,7 +581,7 @@ polygon(c(1:length(www$lower), rev(1:length(www$lower))),
 
 @ %
 
-<<fig2b, fig=TRUE,echo=FALSE,include=FALSE >>=
+<<fig2b, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE >>=
 ysize <- 80
 plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
 lines(res2[1:ysize], lwd=2, col="purple")
@@ -638,16 +638,12 @@ respectively.}
  \label{fig:case1}
 \end{figure}
 
-
-<<echo=FALSE, results=hide>>=
-xxx <- as.data.frame(inputmatrix[1:10,])
-xxx
-
-@
-
 <<label=tab1,echo=FALSE,results=tex>>=
 library(xtable)
-print(xtable(xxx))
+xxx <- as.data.frame(inputmatrix[1:10,])
+xxx2 <- xtable(xxx)
+digits(xxx2) <- 0
+print(xxx2)
 #print(xtable(xxx, caption = "Top 10 list of results", label = "tab:one",
 #digits = c(0, 0, 2, 0, 2, 3, 3)), table.placement = "tbp",
 #caption.placement = "top")
@@ -694,6 +690,26 @@ This definition indirectly ensures that extra emphasis is included on
 the top of the list since the items
 
 
+
+In this section we apply the method to the ColonData data from the R
+package MAMA (Ihnatova, 2013), which consists of gene expression
+measurements from a subset of 500 genes from 77 individuals from
+Denmark, 36 from Australia and 41 from Japan as well as information on
+microsattelite stability (stable MSS/unstable MSI) which is often used
+as an indicator for colorectal cancer. The genes were tested for
+difference in expression in the MSI/MSS groups using the limma package
+(Smyth, 2005). The genes were then ranked according to p–values giving
+three lists that we wish to compare, the top of these can be seen in
+Table 4.
+
+
+<<fig=TRUE>>=
+myres <- average_overlap(inputmatrix[,1:2])
+myres2 <- average_overlap(inputmatrix[-1,1:2])
+xvals <- 1:500
+plot(myres, xlim=c(1, 500), type="l")
+lines(xvals[-1], myres2, col="red")
+@ 
 
 \section{Discussion}
 
