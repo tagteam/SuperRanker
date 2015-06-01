@@ -158,7 +158,7 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
                          res
                      })
     agreement <- rowMeans(tmpres)
-    names(agreement) <- labels
+    names(agreement) <- items
     class(agreement) <- "sra"
     attr(agreement, "B") <- B
     agreement
