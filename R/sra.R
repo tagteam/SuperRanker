@@ -55,7 +55,7 @@ sra.matrix <- function(object, B=1, na.strings=NULL, nitems=nrow(object)) {
         stop("Input object must be a matrix")
 
     ## Convert all missing types to zeros
-    if (!is.null(na.stsrings)) {
+    if (!is.null(na.strings)) {
         object[object %in% na.strings] <- NA
     }
 
