@@ -72,8 +72,7 @@ sra.matrix <- function(object, B=1, na.strings=NULL, nitems=nrow(object)) {
         object <- rbind(object, glue)
     }
     object <- lapply(1:NCOL(object),function(j)object[,j]) # Convert matrix to list
-    object
-##    sra.list(object, B=B)
+    sra.list(object, B=B, nitems=nitems)
 }
 
 
@@ -81,14 +80,15 @@ sra.matrix <- function(object, B=1, na.strings=NULL, nitems=nrow(object)) {
 #' @rdname sra
 #' @export
 sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, length))) {
-
     # Make sure that the input object ends up as a matrix with integer columns all
     # consisting of elements from 1 and up to listlength
 
-    stopifnot(is.list(object)) # data.frame is a list
+    stopifnot(is.list(object))
 
     nlists <- length(object)
-    ## sanity checks
+    nitems <- nitems ## force evaluation here
+
+    ## Sanity checks
     object <- lapply(1:length(object),function(j){
                          x <- object[[j]]
                          ## Add the NA items to be removed
