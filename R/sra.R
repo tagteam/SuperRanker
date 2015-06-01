@@ -92,9 +92,10 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
                          x <- object[[j]]
                          ## Add the NA items to be removed
                          out <- which(is.na(x))
-                         na.strings <- na.strings[!is.na(na.strings)]
-                         if (!is.null(na.strings))
+                         if (!is.null(na.strings)) {
+                             na.strings <- na.strings[!is.na(na.strings)]
                              out <- c(out,grep(paste0("^",na.strings,"$"),x))
+                         }
                          ## remove censored items with side effect:
                          ## in case where all lists have trailing censored information
                          ## this is pruned
