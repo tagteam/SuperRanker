@@ -5,7 +5,7 @@
 #' between 1 and the length of the lists. The lists should have the
 #' same length but censoring can be used by setting the list to zero
 #' from a point onwards. See details for more information.
-#' @param na.strings Code for missing items
+#' @param na.strings A vector of strings/values that represent missing values in addition to NA. Defaults to NULL which means only NA are censored values.
 #' @param B An integer giving the number of randomization to sample
 #' over in the case of censored observations
 #' @return A vector of the sequential rank agreement
@@ -168,25 +168,31 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
 
 #' Simulate sequential rank agreement for randomized unrelated lists
 #'
-#' @param obj Either a vector or matrix
+#' @param obj A matrix
 #' @param B Either a vector or matrix
 #' @param n the number of sequential rank agreement curves to produce
+#' @param na.strings A vector of character values that represent vensored observations
 #' @return A matrix with n columns each representing the sequential rank agreement obtained from
 #' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
 #' @export
-random_list_sra <- function(object, B=1, n=1) {
+random_list_sra <- function(object, B=1, n=1, na.strings=NULL) {
 
     ## Make sure that the input object ends up as a matrix with integer columns all
     ## consisting of elements from 1 and up to listlength
     if (!is.matrix(object))
         object <- as.matrix(do.call("cbind",object))
 
+    ## Convert all missing types to NAs
+    if (!is.null(na.strings)) {
+        object[object %in% na.strings] <- NA
+    }
+
     nitems <- nrow(object)
-    notmiss <- apply(object, 2, function(x) {sum(x>0)} )
+    notmiss <- apply(object, 2, function(x) {sum(!is.na(x))} )
     res <- sapply(1:n, function(i) {
         ## Do a permutation with the same number of missing
         for (j in 1:ncol(object)) {
-            object[,j] <- c(sample(nitems, size=notmiss[j]), rep(0, nitems-notmiss[j]))
+            object[,j] <- c(sample(nitems, size=notmiss[j]), rep(NA, nitems-notmiss[j]))
         }
         sra(object, B=B)
     })
