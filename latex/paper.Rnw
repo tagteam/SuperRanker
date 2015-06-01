@@ -544,8 +544,8 @@ plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential 
 lines(res2[1:ysize], lwd=2, col="purple")
 ##
 # col1 <- makeTransparent()
-null <- sqrt(random_list_sra(inputmatrix, B=1, n=400))
-null3 <- sqrt(random_list_sra(inputmatrix, B=20, n=200))
+null <- sqrt(random_list_sra(inputmatrix, B=1, n=40))
+null3 <- sqrt(random_list_sra(inputmatrix, B=20, n=20))
 ## matlines(null[1:ysize,], col="gray", lty=1)
 
 ##
@@ -703,13 +703,37 @@ three lists that we wish to compare, the top of these can be seen in
 Table 4.
 
 
-<<fig=TRUE>>=
+<<fig-ao1, echo=FALSE, fig=TRUE,include=FALSE>>=
 myres <- average_overlap(inputmatrix[,1:2])
-myres2 <- average_overlap(inputmatrix[-1,1:2])
+myres2 <- average_overlap(inputmatrix[-c(1,2),1:2])
 xvals <- 1:500
-plot(myres, xlim=c(1, 500), type="l")
-lines(xvals[-1], myres2, col="red")
+plot(myres, xlim=c(1, 300), ylim=c(0,1), type="l")
+lines(xvals[-c(1,2)], myres2[1:498], col="red")
 @ 
+
+<<fig-ao2, echo=FALSE, fig=TRUE,include=FALSE>>=
+mmyres <- sqrt(sra(inputmatrix[,1:2]))
+mmyres2 <- sqrt(sra(inputmatrix[-c(1,2),1:2]))
+xvals <- 1:500
+plot(mmyres, xlim=c(1, 300), ylim=c(0,1), type="l")
+lines(xvals[-c(1,2)], mmyres2[1:498], col="red")
+@ 
+
+
+
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=.45\textwidth]{paper-fig-ao1}
+\includegraphics[width=.45\textwidth]{paper-fig-ao2}
+\end{center}
+ \caption{Sequential rank agreement for 4 different analysis methods
+   applied to the Golub data (thick red line). The red and blue shaded
+ areas represent the pointwise 95\% normal areas for the XXX and XXY benchmarks,
+respectively.}
+ \label{fig:case1}
+\end{figure}
+
+
 
 \section{Discussion}
 

@@ -27,7 +27,7 @@ from a point onwards. See details for more information.}
 \item{B}{An integer giving the number of randomization to sample
 over in the case of censored observations}
 
-\item{na.strings}{Code for missing items}
+\item{na.strings}{A vector of strings/values that represent missing values in addition to NA. Defaults to NULL which means only NA are censored values.}
 }
 \value{
 A vector of the sequential rank agreement
@@ -38,6 +38,9 @@ Compute the sequential rank agreement
 \examples{
 mlist <- matrix(cbind(1:8,c(1,2,3,5,6,7,4,8),c(1,5,3,4,2,8,7,6)),ncol=3)
 sra(mlist)
+
+mlist <- matrix(cbind(1:8,c(1,2,3,5,6,7,4,8),c(1,5,3,4,2,8,7,6)),ncol=3)
+sra(mlist, nitems=20, B=10)
 
 alist <- list(a=1:8,b=sample(1:8),c=sample(1:8))
 sra(alist)
