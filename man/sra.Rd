@@ -11,9 +11,11 @@ sra(object, B = 1, ...)
 
 \method{sra}{default}(object, B = 1)
 
-\method{sra}{matrix}(object, B = 1, na.strings = c(NA, 0))
+\method{sra}{matrix}(object, B = 1, na.strings = NULL,
+  nitems = nrow(object))
 
-\method{sra}{list}(object, B = 1, na.strings = c(NA, 0))
+\method{sra}{list}(object, B = 1, na.strings = NULL,
+  nitems = max(sapply(object, length)))
 }
 \arguments{
 \item{object}{Either matrix where each column is a ranked list of
