@@ -490,7 +490,7 @@ producelists <- function(x, y) {
     nonzeros <- sum(coefficients!=0)
     list3 <- order(abs(coefficients), decreasing=TRUE)
     if (nonzeros<nitems) {
-        list3[(nonzeros+1):nitems] <- 0
+        list3[(nonzeros+1):nitems] <- NA
     }
                                         # MIC
     MIC <- sapply(index, function(i) { mine(x[i,], y)$MIC})

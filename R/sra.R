@@ -54,7 +54,7 @@ sra.matrix <- function(object, B=1, na.strings=NULL, nitems=nrow(object)) {
     if (!is.matrix(object))
         stop("Input object must be a matrix")
 
-    ## Convert all missing types to zeros
+    ## Convert all missing types to NAs
     if (!is.null(na.strings)) {
         object[object %in% na.strings] <- NA
     }
@@ -72,7 +72,8 @@ sra.matrix <- function(object, B=1, na.strings=NULL, nitems=nrow(object)) {
         object <- rbind(object, glue)
     }
     object <- lapply(1:NCOL(object),function(j)object[,j]) # Convert matrix to list
-    sra.list(object, B=B)
+    object
+##    sra.list(object, B=B)
 }
 
 
