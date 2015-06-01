@@ -5,37 +5,37 @@
 #' between 1 and the length of the lists. The lists should have the
 #' same length but censoring can be used by setting the list to zero
 #' from a point onwards. See details for more information.
-#' @param na.strings Code for missing items 
+#' @param na.strings Code for missing items
 #' @param B An integer giving the number of randomization to sample
 #' over in the case of censored observations
 #' @return A vector of the sequential rank agreement
 ##' @examples
-##' 
+##'
 ##' mlist <- matrix(cbind(1:8,c(1,2,3,5,6,7,4,8),c(1,5,3,4,2,8,7,6)),ncol=3)
 ##' sra(mlist)
-##' 
+##'
 ##' alist <- list(a=1:8,b=sample(1:8),c=sample(1:8))
 ##' sra(alist)
-##' 
+##'
 ##' blist <- list(x1=letters,x2=sample(letters),x3=sample(letters))
 ##' sra(blist)
-##' 
+##'
 ##' ## censored lists are either too short
 ##' clist <- list(x1=c("a","b","c","d","e","f","g","h"),
 ##'               x2=c("h","c","f","g","b"),
 ##'               x3=c("d","e","a"))
 ##' set.seed(17)
 ##' sra(clist,na.strings="z",B=10)
-##' 
+##'
 ##' ## or use a special code for missing elements
 ##' Clist <- list(x1=c("a","b","c","d","e","f","g","h"),
 ##'               x2=c("h","c","f","g","b","z","z","z"),
 ##'               x3=c("d","e","a","z","z","z","z","z"))
 ##' set.seed(17)
 ##' sra(Clist,na.strings="z",B=10)
-##' 
+##'
 #' @author Claus Ekstrøm <ekstrom@@sund.ku.dk> and Thomas A Gerds <tag@@biostat.ku.dk>
-#' 
+#'
 #' @rdname sra
 #' @export
 sra <- function(object, B=1, ...) {
@@ -50,17 +50,25 @@ sra.default <- function(object, B=1) {
 
 #' @rdname sra
 #' @export
-sra.matrix <- function(object, B=1, na.strings=c(NA, 0)) {
+sra.matrix <- function(object, B=1, na.strings=NULL, nitems=nrow(object)) {
+    if (!is.matrix(object))
+        stop("Input object must be a matrix")
 
     ## Convert all missing types to zeros
-    object[object %in% na.strings] <- 0
+    if (!is.null(na.stsrings)) {
+        object[object %in% na.strings] <- NA
+    }
+
+    unique.items <- length(unique(object[!is.na(object)]))
 
     ## Check that we dont have more unique values than rows
-    if (length(unique(object[object != 0]))>nrow(object)) {
-        warning("Found more unique items in the matrix than rows. Expanding the number of rows to match")
-        unique.items <- length(unique(object[object != 0]))
-        # Expand the columns in the matrix to have length unique.items
-        glue <- matrix(rep(0, ncol(object)*(unique.items - nrow(object))), ncol=ncol(object))
+    if (unique.items > nitems) {
+        stop("Found more unique items in the matrix than rows/nitems. Increase nitems to match")
+    }
+
+    ## Expand the columns in the matrix to have length unique.items
+    if (nitems>nrow(object)) {
+        glue <- matrix(rep(NA, ncol(object)*(nitems - nrow(object))), ncol=ncol(object))
         object <- rbind(object, glue)
     }
     object <- lapply(1:NCOL(object),function(j)object[,j]) # Convert matrix to list
@@ -71,45 +79,55 @@ sra.matrix <- function(object, B=1, na.strings=c(NA, 0)) {
 
 #' @rdname sra
 #' @export
-sra.list <- function(object, B=1, na.strings=c(NA, 0)) {
+sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, length))) {
+
     # Make sure that the input object ends up as a matrix with integer columns all
     # consisting of elements from 1 and up to listlength
+
+    stopifnot(is.list(object)) # data.frame is a list
+
     nlists <- length(object)
     ## sanity checks
     object <- lapply(1:length(object),function(j){
-                                 x <- object[[j]]
-                                 out <- which(is.na(x))
-                                 na.strings <- na.strings[!is.na(na.strings)]
-                                 if (length(na.strings)>0)
-                                     out <- c(out,grep(paste0("^",na.strings,"$"),x))
-                                 ## remove censored items with side effect:
-                                 ## in case where all lists have trailing censored information
-                                 ## this is pruned
-                                 if (length(out)>0)
-                                     x <- x[-out]
-                                 # stop at duplicated items
-                                 if (any(duplicated(x)))
-                                     stop(paste0("Duplicated items found in list ",j))
-                                 x
-                             })
+                         x <- object[[j]]
+                         ## Add the NA items to be removed
+                         out <- which(is.na(x))
+                         na.strings <- na.strings[!is.na(na.strings)]
+                         if (!is.null(na.strings))
+                             out <- c(out,grep(paste0("^",na.strings,"$"),x))
+                         ## remove censored items with side effect:
+                         ## in case where all lists have trailing censored information
+                         ## this is pruned
+                         if (length(out)>0)
+                             x <- x[-out]
+                         ## stop at duplicated items
+                         if (any(duplicated(x)))
+                             stop(paste0("Duplicated items found in list ",j))
+                         x
+                     })
     ## check class of elements, then coerce to integer
-    cc <- sapply(object,class)
-    if (length(cc <- unique(cc))>1) stop(paste("All elements of object must have the same class. Found:",paste(cc,collapse=", ")))
+
+    cc <- sapply(object, class)
+    if (length(cc <- unique(cc))>1)
+        stop(paste("All elements of object must have the same class. Found:",paste(cc,collapse=", ")))
+
     if (match(cc,c("integer","character","numeric","factor"),nomatch=0)==0)
         stop("Class of lists in object should be one of 'integer', 'character', 'numeric' or 'factor'.")
+
     labels <- unique(unlist(object,recursive=TRUE,use.names=FALSE))
-    nitems <- length(labels)
-    if (match(c("sraNULL"),labels,nomatch=0)>0) stop("Item name sraNULL is reserved for missing items")
-    object <- lapply(object,function(x){as.integer(factor(x,levels=c("sraNULL",labels)))-1})
+
+    nitems <- max(nitems, length(labels))
+
+    object <- lapply(object,function(x){as.integer(factor(x,levels=labels))})
 
     ## items are coded as 1, 2, 3, ...
     ## missing items (sraNULL) are coded as 0
-    items <- seq(nitems) 
+    items <- seq(nitems)
 
     ## Compute a list of missing items for each list
     missing.items <- lapply(object, function(x) {items[match(items,x,nomatch=0)==0]})
     nmiss <- sapply(missing.items,length)
-    
+
     ## fill too short lists with 0 (code for missing)
     ll <- sapply(object,length)
     listlength <- max(ll)
@@ -128,11 +146,7 @@ sra.list <- function(object, B=1, na.strings=c(NA, 0)) {
                          obj.b <- lapply(1:nlists,function(j){
                                              list <- object[[j]]
                                              if (nmiss[[j]]>0){
-                                                 if (nmiss[[j]]==1){ ## fill in missing item
-                                                     list[list==0] <- missing.items[[j]]
-                                                 } else{ ## replace censored items with random order
-                                                       list[list==0] <- resample(missing.items[[j]])
-                                                   }
+                                                 list[list==0] <- resample(missing.items[[j]])
                                              }
                                              list
                                          })
@@ -146,6 +160,7 @@ sra.list <- function(object, B=1, na.strings=c(NA, 0)) {
     class(agreement) <- "sra"
     attr(agreement, "B") <- B
     agreement
+
 }
 
 
@@ -154,7 +169,7 @@ sra.list <- function(object, B=1, na.strings=c(NA, 0)) {
 #' @param obj Either a vector or matrix
 #' @param B Either a vector or matrix
 #' @param n the number of sequential rank agreement curves to produce
-#' @return A matrix with n columns each representing the sequential rank agreement obtained from 
+#' @return A matrix with n columns each representing the sequential rank agreement obtained from
 #' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
 #' @export
 random_list_sra <- function(object, B=1, n=1) {
@@ -171,10 +186,10 @@ random_list_sra <- function(object, B=1, n=1) {
         for (j in 1:ncol(object)) {
             object[,j] <- c(sample(nitems, size=notmiss[j]), rep(0, nitems-notmiss[j]))
         }
-        sra(object, B=B) 
+        sra(object, B=B)
     })
     res
-    
+
 }
 
 

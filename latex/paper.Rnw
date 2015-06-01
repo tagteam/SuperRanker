@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper]{statsoc}
+\documentclass[12pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[]{graphicx}
 \usepackage{amsmath}
@@ -22,34 +22,18 @@
 
 %%% RSS specific items
 
-\title[Sequential rank agreement]{Sequential rank agreement methods for comparison of ranked
+
+
+\title{Sequential rank agreement methods for comparison of ranked
   lists}
-\author[Ekstrøm {\it et al.}]{Claus Thorn Ekstrøm}
-\address{Affiliation,
-City,
-Country.}
-\email{Author@emailaddress.com}
+\author{Claus Thorn Ekstrøm}
 \author{Thomas Alexander Gerds}
-\address{Affiliation,
-City,
-Country.}
-\author{Andreas Kryger Jensen}
-\address{Affiliation,
-City,
-Country.}
 \author{Kasper Brink-Jensen}
-\address{Affiliation,
-City,
-Country.}
+\affil{Biostatistics, University of Copenhagen}
+
 
 
 \begin{document}
-
-% \title{Sequential rank agreement methods for comparison of ranked lists}
-% \author{Claus Thorn Ekstrøm}
-% \author{Thomas Alexander Gerds}
-% \author{Kasper Brink-Jensen}
-% \affil{Biostatistics, University of Copenhagen}
 
 % Use square brackets for numbering affiliations
 
@@ -103,10 +87,10 @@ three examples above, respectively.
 
 The analysis of rankings is hardly new, and several other approaches
 have proposed a measure of the ``distance'' between two ranked
-lists. Of these, Kendall's $\tau$ 
-%\citep{kendall1948} 
+lists. Of these, Kendall's $\tau$
+%\citep{kendall1948}
 and Spearman’s footrule
-%$\rho$ \citep{Spearman1910} 
+%$\rho$ \citep{Spearman1910}
 are the most well-known. Both measure the similarity of two ranked
 lists but neither of them make any distinction between errors towards
 the top versus the errors towards the bottom of the lists.  Several
@@ -213,7 +197,7 @@ item $X_{34}$ is ranked first in list $l$, and similarly $R_l(X_{34})=1$.
   \end{subtable}
 % \hfill
 \hspace{1em}
-%%% 
+%%%
   \begin{subtable}{4cm}%
     \caption{}
     \begin{tabular}{cccc} \hline\hline
@@ -337,14 +321,14 @@ items from list $l$ where $k_l = |\Lambda_l|$. Note that if
 $k_1=\cdots=k_L=k$ then we observe the top $k$ items for each of the
 $L$ lists. For censored lists the rank function becomes
 \begin{equation}
-\tilde R_l(X_p) = \left\{\begin{array}{cl} \{\pi_l^{-1}(p)\} & \text{ for } p\in \Lambda_l \\ 
+\tilde R_l(X_p) = \left\{\begin{array}{cl} \{\pi_l^{-1}(p)\} & \text{ for } p\in \Lambda_l \\
 \{k_l+1,\dots,P\} & \text{ for } p \not\in \Lambda_l\end{array}\right.
 \end{equation}
 where we only know that the rank for the unobserved items in list $l$
 must be larger than the largest rank observed in that list.
 Unless we have additional prior knowledge about the distribution of the
 unranked items then we can restrict attention of the sequential rank
-agreement to 
+agreement to
 \begin{equation}
 d \leq \max(k_1, \ldots, k_L),
 \end{equation}
@@ -403,7 +387,7 @@ filled out lists.}
  ess contains full set of ranks and by using
 the ... instead of applying the average ...
 
-the mean then we 
+the mean then we
 
 FIXME: If instead of running through all elements of $\tilde R_1(X_p)$
 one would use the average rank in $\tilde R_1(X_p)$ we would end up with
@@ -411,9 +395,9 @@ a too small variance.
 
 FIXME: For censored lists we expect a change point around the depth
 where the lists are censored. This is an artefact stemming from the
-fact that 
+fact that
 
-\section{Benchmarks}
+\section{Evaluating sequential rank agreement}
 
 To interpretate the sequential rank agreement scale we propose by
 several different benchmark values. Our data free benchmark value is
@@ -435,7 +419,7 @@ modified data where the outcome vector is randomly permuted. This
 artificially removes any potential information regarding the
 regression that the real data may contain.
 
-- third approach? 
+- third approach?
 
 \subsection{Independent lists}
 
@@ -445,7 +429,7 @@ Do the following a large number of times
 \begin{enumerate}
   \item Permute outcome vector
   \item Redo analyses for all $L$ methods
-  \item Compute sequential rank agreement for 
+  \item Compute sequential rank agreement for
 \end{enumerate}
 
 Lidt spøjs ting man matcher dem op imod
@@ -483,7 +467,7 @@ data(golub)
 
 
 y <- golub.cl
-x <- golub 
+x <- golub
 
 producelists <- function(x, y) {
     nitems <- nrow(x)
@@ -493,11 +477,11 @@ producelists <- function(x, y) {
                                         # Marginale t-tests
     mt.p <- sapply(index, function(i) { t.test(x[i,] ~ y)$p.value } )
     list1 <- order(mt.p)
-    
+
                                         # Marginale logreg-tests
     mlogreg.p <- sapply(index, function(i) { drop1(glm(y ~ x[i,], family=binomial), test="Chisq")[2,5] } )
     list2 <- order(mlogreg.p)
-    
+
                                         # Elastic net
     X <- scale(t(x))
     enet <- glmnet(X, y, family="binomial", alpha=.8)
@@ -507,12 +491,12 @@ producelists <- function(x, y) {
     list3 <- order(abs(coefficients), decreasing=TRUE)
     if (nonzeros<nitems) {
         list3[(nonzeros+1):nitems] <- 0
-    } 
+    }
                                         # MIC
     MIC <- sapply(index, function(i) { mine(x[i,], y)$MIC})
     list4 <- order(MIC, decreasing=TRUE)
-    
-    
+
+
                                         # Random Forest
 ###    dd <- data.frame(y=factor(y), t(x))
                                         # dd <- data.frame(y=y, t(x))
@@ -521,7 +505,7 @@ producelists <- function(x, y) {
 ###    num.undecided <- sum(variables==0)
 ###    list5 <- order(variables, decreasing=TRUE)
 ###    list5[(length(variables)-num.undecided):length(variables)] <- 0
-    
+
     cbind(list1,list2,list3,list4)
 }
 
@@ -530,10 +514,10 @@ colnames(inputmatrix) <- c("T", "LogReg", "ElasticNet", "MIC", "RF")[1:ncol(inpu
 
 res <- sqrt(sra(inputmatrix, B=20))
 inputmatrix2 <- inputmatrix
-inputmatrix2[51:nrow(inputmatrix),] <- 0
+inputmatrix2[51:nrow(inputmatrix),] <- NA
 res2 <- sqrt(sra(inputmatrix2, B=20))
 
-@ 
+@
 
 
 <<fig1a, fig=TRUE,echo=FALSE,include=FALSE>>=
@@ -554,17 +538,17 @@ lines(res2[1:ysize], lwd=2, col="purple")
 
 
 
-<<fig2a, fig=TRUE,echo=FALSE,include=FALSE>>=
+<<fig2a, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE>>=
 ysize <- 1000
 plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
 lines(res2[1:ysize], lwd=2, col="purple")
-## 
+##
 # col1 <- makeTransparent()
 null <- sqrt(random_list_sra(inputmatrix, B=1, n=400))
 null3 <- sqrt(random_list_sra(inputmatrix, B=20, n=200))
 ## matlines(null[1:ysize,], col="gray", lty=1)
 
-## 
+##
 
 ##null2 <- sapply(1:40, function(i) {
 ##    sra(producelists(x, sample(y)), B=1)
@@ -597,17 +581,17 @@ polygon(c(1:length(www$lower), rev(1:length(www$lower))),
 
 @ %
 
-<<fig2b, fig=TRUE,echo=FALSE,include=FALSE >>=
+<<fig2b, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE >>=
 ysize <- 80
 plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
 lines(res2[1:ysize], lwd=2, col="purple")
-## 
+##
 # col1 <- makeTransparent()
 null <- sqrt(random_list_sra(inputmatrix, B=1, n=400))
 null3 <- sqrt(random_list_sra(inputmatrix, B=20, n=200))
 ## matlines(null[1:ysize,], col="gray", lty=1)
 
-## 
+##
 
 ##null2 <- sapply(1:40, function(i) {
 ##    sra(producelists(x, sample(y)), B=1)
@@ -654,16 +638,12 @@ respectively.}
  \label{fig:case1}
 \end{figure}
 
-
-<<echo=FALSE, results=hide>>=
-xxx <- as.data.frame(inputmatrix[1:10,])
-xxx
-
-@ 
-
 <<label=tab1,echo=FALSE,results=tex>>=
 library(xtable)
-print(xtable(xxx))
+xxx <- as.data.frame(inputmatrix[1:10,])
+xxx2 <- xtable(xxx)
+digits(xxx2) <- 0
+print(xxx2)
 #print(xtable(xxx, caption = "Top 10 list of results", label = "tab:one",
 #digits = c(0, 0, 2, 0, 2, 3, 3)), table.placement = "tbp",
 #caption.placement = "top")
@@ -680,7 +660,7 @@ cp1@cpts
 cp1@param.est
 cp2@cpts
 cp2@param.est
-@ 
+@
 
 \subsection{Stability of results}
 
@@ -691,11 +671,49 @@ cp2@param.est
 Bootstrap across a single method and compare results. Discuss collinearity
 
 
-\section{Alternatives}
+\section{Comparison to ...}
+
+The overlap among $L$ lists observed until depth $d$ is defined as the
+proportion of items that are found in all $L$ lists compared to the
+possible number of items found in all lists observed until depth $d$:
+\begin{equation}
+O(d) = \frac{| \cap_{l=1}^L \{\pi_l(r); r\leq d \} |}{d}.
+\end{equation}
+Typically, the overlap is only considered for pairwise comparisons
+
+The average overlap at depth $d$ is defined as the average of the
+overlaps until $d$,
+\begin{equation}
+AO(d) = \sum_{i=1}^d \frac{O(d)}{d}.
+\end{equation}
+This definition indirectly ensures that extra emphasis is included on
+the top of the list since the items
+
+
+
+In this section we apply the method to the ColonData data from the R
+package MAMA (Ihnatova, 2013), which consists of gene expression
+measurements from a subset of 500 genes from 77 individuals from
+Denmark, 36 from Australia and 41 from Japan as well as information on
+microsattelite stability (stable MSS/unstable MSI) which is often used
+as an indicator for colorectal cancer. The genes were tested for
+difference in expression in the MSI/MSS groups using the limma package
+(Smyth, 2005). The genes were then ranked according to p–values giving
+three lists that we wish to compare, the top of these can be seen in
+Table 4.
+
+
+<<fig=TRUE>>=
+myres <- average_overlap(inputmatrix[,1:2])
+myres2 <- average_overlap(inputmatrix[-1,1:2])
+xvals <- 1:500
+plot(myres, xlim=c(1, 500), type="l")
+lines(xvals[-1], myres2, col="red")
+@ 
 
 \section{Discussion}
 
-Mention/discuss different measures. 
+Mention/discuss different measures.
 
 
 \bibliographystyle{rss}
