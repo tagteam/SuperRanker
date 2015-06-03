@@ -1,5 +1,5 @@
 ##' Plot the agreement between lists as a function of the list depth
-##' 
+##'
 ##' @title Plot sequential rank agreement
 ##' @param x Agreement object
 ##' @param xlim x-axis limits
@@ -17,17 +17,17 @@
 ##'     sra(list(sample(R1),sample(R1)))
 ##' })))
 ##' lines(1:length(R1),arand,col=2,lwd=3)
-##' 
+##'
 ##' l <- c(1,2,3,4,5,7,6,8,9,10,11,12,13)
 ##' l <- 1:100
 ##' aa <- sapply(1:20,function(i){
 ##'     sra(list(sample(l),sample(l),sample(l)))[i]
 ##' })
 ##' c(mean(aa),sd(aa))
-##' 
+##'
 #' @export
 ##' @author Thomas A. Gerds <tag@@biostat.ku.dk>
-plot.sra <- function(x, xlim, ylim, xlab="List depth", ylab="Agreement", add=FALSE, ...){
+plot.sra <- function(x, xlim, ylim, xlab="List depth", ylab="Sequential rank agreement", add=FALSE, ...){
     if (missing(xlim)) xlim=c(1,length(x))
     if (missing(ylim)) ylim=c(0,max(x))
     axis1.DefaultArgs <- list()

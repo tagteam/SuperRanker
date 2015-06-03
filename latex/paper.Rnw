@@ -326,40 +326,28 @@ $L$ lists. For censored lists the rank function becomes
 \end{equation}
 where we only know that the rank for the unobserved items in list $l$
 must be larger than the largest rank observed in that list.
-Unless we have additional prior knowledge about the distribution of the
-unranked items then we can restrict attention of the sequential rank
-agreement to
-\begin{equation}
-d \leq \max(k_1, \ldots, k_L),
-\end{equation}
-since we have no information about the ordering of the items after a
-depth $d$ where all lists are censored.
 
 The agreement, $A(X_p)$, cannot be computed directly for all
-predictors because we only observe the censored version of $R(X_p)$
-for some of the lists. Instead we assume that the rank assigned to
-item $X_p$ in list $l$ is uniformly distributed among the ranks that
-have \emph{not} been assigned for list $l$. The algorithm is described
-in detail in Algorithm~\ref{sra-algorithm}.
+predictors when we have censored lists because we only do not know the
+exact rank assigned to each item in all lists.  Instead we assume that
+the rank assigned to an item $X_p$ that is not present in list $l$
+(i.e., is censored) is uniformly distributed among the ranks that have
+\emph{not} been assigned for list $l$.  The rankings within a single
+list are clearly not independent since each rank must appear exactly
+in each list. Thus we cannot simply assign
 
 
-%, so the augmented agreement
-%becomes
-%\begin{equation}
-%\bar{A}(X_p) = \frac{\sum_{r_1; r_1\in \tilde R_1(X_p)}  \cdots
-%  \sum_{r_L; r_L\in \tilde R_L(X_p)} A(X_p)}{\prod_l |\tilde
-%  R_l(X_p)|}. \label{formula:censored-agreement}
-%\end{equation}
-%Similarly, the sequential rank agreement becomes
-%\begin{equation}
-%XXX \textrm{SRA}(d)= \sqrt{\frac{\sum_{\{p \in S_d\}}(L-1)\tilde{A}(X_p)^2}{(L-1)|S_d|}}, \label{def:sra-censored}
-%\end{equation}
 
-The rankings within a single list are clearly not independent since
-each rank must appear exactly in each list. Thus, by randomizing
-unobserved items as described in \eqref{formula:censored-agreement}
+Thus, by randomizing unobserved items as described in
+\eqref{formula:censored-agreement}
 
 
+
+
+
+
+The algorithm is described in
+detail in Algorithm~\ref{sra-algorithm}.
 
 \begin{algorithm}
 \caption{Sequential rank agreement algorithm for censored lists}
@@ -380,6 +368,29 @@ filled out lists.}
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
+
+
+
+
+
+
+
+
+
+
+
+
+Unless we have additional prior knowledge about the distribution of the
+unranked items then we can restrict attention of the sequential rank
+agreement to
+\begin{equation}
+d \leq \max(k_1, \ldots, k_L),
+\end{equation}
+since we have no information about the ordering of the items after a
+depth $d$ where all lists are censored.
+
+
+
 
 
 
@@ -587,8 +598,8 @@ plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential 
 lines(res2[1:ysize], lwd=2, col="purple")
 ##
 # col1 <- makeTransparent()
-null <- sqrt(random_list_sra(inputmatrix, B=1, n=400))
-null3 <- sqrt(random_list_sra(inputmatrix, B=20, n=200))
+null <- sqrt(random_list_sra(inputmatrix, B=1, n=40))
+null3 <- sqrt(random_list_sra(inputmatrix, B=20, n=20))
 ## matlines(null[1:ysize,], col="gray", lty=1)
 
 ##
@@ -686,8 +697,26 @@ overlaps until $d$,
 \begin{equation}
 AO(d) = \sum_{i=1}^d \frac{O(d)}{d}.
 \end{equation}
-This definition indirectly ensures that extra emphasis is included on
-the top of the list since the items
+This definition directly ensures that extra emphasis is included on
+the top of the list since the overlap of the items towards the top are
+included in the majority of the calculations.
+
+
+
+
+
+In a classical paper by \citet{Golub1999} a dataset of 3051 gene
+expression values were measured on 38 tumor mRNA samples in order to
+improve the classification of acute leukemias between two types: acute
+lymphoblastic leukemia (ALL) or acute myeloid leukemia
+(AML). Preprocessing of the gene expression data was done as described
+in \citep{Dudoit2002}.
+
+We analyzed these gene expression data using four different
+approaches: marginal two-sample $t$ tests, marginal logistic
+regression analyses, logistic regression eleastic net, and marginal
+maximum information content correlations (MIC) \citep{Reshef2011}. For
+the first two methods, the genes were ranked according to $p$ value.
 
 
 
@@ -709,15 +738,15 @@ myres2 <- average_overlap(inputmatrix[-c(1,2),1:2])
 xvals <- 1:500
 plot(myres, xlim=c(1, 300), ylim=c(0,1), type="l")
 lines(xvals[-c(1,2)], myres2[1:498], col="red")
-@ 
+@
 
 <<fig-ao2, echo=FALSE, fig=TRUE,include=FALSE>>=
 mmyres <- sqrt(sra(inputmatrix[,1:2]))
 mmyres2 <- sqrt(sra(inputmatrix[-c(1,2),1:2]))
 xvals <- 1:500
-plot(mmyres, xlim=c(1, 300), ylim=c(0,1), type="l")
+plot(mmyres, xlim=c(1, 300), type="l")
 lines(xvals[-c(1,2)], mmyres2[1:498], col="red")
-@ 
+@
 
 
 

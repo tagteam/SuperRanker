@@ -71,7 +71,7 @@ sra.matrix <- function(object, B=1, na.strings=NULL, nitems=nrow(object)) {
 
     ## Expand the columns in the matrix to have length unique.items
     if (nitems>nrow(object)) {
-        glue <- matrix(rep(NA, ncol(object)*(nitems - nrow(object))), ncol=ncol(object))
+        glue <- matrix(rep(NA, NCOL(object)*(nitems - nrow(object))), ncol=NCOL(object))
         object <- rbind(object, glue)
     }
     object <- lapply(1:NCOL(object),function(j)object[,j]) # Convert matrix to list
@@ -160,7 +160,7 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
                          res <- sracppfull(rankmat)
                          res
                      })
-    agreement <- rowMeans(tmpres)
+    agreement <- sqrt(rowMeans(tmpres))
     names(agreement) <- items
     class(agreement) <- "sra"
     attr(agreement, "B") <- B
