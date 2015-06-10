@@ -282,16 +282,6 @@ interpreted as how many ranks apart do we on average expect the items
 found until depth $d$ to be so smaller values on the $y$ axis
 correspond to better agreement among the lists than larger values.
 
-If the lists generally agree on all items then we expect the
-sequential rank agreement curve to be flat, but if there are changes
-in the levels of rank agreement then this suggests that there are sets
-of items that the lists agree on and other sets where they rank the
-items differently. In particular, we generally expect the agreement
-among the lists to be better towards the top of the lists and worse
-towards the end of the lists, and in this case the sequential rank
-agreement curve will start at a low level, and then have an increase
-before it levels off.
-
 
 \begin{figure}[tb]
 \begin{center}
@@ -305,6 +295,18 @@ before it levels off.
    the same information but has zoomed in on the first part of the $x$-axis.}
  \label{fig:example1}
 \end{figure}
+
+
+
+If the lists generally agree on all items then we expect the
+sequential rank agreement curve to be flat, but if there are changes
+in the levels of rank agreement then this suggests that there are sets
+of items that the lists agree on and other sets where they rank the
+items differently. In particular, we generally expect the agreement
+among the lists to be better towards the top of the lists and worse
+towards the end of the lists, and in this case the sequential rank
+agreement curve will start at a low level, and then have an increase
+before it levels off.
 
 
 \subsection{Analysis of incomplete/censored lists}
@@ -328,26 +330,28 @@ where we only know that the rank for the unobserved items in list $l$
 must be larger than the largest rank observed in that list.
 
 The agreement, $A(X_p)$, cannot be computed directly for all
-predictors when we have censored lists because we only do not know the
-exact rank assigned to each item in all lists.  Instead we assume that
-the rank assigned to an item $X_p$ that is not present in list $l$
-(i.e., is censored) is uniformly distributed among the ranks that have
-\emph{not} been assigned for list $l$.  The rankings within a single
-list are clearly not independent since each rank must appear exactly
-in each list. Thus we cannot simply assign
+predictors in the presence of censored lists because the exact rank
+for some item is unknown in some of the lists.  The rankings within a
+single list are clearly not independent since each rank must appear
+exactly once in each list. Thus we cannot simply assign the same
+number (e.g., the mean of the unassigned ranks) to the censored items
+since that would result in less variation of the agreement, and it
+would artificially introduce a (downward) bias of agreement for items
+that are censored in multiple lists.
 
-
-
-Thus, by randomizing unobserved items as described in
-\eqref{formula:censored-agreement}
-
-
-
-
-
-
-The algorithm is described in
+Instead we assume that the rank assigned to an item $X_p$ that is not
+present in list $l$ (i.e., is censored) is uniformly distributed among
+the ranks that have \emph{not} been assigned for list $l$. By
+randomizing unobserved items we attain one realization of the rankings
+where all lists are fully observed. By randomizing a large number of
+times we can compute \eqref{def:sra} for each realization, and then
+compute the sequential rank agreement as the pointwise (for each
+depth) average of the rank agreements. The algorithm is described in
 detail in Algorithm~\ref{sra-algorithm}.
+
+
+
+
 
 \begin{algorithm}
 \caption{Sequential rank agreement algorithm for censored lists}
@@ -369,6 +373,17 @@ filled out lists.}
 \end{algorithmic}
 \end{algorithm}
 
+
+
+
+Discuss assumption
+
+Present stuff that is long enough
+
+information 
+
+in
+\eqref{formula:censored-agreement}
 
 
 
