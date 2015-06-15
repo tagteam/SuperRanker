@@ -28,10 +28,22 @@
   lists}
 \author{Claus Thorn Ekstrøm}
 \author{Thomas Alexander Gerds}
+\author{Andreas Jensen}
 \author{Kasper Brink-Jensen}
 \affil{Biostatistics, University of Copenhagen}
 
 
+
+\renewcommand{\topfraction}{.85}
+\renewcommand{\bottomfraction}{.7}
+\renewcommand{\textfraction}{.15}
+\renewcommand{\floatpagefraction}{.66}
+\renewcommand{\dbltopfraction}{.66}
+\renewcommand{\dblfloatpagefraction}{.66}
+\setcounter{topnumber}{9}
+\setcounter{bottomnumber}{9}
+\setcounter{totalnumber}{20}
+\setcounter{dbltopnumber}{9}
 
 \begin{document}
 
@@ -165,6 +177,7 @@ makeTransparent<-function(someColor, alpha=100)
   apply(newColor, 2, function(curcoldata){rgb(red=curcoldata[1], green=curcoldata[2],
     blue=curcoldata[3],alpha=alpha, maxColorValue=255)})
 }
+
 @ %
 
 \section{Methods}
@@ -261,8 +274,11 @@ ordering while larger values suggests disagreement. If the ranked
 lists are identical then the value of SRA will be zero for all depths
 $d$.  The sequential rank agreement can be interpreted as the average
 distance of the individual rankings of the lists from the average
-ranking for each of the items we have seen until depth $d$.
-
+ranking for each of the items we have seen until depth $d$. Note that
+the terms that are part of \eqref{def:sra} are not independent since
+each list contains the ranks from 1 tp $P$ exactly once. Hence we
+simply use the pooled standard deviation as a measure of the average
+distance between rankings.
 
 \subsection{Agreement among fully observed lists}
 The simplest case occurs when all $L$ lists are fully
@@ -274,25 +290,239 @@ importance, or if the same analysis method is applied to data from
 different populations.
 
 With fully observed lists we can plot the sequential rank agreement
-\eqref{def:sra} as a function of depth $d$.  An example is seen in the
-left panel of Figure~\ref{fig:example1} where four analysis methods
-were used to rank genes (for further detail see the application
-section below). The sequential rank agreement at depth $d$ can be
+\eqref{def:sra} as a function of depth $d$. An example is seen in top
+panels of Figure~\ref{fig:example1} where four analysis methods were
+used to rank 3051 gene expression values measured on 38 tumor mRNA
+samples in order to improve the classification of acute leukemias
+between two types: acute lymphoblastic leukemia (ALL) or acute myeloid
+leukemia (AML) \citep{Golub1999}. Preprocessing of the gene expression
+data was done as described in \citet{Dudoit2002} and the four
+different analysis approaces were: marginal two-sample $t$ tests,
+marginal logistic regression analyses, logistic regression eleastic
+net, and marginal maximum information content correlations (MIC)
+\citep{Reshef2011} which resulted in the rankings seen in
+Table~\ref{tab1}.  The sequential rank agreement at depth $d$ can be
 interpreted as how many ranks apart do we on average expect the items
 found until depth $d$ to be so smaller values on the $y$ axis
-correspond to better agreement among the lists than larger values.
+correspond to \emph{better} agreement among the lists than larger
+values.
+
+
+
+
+<<example1, echo=FALSE>>=
+library(SuperRanker)
+library(glmnet)
+library(minerva)
+library(changepoint)
+library(randomForestSRC)
+
+# Read data
+library(multtest)
+data(golub)
+
+
+y <- golub.cl
+x <- golub
+
+topk <- 20
+
+producelists <- function(x, y) {
+    nitems <- nrow(x)
+    index <- seq(1, nrow(golub))
+    ## d <- data.frame(y, x)
+
+    ## Marginale t-tests
+    mt.p <- sapply(index, function(i) { t.test(x[i,] ~ y)$p.value } )
+    list1 <- order(mt.p)
+
+    ## Marginale logreg-tests
+    mlogreg.p <- sapply(index, function(i) { drop1(glm(y ~ x[i,], family=binomial), test="Chisq")[2,5] } )
+    list2 <- order(mlogreg.p)
+
+    ## Elastic net
+    X <- scale(t(x))
+    enet <- glmnet(X, y, family="binomial", alpha=.8)
+    nyres <- cv.glmnet(X, y, family="binomial", alpha=.8)
+    coefficients <- coef(enet, s=nyres$lambda.1se)[-1]
+    nonzeros <- sum(coefficients!=0)
+    list3 <- order(abs(coefficients), decreasing=TRUE)
+    if (nonzeros<nitems) {
+        list3[(nonzeros+1):nitems] <- NA
+    }
+    ## MIC
+    MIC <- sapply(index, function(i) { mine(x[i,], y)$MIC})
+    list4 <- order(MIC, decreasing=TRUE)
+
+
+                                        # Random Forest
+###    dd <- data.frame(y=factor(y), t(x))
+                                        # dd <- data.frame(y=y, t(x))
+###    f1 <- rfsrc(y ~ ., data=dd, ntree=100)
+###    variables <- abs(f1$importance[,1])
+###    num.undecided <- sum(variables==0)
+###    list5 <- order(variables, decreasing=TRUE)
+###    list5[(length(variables)-num.undecided):length(variables)] <- 0
+
+    cbind(list1,list2,list3,list4)
+}
+
+## Original run
+B <- 20
+inputmatrix <- producelists(x, y)
+colnames(inputmatrix) <- c("T", "LogReg", "ElasticNet", "MIC", "RF")[1:ncol(inputmatrix)]
+res <- sra(inputmatrix, B=B)
+
+## Now make the same run but where we only have top 50 lists
+inputmatrix2 <- inputmatrix
+inputmatrix2[(topk+1):nrow(inputmatrix),] <- NA
+res2 <- sra(inputmatrix2, B=B)
+
+@
+
+
+<<fig1a, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE>>=
+ysize <- 1000
+nreference <- 20
+## Plot the line
+plot(res[1:ysize], col="black", lwd=3, type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
+
+## Compute random list backgrounds
+null <- random_list_sra(inputmatrix, B=B, n=nreference)
+
+bcolor <- makeTransparent("red", alpha=80)
+bcolor2 <- makeTransparent("blue", alpha=80)
+
+## Plot the random lists
+www <- smooth_sra(null)
+polygon(c(1:length(www$lower), rev(1:length(www$lower))),
+        c(www$lower, rev(www$upper)),
+        col=bcolor2, border=NA)
+
+## Load the data for the methods
+makereference <- function(x, y, n=100, B=20) {
+    sapply(1:n, function(i) { sra(producelists(x, sample(y)), B=B) }  )
+}
+## Uncomment the two lines below to redu the analysis
+###null2 <- makereference(x, y, n=100, B=B)
+###save(null2, file="R/fig1null2.rda")
+load("R/fig1null2.rda")
+
+## Plot the reference sras
+www2 <- smooth_sra(null2)
+polygon(c(1:length(www2$lower), rev(1:length(www2$lower))),
+        c(www2$lower, rev(www2$upper)),
+        col=bcolor, border=NA)
+
+@ %
+
+
+<<fig1b, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE >>=
+## Same as above but zoomed in
+ysize <- 50
+plot(res[1:ysize], lwd=3, col="black", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
+
+## Plot the random lists
+polygon(c(1:length(www$lower), rev(1:length(www$lower))),
+        c(www$lower, rev(www$upper)),
+        col=bcolor2, border=NA)
+
+## Plot the reference sras
+www2 <- smooth_sra(null2)
+polygon(c(1:length(www2$lower), rev(1:length(www2$lower))),
+        c(www2$lower, rev(www2$upper)),
+        col=bcolor, border=NA)
+
+
+@ %
+
+
+
+
+<<fig2a, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE>>=
+ysize <- 1000
+nreference <- 20
+## Plot the line
+plot(res2[1:ysize], col="black", lwd=3, type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
+
+## Compute random list backgrounds
+null <- random_list_sra(inputmatrix2, B=B, n=nreference)
+
+## Plot the random lists
+www <- smooth_sra(null)
+polygon(c(1:length(www$lower), rev(1:length(www$lower))),
+        c(www$lower, rev(www$upper)),
+        col=bcolor2, border=NA)
+
+## Load the data for the methods
+makereference <- function(x, y, n=100, B=20) {
+    sapply(1:n, function(i) { mymat <- producelists(x, sample(y)) ; mymat[(topk+1):nrow(mymat),] <- NA ; sra(mymat, B=B) }  )
+}
+## Uncomment the two lines below to redu the analysis
+##null2 <- makereference(x, y, n=100, B=B)
+##save(null2, file="R/fig1null2c.rda")
+load("R/fig1null2c.rda")
+
+## Plot the reference sras
+www2 <- smooth_sra(null2)
+polygon(c(1:length(www2$lower), rev(1:length(www2$lower))),
+        c(www2$lower, rev(www2$upper)),
+        col=bcolor, border=NA)
+
+@ %
+
+
+<<fig2b, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE >>=
+## Same as above but zoomed in
+ysize <- 50
+plot(res2[1:ysize], lwd=3, col="black", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
+
+## Plot the random lists
+polygon(c(1:length(www$lower), rev(1:length(www$lower))),
+        c(www$lower, rev(www$upper)),
+        col=bcolor2, border=NA)
+
+## Plot the reference sras
+www2 <- smooth_sra(null2)
+polygon(c(1:length(www2$lower), rev(1:length(www2$lower))),
+        c(www2$lower, rev(www2$upper)),
+        col=bcolor, border=NA)
+
+
+@ %
+
+
+<<label=tab1,echo=FALSE,results=tex>>=
+library(xtable)
+xxx <- as.data.frame(cbind(1:10, inputmatrix[1:10,]))
+colnames(xxx) <- c("Ranking", colnames(xxx)[2:5])
+xxx2 <- xtable(xxx, caption = "Top 10 list of ranked results from the Golub data. Numbers indicate the predictor/gene for the given ranking and method")
+digits(xxx2) <- 0
+print(xxx2, table.placement = "tb", caption.placement = "top", include.rownames=FALSE)
+#print(xtable(xxx,  label = "tab:one",
+
+@
+
+
+
 
 
 \begin{figure}[tb]
 \begin{center}
 \includegraphics[width=.45\textwidth]{paper-fig1a}
+\includegraphics[width=.45\textwidth]{paper-fig2a}
 \includegraphics[width=.45\textwidth]{paper-fig1b}
+\includegraphics[width=.45\textwidth]{paper-fig2b}
+
 \end{center}
- \caption{Left panel: Sequential rank agreement for 4 different analysis methods
-   applied to the 3051 genes in the Golub data (solid line). The dashed line shows the
-   corresponding estimated sequential rank agreement for censored
-   lists based purely on the top 50 ranked genes. Right panel contains
-   the same information but has zoomed in on the first part of the $x$-axis.}
+ \caption{Left panels: Sequential rank agreement for 4 different analysis methods
+   applied to the 3051 genes in the Golub data. The two plots on the
+   right show the sequential rank agreement for the same data but
+   where only the top-\Sexpr{topk} ranked items are available. The blue
+   and red areas correspond to the independent and randomized
+   reference hypothesis areas, respectively. The bottom plots are
+   identical to the corresponding top plots but have been zoomed in on
+   the first part of the $x$ axis.}
  \label{fig:example1}
 \end{figure}
 
@@ -465,216 +695,6 @@ Lidt spøjs ting man matcher dem op imod
 \section{Applications}
 
 \subsection{Comparing results across different method}
-
-In a classical paper by \citet{Golub1999} a dataset of 3051 gene
-expression values were measured on 38 tumor mRNA samples in order to
-improve the classification of acute leukemias between two types: acute
-lymphoblastic leukemia (ALL) or acute myeloid leukemia
-(AML). Preprocessing of the gene expression data was done as described
-in \citep{Dudoit2002}.
-
-We analyzed these gene expression data using four different
-approaches: marginal two-sample $t$ tests, marginal logistic
-regression analyses, logistic regression eleastic net, and marginal
-maximum information content correlations (MIC) \citep{Reshef2011}. For
-the first two methods, the genes were ranked according to $p$ value.
-
-
-<<example1, echo=FALSE>>=
-library(SuperRanker)
-library(glmnet)
-library(minerva)
-library(changepoint)
-library(randomForestSRC)
-
-# Read data
-library(multtest)
-data(golub)
-
-
-y <- golub.cl
-x <- golub
-
-producelists <- function(x, y) {
-    nitems <- nrow(x)
-    index <- seq(1, nrow(golub))
-                                        # d <- data.frame(y, x)
-
-                                        # Marginale t-tests
-    mt.p <- sapply(index, function(i) { t.test(x[i,] ~ y)$p.value } )
-    list1 <- order(mt.p)
-
-                                        # Marginale logreg-tests
-    mlogreg.p <- sapply(index, function(i) { drop1(glm(y ~ x[i,], family=binomial), test="Chisq")[2,5] } )
-    list2 <- order(mlogreg.p)
-
-                                        # Elastic net
-    X <- scale(t(x))
-    enet <- glmnet(X, y, family="binomial", alpha=.8)
-    nyres <- cv.glmnet(X, y, family="binomial", alpha=.8)
-    coefficients <- coef(enet, s=nyres$lambda.1se)[-1]
-    nonzeros <- sum(coefficients!=0)
-    list3 <- order(abs(coefficients), decreasing=TRUE)
-    if (nonzeros<nitems) {
-        list3[(nonzeros+1):nitems] <- NA
-    }
-                                        # MIC
-    MIC <- sapply(index, function(i) { mine(x[i,], y)$MIC})
-    list4 <- order(MIC, decreasing=TRUE)
-
-
-                                        # Random Forest
-###    dd <- data.frame(y=factor(y), t(x))
-                                        # dd <- data.frame(y=y, t(x))
-###    f1 <- rfsrc(y ~ ., data=dd, ntree=100)
-###    variables <- abs(f1$importance[,1])
-###    num.undecided <- sum(variables==0)
-###    list5 <- order(variables, decreasing=TRUE)
-###    list5[(length(variables)-num.undecided):length(variables)] <- 0
-
-    cbind(list1,list2,list3,list4)
-}
-
-inputmatrix <- producelists(x, y)
-colnames(inputmatrix) <- c("T", "LogReg", "ElasticNet", "MIC", "RF")[1:ncol(inputmatrix)]
-
-res <- sqrt(sra(inputmatrix, B=20))
-inputmatrix2 <- inputmatrix
-inputmatrix2[51:nrow(inputmatrix),] <- NA
-res2 <- sqrt(sra(inputmatrix2, B=20))
-
-@
-
-
-<<fig1a, fig=TRUE,echo=FALSE,include=FALSE>>=
-ysize <- 1000
-plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
-lines(res2[1:ysize], lwd=2, col="purple")
-
-@ %
-
-<<fig1b, fig=TRUE,echo=FALSE,include=FALSE >>=
-ysize <- 80
-plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
-lines(res2[1:ysize], lwd=2, col="purple")
-
-
-@ %
-
-
-
-
-<<fig2a, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE>>=
-ysize <- 1000
-plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
-lines(res2[1:ysize], lwd=2, col="purple")
-##
-# col1 <- makeTransparent()
-null <- sqrt(random_list_sra(inputmatrix, B=1, n=40))
-null3 <- sqrt(random_list_sra(inputmatrix, B=20, n=20))
-## matlines(null[1:ysize,], col="gray", lty=1)
-
-##
-
-##null2 <- sapply(1:40, function(i) {
-##    sra(producelists(x, sample(y)), B=1)
-##} )
-## matlines(null2[1:ysize,], col="lightblue", lty=1)
-
-load("R/fig1null.rda")
-
-bcolor <- makeTransparent("lightblue", alpha=80)
-bcolor2 <- makeTransparent("red", alpha=80)
-bcolor3 <- makeTransparent("green", alpha=80)
-
-
-www <- smooth_sra(null2)
-polygon(c(1:length(www$lower), rev(1:length(www$lower))),
-        c(www$lower, rev(www$upper)),
-        col=bcolor, border=NA)
-
-www <- smooth_sra(null)
-polygon(c(1:length(www$lower), rev(1:length(www$lower))),
-        c(www$lower, rev(www$upper)),
-        col=bcolor2, border=NA)
-
-www <- smooth_sra(null3)
-polygon(c(1:length(www$lower), rev(1:length(www$lower))),
-        c(www$lower, rev(www$upper)),
-        col=bcolor3, border=NA)
-
-
-
-@ %
-
-<<fig2b, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE >>=
-ysize <- 80
-plot(res[1:ysize], lwd=3, col="red", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
-lines(res2[1:ysize], lwd=2, col="purple")
-##
-# col1 <- makeTransparent()
-null <- sqrt(random_list_sra(inputmatrix, B=1, n=40))
-null3 <- sqrt(random_list_sra(inputmatrix, B=20, n=20))
-## matlines(null[1:ysize,], col="gray", lty=1)
-
-##
-
-##null2 <- sapply(1:40, function(i) {
-##    sra(producelists(x, sample(y)), B=1)
-##} )
-## matlines(null2[1:ysize,], col="lightblue", lty=1)
-
-load("R/fig1null.rda")
-
-bcolor <- makeTransparent("lightblue", alpha=80)
-bcolor2 <- makeTransparent("red", alpha=80)
-bcolor3 <- makeTransparent("green", alpha=80)
-
-
-www <- smooth_sra(null2)
-polygon(c(1:length(www$lower), rev(1:length(www$lower))),
-        c(www$lower, rev(www$upper)),
-        col=bcolor, border=NA)
-
-www <- smooth_sra(null)
-polygon(c(1:length(www$lower), rev(1:length(www$lower))),
-        c(www$lower, rev(www$upper)),
-        col=bcolor2, border=NA)
-
-www <- smooth_sra(null3)
-polygon(c(1:length(www$lower), rev(1:length(www$lower))),
-        c(www$lower, rev(www$upper)),
-        col=bcolor3, border=NA)
-
-
-
-@ %
-
-
-
-\begin{figure}[tb]
-\begin{center}
-\includegraphics[width=.45\textwidth]{paper-fig2a}
-\includegraphics[width=.45\textwidth]{paper-fig2b}
-\end{center}
- \caption{Sequential rank agreement for 4 different analysis methods
-   applied to the Golub data (thick red line). The red and blue shaded
- areas represent the pointwise 95\% normal areas for the XXX and XXY benchmarks,
-respectively.}
- \label{fig:case1}
-\end{figure}
-
-<<label=tab1,echo=FALSE,results=tex>>=
-library(xtable)
-xxx <- as.data.frame(inputmatrix[1:10,])
-xxx2 <- xtable(xxx)
-digits(xxx2) <- 0
-print(xxx2)
-#print(xtable(xxx, caption = "Top 10 list of results", label = "tab:one",
-#digits = c(0, 0, 2, 0, 2, 3, 3)), table.placement = "tbp",
-#caption.placement = "top")
-
-@
 
 
 
