@@ -516,9 +516,9 @@ print(xxx2, table.placement = "tb", caption.placement = "top", include.rownames=
 
 \end{center}
  \caption{Left panels: Sequential rank agreement for 4 different analysis methods
-   applied to the 3051 genes in the Golub data. The two plots on the
-   right show the sequential rank agreement for the same data but
-   where only the top-\Sexpr{topk} ranked items are available. The blue
+   applied to the 3051 genes in the Golub data. Right panels:
+   Corresponding xssequential rank agreement for the same data but
+   where only the top \Sexpr{topk} ranked items are available. The blue
    and red areas correspond to the independent and randomized
    reference hypothesis areas, respectively. The bottom plots are
    identical to the corresponding top plots but have been zoomed in on
@@ -604,6 +604,14 @@ filled out lists.}
 \end{algorithm}
 
 
+The proposed approach for censored rankings is based on two
+assumptions: 1) that the items of interest will be ..., and that 2)
+that the censored rankings provide so little information that it is
+reasonable to assume that the missing rankings 
+
+
+For censored data it is also imminent that ...
+
 
 
 Discuss assumption
@@ -612,16 +620,10 @@ Present stuff that is long enough
 
 information 
 
-in
-\eqref{formula:censored-agreement}
 
-
-
-
-
-
-
-
+For censored lists we expect a change point around the depth
+where the lists are censored. This is an artefact stemming from the
+fact that
 
 
 
@@ -631,13 +633,8 @@ agreement to
 \begin{equation}
 d \leq \max(k_1, \ldots, k_L),
 \end{equation}
-since we have no information about the ordering of the items after a
+since we have no real information about the ordering of the items after a
 depth $d$ where all lists are censored.
-
-
-
-
-
 
 
  ess contains full set of ranks and by using
@@ -645,13 +642,6 @@ the ... instead of applying the average ...
 
 the mean then we
 
-FIXME: If instead of running through all elements of $\tilde R_1(X_p)$
-one would use the average rank in $\tilde R_1(X_p)$ we would end up with
-a too small variance.
-
-FIXME: For censored lists we expect a change point around the depth
-where the lists are censored. This is an artefact stemming from the
-fact that
 
 \section{Evaluating sequential rank agreement}
 

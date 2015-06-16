@@ -1,0 +1,129 @@
+---
+title: "SuperRanker issues"
+author: "Claus Ekstrøm"
+date: "2 Jun 2015"
+output: html_document
+---
+
+# Betydning af censurering
+
+```{r echo=FALSE}
+#note: always pass alpha on the 0-255 scale
+makeTransparent<-function(someColor, alpha=100)
+{
+  newColor<-col2rgb(someColor)
+  apply(newColor, 2, function(curcoldata){rgb(red=curcoldata[1], green=curcoldata[2],
+    blue=curcoldata[3],alpha=alpha, maxColorValue=255)})
+}
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+library(SuperRanker)
+library(glmnet)
+library(minerva)
+library(changepoint)
+library(randomForestSRC)
+
+# Read data
+library(multtest)
+data(golub)
+
+
+y <- golub.cl
+x <- golub
+
+producelists <- function(x, y) {
+    nitems <- nrow(x)
+    index <- seq(1, nrow(golub))
+                                        # d <- data.frame(y, x)
+
+                                        # Marginale t-tests
+    mt.p <- sapply(index, function(i) { t.test(x[i,] ~ y)$p.value } )
+    list1 <- order(mt.p)
+
+                                        # Marginale logreg-tests
+    mlogreg.p <- sapply(index, function(i) { drop1(glm(y ~ x[i,], family=binomial), test="Chisq")[2,5] } )
+    list2 <- order(mlogreg.p)
+
+                                        # Elastic net
+    X <- scale(t(x))
+    enet <- glmnet(X, y, family="binomial", alpha=.8)
+    nyres <- cv.glmnet(X, y, family="binomial", alpha=.8)
+    coefficients <- coef(enet, s=nyres$lambda.1se)[-1]
+    nonzeros <- sum(coefficients!=0)
+    list3 <- order(abs(coefficients), decreasing=TRUE)
+    if (nonzeros<nitems) {
+        list3[(nonzeros+1):nitems] <- NA
+    }
+                                        # MIC
+    MIC <- sapply(index, function(i) { mine(x[i,], y)$MIC})
+    list4 <- order(MIC, decreasing=TRUE)
+
+
+                                        # Random Forest
+###    dd <- data.frame(y=factor(y), t(x))
+                                        # dd <- data.frame(y=y, t(x))
+###    f1 <- rfsrc(y ~ ., data=dd, ntree=100)
+###    variables <- abs(f1$importance[,1])
+###    num.undecided <- sum(variables==0)
+###    list5 <- order(variables, decreasing=TRUE)
+###    list5[(length(variables)-num.undecided):length(variables)] <- 0
+
+    cbind(list1,list2,list3,list4)
+}
+
+inputmatrix <- producelists(x, y)
+colnames(inputmatrix) <- c("T", "LogReg", "ElasticNet", "MIC", "RF")[1:ncol(inputmatrix)]
+
+res <- sqrt(sra(inputmatrix, B=20))
+
+```
+
+
+Censurerer 4 metoder ved 20 (dvs. 4 top-20 lister). Lader den funde listlængde være hhv. 50, 100, 200
+
+```{r}
+im <- inputmatrix[1:20,1:2]
+
+res50 <- sqrt(sra(im, B=200, nitems=50))
+res100 <- sqrt(sra(im, B=200, nitems=100))
+res200 <- sqrt(sra(im, B=200, nitems=200))
+```
+
+
+```{r}
+plot(res50, ylim=c(0, 80))
+lines(res100, col="red", lwd=3)
+lines(res200, col="blue", lwd=3)
+```
+
+
+```{r}
+plot(res100/res50, type="l", ylim=c(0, 10), xlim=c(0, 50))
+lines(res200/res50)
+```
+
+
+---
+
+# Randomsiering vs. mean censored rank
+
+```{r}
+m <- matrix(c(1:4,1,NA, NA, NA, 1:2, NA, NA), ncol=3)
+m
+sra(m, B=1000)
+```
+
+Her er der to "problemer":
+
+* Hvordan ved vi, hvilke items der skal tages med? Fx. ved dybde 2 skal vi så se på {1, 2} eller {1, 2, ?}?
+* A(2) = (sd(c(2,2,2)) + sd(c(2,2,3)) + sd(c(2,2,4))) / 3
+
+
+```{r}
+m <- matrix(c(1:3, 1, NA, NA), ncol=2)
+m
+sra(m, B=10000)
+
+
+```
