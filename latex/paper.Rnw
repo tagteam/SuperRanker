@@ -300,7 +300,10 @@ data was done as described in \citet{Dudoit2002} and the four
 different analysis approaces were: marginal two-sample $t$ tests,
 marginal logistic regression analyses, logistic regression eleastic
 net, and marginal maximum information content correlations (MIC)
-\citep{Reshef2011} which resulted in the rankings seen in
+\citep{Reshef2011}. For the first two methods, the genes were ranked
+according to $p$ value, for logistic regression the genes were ordered
+by size of the corresponding coefficients (after standardization), and
+MIC was ordered by correlation which resulted in the rankings seen in
 Table~\ref{tab1}.  The sequential rank agreement at depth $d$ can be
 interpreted as how many ranks apart do we on average expect the items
 found until depth $d$ to be so smaller values on the $y$ axis
@@ -517,7 +520,7 @@ print(xxx2, table.placement = "tb", caption.placement = "top", include.rownames=
 \end{center}
  \caption{Left panels: Sequential rank agreement for 4 different analysis methods
    applied to the 3051 genes in the Golub data. Right panels:
-   Corresponding xssequential rank agreement for the same data but
+   Corresponding sequential rank agreement for the same data but
    where only the top \Sexpr{topk} ranked items are available. The blue
    and red areas correspond to the independent and randomized
    reference hypothesis areas, respectively. The bottom plots are
@@ -535,8 +538,8 @@ of items that the lists agree on and other sets where they rank the
 items differently. In particular, we generally expect the agreement
 among the lists to be better towards the top of the lists and worse
 towards the end of the lists, and in this case the sequential rank
-agreement curve will start at a low level, and then have an increase
-before it levels off.
+agreement curve will start at a low level and then increase until it
+levels off.
 
 
 \subsection{Analysis of incomplete/censored lists}
@@ -604,44 +607,37 @@ filled out lists.}
 \end{algorithm}
 
 
-The proposed approach for censored rankings is based on two
-assumptions: 1) that the items of interest will be ..., and that 2)
-that the censored rankings provide so little information that it is
-reasonable to assume that the missing rankings 
+The proposed approach is based on two assumptions: 1) that the items
+of interest will be found towards the top of the lists, and 2) that
+the censored rankings provide so little information that it is
+reasonable to assume that the missing rankings provide no information
+and might as well be considered random.  The first assumption is
+justifiable because we have already accepted that it is reasonable to
+rank the items in the first place. The second assumption is fair
+in the light of the first assumption provided that we have a
+``sufficiently large'' part of the top of the lists available.
 
-
-For censored data it is also imminent that ...
-
-
-
-Discuss assumption
-
-Present stuff that is long enough
-
-information 
-
-
-For censored lists we expect a change point around the depth
-where the lists are censored. This is an artefact stemming from the
-fact that
-
-
-
-Unless we have additional prior knowledge about the distribution of the
-unranked items then we can restrict attention of the sequential rank
-agreement to
+When the two assumptions are combined then it is clear that the
+interesting part of the sequential rank agreement curves must be for
+smaller depths. Unless we have additional prior knowledge about the
+distribution of the unranked items then we can restrict attention of
+the sequential rank agreement to
 \begin{equation}
-d \leq \max(k_1, \ldots, k_L),
+d' \leq \max(k_1, \ldots, k_L),
 \end{equation}
 since we have no real information about the ordering of the items after a
-depth $d$ where all lists are censored.
+depth $d'$ where all lists are censored.
 
-
- ess contains full set of ranks and by using
-the ... instead of applying the average ...
-
-the mean then we
-
+Like for fully observed lists we generally expect the sequential rank
+agreement to start low and then increase unless the lists are
+completely unrelated (in which case the sequential rank agreement will
+be constant at a high level) or if the lists mostly agree on the
+ranking (in which case the sequential rank agreement will also be
+constant but at a low level). For censored lists we also expect a
+change point around the depth where the lists are censored. This is an
+artefact stemming from the fact that we assume that the remainder of
+the lists can be replaced by a simple permutation of the missing
+items.
 
 \section{Evaluating sequential rank agreement}
 
@@ -682,32 +678,8 @@ Lidt spøjs ting man matcher dem op imod
 
 \subsection{Changepoint analysis}
 
-\section{Applications}
 
-\subsection{Comparing results across different method}
-
-
-
-<<>>=
-library(changepoint)
-cp1 <- cpt.mean(res, method="BinSeg")
-cp2 <- cpt.mean(res2, method="BinSeg")
-cp1@cpts
-cp1@param.est
-cp2@cpts
-cp2@param.est
-@
-
-\subsection{Stability of results}
-
-\subsection{Evaluating results from top-$k$ lists}
-
-
-
-Bootstrap across a single method and compare results. Discuss collinearity
-
-
-\section{Comparison to ...}
+\section{Comparison to average overlap}
 
 The overlap among $L$ lists observed until depth $d$ is defined as the
 proportion of items that are found in all $L$ lists compared to the
@@ -728,23 +700,6 @@ included in the majority of the calculations.
 
 
 
-
-
-In a classical paper by \citet{Golub1999} a dataset of 3051 gene
-expression values were measured on 38 tumor mRNA samples in order to
-improve the classification of acute leukemias between two types: acute
-lymphoblastic leukemia (ALL) or acute myeloid leukemia
-(AML). Preprocessing of the gene expression data was done as described
-in \citep{Dudoit2002}.
-
-We analyzed these gene expression data using four different
-approaches: marginal two-sample $t$ tests, marginal logistic
-regression analyses, logistic regression eleastic net, and marginal
-maximum information content correlations (MIC) \citep{Reshef2011}. For
-the first two methods, the genes were ranked according to $p$ value.
-
-
-
 In this section we apply the method to the ColonData data from the R
 package MAMA (Ihnatova, 2013), which consists of gene expression
 measurements from a subset of 500 genes from 77 individuals from
@@ -761,16 +716,16 @@ Table 4.
 myres <- average_overlap(inputmatrix[,1:2])
 myres2 <- average_overlap(inputmatrix[-c(1,2),1:2])
 xvals <- 1:500
-plot(myres, xlim=c(1, 300), ylim=c(0,1), type="l")
-lines(xvals[-c(1,2)], myres2[1:498], col="red")
+plot(xvals, myres[xvals], xlim=c(1, 150), ylim=c(0,1), type="l", lwd=2, ylab="Average overlap", xlab="List depth")
+lines(xvals[-c(1,2)], myres2[1:498], col="red", lwd=2)
 @
 
 <<fig-ao2, echo=FALSE, fig=TRUE,include=FALSE>>=
-mmyres <- sqrt(sra(inputmatrix[,1:2]))
-mmyres2 <- sqrt(sra(inputmatrix[-c(1,2),1:2]))
+mmyres <- sra(inputmatrix[,1:2])
+mmyres2 <- sra(inputmatrix[-c(1,2),1:2])
 xvals <- 1:500
-plot(mmyres, xlim=c(1, 300), type="l")
-lines(xvals[-c(1,2)], mmyres2[1:498], col="red")
+plot(xvals, mmyres[xvals], xlim=c(1, 150), ylim=c(0, 110), type="l", lwd=2, ylab="Sequential rank agreement", xlab="List depth")
+lines(xvals[-c(1,2)], mmyres2[1:498], col="red", lwd=2)
 @
 
 
@@ -780,12 +735,43 @@ lines(xvals[-c(1,2)], mmyres2[1:498], col="red")
 \includegraphics[width=.45\textwidth]{paper-fig-ao1}
 \includegraphics[width=.45\textwidth]{paper-fig-ao2}
 \end{center}
- \caption{Sequential rank agreement for 4 different analysis methods
+ \caption{Average overlap (left figure) and sequential rank agreement
+   (right figure) for two different analysis methods
    applied to the Golub data (thick red line). The red and blue shaded
  areas represent the pointwise 95\% normal areas for the XXX and XXY benchmarks,
 respectively.}
  \label{fig:case1}
 \end{figure}
+
+
+
+
+\section{Applications}
+
+\subsection{Comparing results across different method}
+
+
+
+<<>>=
+#library(changepoint)
+#cp1 <- cpt.mean(res, method="BinSeg")
+#cp2 <- cpt.mean(res2, method="BinSeg")
+#cp1@cpts
+#cp1@param.est
+#cp2@cpts
+#cp2@param.est
+@
+
+\subsection{Stability of results}
+
+\subsection{Evaluating results from top-$k$ lists}
+
+
+
+Bootstrap across a single method and compare results. Discuss collinearity
+
+
+
 
 
 
