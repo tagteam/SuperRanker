@@ -641,8 +641,38 @@ items.
 
 \section{Evaluating sequential rank agreement}
 
-To interpretate the sequential rank agreement scale we propose by
-several different benchmark values. Our data free benchmark value is
+To interpret the sequential rank agreement values we propose two
+different benchmark values corresponding to two different
+hypotheses. We wish to determine if we observe better agreement that
+what would be expected if there were no relevant information available
+in the data.
+
+The first reference hypothesis is 
+\begin{eqnarray*}
+H_0  & : &  \text{The list rankings correspond to complete randomly}\\
+       &  & \text{permuted lists} \\
+\end{eqnarray*}
+
+\begin{eqnarray*}
+H_1 & :&  \text{The list rankings correspond to ranked lists based on}\\
+& &   \text{data containing no information}
+\end{eqnarray*}
+
+
+It is important to stress 
+Note that 
+
+
+Compute the sequential rank agreement for a large number of random
+permutations ... with the same number of lists and with the same amount of censoring.
+
+
+understood about the outcome
+
+Clearly hypothesis .... is ... no association and that the methods are
+also completely independent.
+
+Our data free benchmark value is
 obtained by computing the sequential rank agreement of $L$ lists each
 containing a permutation of $P$ items. Practically this benchmark
 value can be obtained by averaging the result of repeated computer
@@ -676,7 +706,6 @@ Do the following a large number of times
 
 Lidt spøjs ting man matcher dem op imod
 
-\subsection{Changepoint analysis}
 
 
 \section{Comparison to average overlap}
@@ -778,6 +807,9 @@ Bootstrap across a single method and compare results. Discuss collinearity
 \section{Discussion}
 
 Mention/discuss different measures.
+
+
+\subsection{Changepoint analysis}
 
 
 \bibliographystyle{rss}
