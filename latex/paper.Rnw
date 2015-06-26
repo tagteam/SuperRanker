@@ -643,83 +643,98 @@ items.
 
 To interpret the sequential rank agreement values we propose two
 different benchmark values corresponding to two different
-hypotheses. We wish to determine if we observe better agreement that
+hypotheses. We wish to determine if we observe better agreement than
 what would be expected if there were no relevant information available
 in the data.
 
 The first reference hypothesis is 
 \begin{eqnarray*}
 H_0  & : &  \text{The list rankings correspond to complete randomly}\\
-       &  & \text{permuted lists} \\
+       &  & \text{permuted lists} 
 \end{eqnarray*}
+which not only assumes that there is no information in the rankings
+but also that the methods are completely independent.
 
+Alternatively, we can remove the restriction on the independence among
+the methods by only requiring that there is no information in the
+ranking but that the rankings are all based on applying the 
+method/approaches to the same data
 \begin{eqnarray*}
-H_1 & :&  \text{The list rankings correspond to ranked lists based on}\\
-& &   \text{data containing no information}
+H_1 & :&  \text{The list rankings are based on data containing}\\
+& &   \text{no association to the outcome.}
 \end{eqnarray*}
+$H_0$ is clearly the strictest (and also potentially quite
+unrealistic) null hypothesis but we can easily obtain realizations
+from that null hypothesis simply by permuting the items for each list
+and then computing the sequential rank agreement for the permuted
+lists. In the uncensored case each experiment contains $L$ lists of
+random permutations of the numbers $1,\dots,P$. For the censored case
+we permute the number as before but censor the same number of items
+for each list as were censored in the original dataset. The sequential
+rank agreement curve from the the original data can then be compared
+to the pointwise rank agreements obtained from under $H_0$.
+
+To obtain a reference distribution under $H_1$ we use a randomization
+test approach on the original data to remove any associations to the
+outcome in the data that was used to generate the rankings before
+computing the ranking and subsequently the sequential rank agreement
+from the randomized data. The idea is to repeat the ranking procedures
+in the modified data where the outcome vector is randomly permuted. In
+practice we permute the outcomes but keep any predictors before
+ranking to preserve any structure in the predictors. This artificially
+removes any potential information regarding the regression that the
+real data may contain. The randomization approach requires that we
+have the original data available, so we can compute the ranked lists
+from the randomized data and not just the ranked lists and as such it
+may not be possible to evaluate $H_1$ in all situations.
 
 
-It is important to stress 
-Note that 
+If the sequential rank agreement for the original data lies
+substantially below the distribution of the sequential rank agreements
+obtained under either $H_0$ or $H_1$ then this suggests that the
+original ranked lists agree \emph{more} that we would expect if the
+ranked lists were based on data with no information.
+
+Figure~\ref{fig:example1} shows the sequential rank distributions
+based on $400$ samples under $H_0$ and $H_1$, respectively. Not
+surprisingly, the null distribution of $H_1$ has lower sequential rank
+agreement than the null distribution of $H_0$ because the four methods
+used to rank the data ($t$ test, logistic regression, elastic net, and
+MIC) generally identify and rank the same set of predictors that show
+spurious associations. The two bottom panels in
+Figure~\ref{fig:example1} also indicate that the observed sequential
+rank agreement is better than what would be expected for the full
+dataset but that the censored data (the bottom-right plot) suggests
+that there may be at most 1 or 2 ranked items that are towards the top
+of the lists that yield a result better than what would be expected.
 
 
-Compute the sequential rank agreement for a large number of random
-permutations ... with the same number of lists and with the same amount of censoring.
-
-
-understood about the outcome
-
-Clearly hypothesis .... is ... no association and that the methods are
-also completely independent.
-
-Our data free benchmark value is
-obtained by computing the sequential rank agreement of $L$ lists each
-containing a permutation of $P$ items. Practically this benchmark
-value can be obtained by averaging the result of repeated computer
-experiments. In the uncensored case each experiment contains $L$ lists
-of random permutations of the numbers $1,\dots,P$. In the censored
-case only the uncensored part of the orginal lists is randomly
-permuted.
-
-In our experience XX repetitions are sufficient to reduce Monte Carlo
-error. Table Appendix A shows benchmark values obtained with
-
-Our no-information benchmark can be applied in situations where each
-list is an importance ranking of $P$ predictors resulting from
-regression analyses. The idea is to repeat the regression analyses in
-modified data where the outcome vector is randomly permuted. This
-artificially removes any potential information regarding the
-regression that the real data may contain.
-
-- third approach?
-
-\subsection{Independent lists}
-
-\subsection{Permuted outcomes + analyses}
-
-Do the following a large number of times
-\begin{enumerate}
-  \item Permute outcome vector
-  \item Redo analyses for all $L$ methods
-  \item Compute sequential rank agreement for
-\end{enumerate}
-
-Lidt spøjs ting man matcher dem op imod
+It is important to stress that neither $H_0$ nor $H_1$ are concerned
+with whether the $L$ rankings are relevant. Both hypotheses are purely
+considering how the rankings agree in a situation where there is no relevant
+information available in the data used for creating the rankings.
 
 
 
 \section{Comparison to average overlap}
 
+The average overlap is widely used in comparing (two) ranked list and
+the idea behind the average overlap closely resembles the sequential
+rank agreement \citep{Fagin2003,Webber2010}. Here we will present an
+extention of the average overlap to more that two lists and compare this
+to sequential rank agreement.
+
 The overlap among $L$ lists observed until depth $d$ is defined as the
 proportion of items that are found in all $L$ lists compared to the
 possible number of items found in all lists observed until depth $d$:
 \begin{equation}
-O(d) = \frac{| \cap_{l=1}^L \{\pi_l(r); r\leq d \} |}{d}.
+O(d) = \frac{| \cap_{l=1}^L \{\pi_l(r); r\leq d \} |}{d}. \label{def:overlap}
 \end{equation}
-Typically, the overlap is only considered for pairwise comparisons
+Typically, the overlap is only considered for pairwise comparisons but in
+\eqref{def:overlap} we make no such distinction. 
 
 The average overlap at depth $d$ is defined as the average of the
-overlaps until $d$,
+overlaps until depth $d$,
 \begin{equation}
 AO(d) = \sum_{i=1}^d \frac{O(d)}{d}.
 \end{equation}
@@ -727,18 +742,24 @@ This definition directly ensures that extra emphasis is included on
 the top of the list since the overlap of the items towards the top are
 included in the majority of the calculations.
 
+There are three main drawbacks of the average overlap method: First it
+is highly sensitive to items at the top of the list. The average
+overlap profile changes dramatically depending on the occurrence of
+similar items in the lists. Secondly, when the number of lists, $L$,
+is high then it might be difficult to obtain a non-zero overlap (and
+hence a non-zero average overlap) at the beginning of the lists because
+the overlap does not increase until an item is present in all $L$
+lists. Finally, the average overlap has an interpretation in terms of
+moving averages of  percentages (of $L$ sets) which somewhat less
+intuitive than simply the average rank distance that we propose.
 
-
-In this section we apply the method to the ColonData data from the R
-package MAMA (Ihnatova, 2013), which consists of gene expression
-measurements from a subset of 500 genes from 77 individuals from
-Denmark, 36 from Australia and 41 from Japan as well as information on
-microsattelite stability (stable MSS/unstable MSI) which is often used
-as an indicator for colorectal cancer. The genes were tested for
-difference in expression in the MSI/MSS groups using the limma package
-(Smyth, 2005). The genes were then ranked according to p–values giving
-three lists that we wish to compare, the top of these can be seen in
-Table 4.
+In this section we compare the average overlap and the sequential rank
+agreement to the Golub data  \citep{Golub1999}. To make it more
+similar to the way the average ovelap is typically used we restrict
+attention to only two analysis methods: $t$ tests and logistic
+regression. Thus we have two marginal model approaches that are very
+similar and the first two columns of Table~\ref{tab1} show the actual top-10
+ranking of the predictors. 
 
 
 <<fig-ao1, echo=FALSE, fig=TRUE,include=FALSE>>=
@@ -765,13 +786,32 @@ lines(xvals[-c(1,2)], mmyres2[1:498], col="red", lwd=2)
 \includegraphics[width=.45\textwidth]{paper-fig-ao2}
 \end{center}
  \caption{Average overlap (left figure) and sequential rank agreement
-   (right figure) for two different analysis methods
-   applied to the Golub data (thick red line). The red and blue shaded
- areas represent the pointwise 95\% normal areas for the XXX and XXY benchmarks,
-respectively.}
+   (right figure) for comparing two different analysis methods
+   (marginal $t$ test and logistic regression)
+   applied to the Golub data. The black lines are based on the full
+   set of predictors while the red lines have the two highest
+   associated predictors removed
+   from the data before computing the average overlap and sequential
+   rank agreement.}
  \label{fig:case1}
 \end{figure}
 
+
+
+
+The black lines Figure~\ref{fig:case1} show the average overlap and
+sequential rank agreement for these data. It is clear from both plots
+that there is perfect agreement towards the top of the ranked lists:
+the average overlap is 1 and the sequential rank agreement is zero.
+However, if we remove those two items from the data (i.e.,
+gene/predictor 2124 and 896) and redo the analyses then we get
+substantially different curves for the average overlap but not for
+sequential rank agreement (red lines in Figure~\ref{fig:case1}). For
+the sequential rank agreement we get roughly the same estimate of
+agreement from rank 3 as we did from the full dataset which is a nice
+property. For the average overlap the curves completely change when
+these two items are missing and give a visually different conclusion
+about the ranking of the items from rank 3 downwards.
 
 
 
@@ -808,6 +848,7 @@ Bootstrap across a single method and compare results. Discuss collinearity
 
 Mention/discuss different measures.
 
+Censor lists at significane level?
 
 \subsection{Changepoint analysis}
 
