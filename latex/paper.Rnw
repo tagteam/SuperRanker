@@ -645,17 +645,17 @@ hypotheses. We wish to determine if we observe better agreement than
 what would be expected if there were no relevant information available
 in the data.
 
-The first reference hypothesis is 
+The first reference hypothesis is
 \begin{eqnarray*}
 H_0  & : &  \text{The list rankings correspond to complete randomly}\\
-       &  & \text{permuted lists} 
+       &  & \text{permuted lists}
 \end{eqnarray*}
 which not only assumes that there is no information in the rankings
 but also that the methods are completely independent.
 
 Alternatively, we can remove the restriction on the independence among
 the methods by only requiring that there is no information in the
-ranking but that the rankings are all based on applying the 
+ranking but that the rankings are all based on applying the
 method/approaches to the same data
 \begin{eqnarray*}
 H_1 & :&  \text{The list rankings are based on data containing}\\
@@ -729,7 +729,7 @@ possible number of items found in all lists observed until depth $d$:
 O(d) = \frac{| \cap_{l=1}^L \{\pi_l(r); r\leq d \} |}{d}. \label{def:overlap}
 \end{equation}
 Typically, the overlap is only considered for pairwise comparisons but in
-\eqref{def:overlap} we make no such distinction. 
+\eqref{def:overlap} we make no such distinction.
 
 The average overlap at depth $d$ is defined as the average of the
 overlaps until depth $d$,
@@ -757,7 +757,7 @@ similar to the way the average ovelap is typically used we restrict
 attention to only two analysis methods: $t$ tests and logistic
 regression. Thus we have two marginal model approaches that are very
 similar and the first two columns of Table~\ref{tab1} show the actual top-10
-ranking of the predictors. 
+ranking of the predictors.
 
 
 <<fig-ao1, echo=FALSE, fig=TRUE,include=FALSE>>=
@@ -815,27 +815,63 @@ about the ranking of the items from rank 3 downwards.
 
 \section{Applications}
 
-\subsection{Comparing results across different method}
+
+We now consider an application of the sequential rank agreement to two
+data sets consisting of MALDI-TOF (Matrix-Assisted Laser
+Desorption/Ionization Time Of Flight) mass spectra obtained from blood
+samples from patients with either benign or malignant ovarian
+tumors. The data sets are subsamples of the Danish MALOVA and DACOVA
+study populations.
+
+The MALOVA study is a multidisciplinary Danish study on ovarian cancer
+\cite{Hogdall:2004:Cancer:15160342} where all Danish women diagnosed
+with an ovarian tumor and referred for surgery from the participating
+departments of gynecology were enrolled continuously from December
+1994 to May 1999. We use a random subsample of $119$ patients with a
+total of $58$ patients with malignant ovarian cancers as cases and
+$61$ patients with benign ovarian tumors as controls. The DACOVA study
+is similarly a multidisciplinary Danish study on ovarian cancer
+covering about $66\%$ of the population in Denmark
+\cite{bertelsen1991protocol}. It was attempted to continuous enroll
+all patients referred for surgery with an ovarian tumor clinically
+suspected to be cancer during the period 1984 to 1990. We use a random
+subsample of $113$ patients with a total of $54$ malignant ovarian
+cancers and $59$ benign ovarian tumors/gynecologic disorders.
+
+Proteomic analysis was performed by MALDI-TOF mass spectrometry with a
+Bruker Ultraflex in positive, linear ion mode in the mass-to-charge
+range $800$ to $20000$ Dalton by an average of $500$ laser
+shots. Calibration of the instrument was performed using a protein
+standard mixture. Each spectrum consists of $49642$ samples over the
+mass-to-charge range which we down-sample on an equidistant grid of
+5000 points by linear interpolation. We further preprocess each
+spectrum by first removing the slow-varying baseline intensities with
+the SNIP algorithm \cite{ryan1988snip} followed by a normalization
+with respect to the total ion counts. Finally, we standardize the 5000
+predictors to have column-wise zero mean and unit variance.
+
+We use these two data sets to illustrate how the sequential rank
+agreement can be applied in two different scenarios: i) assessing the
+agreement of ranking the importance of the predictors using different
+statistical classification methods and ii) assessing the agreement of
+rankings the predictions (the probability of the classifying a tumor
+as malignant) subject to perturbations in data. In the latter case we
+further illustrate the discrepancy between the ranking stability of
+different statistical methods through a simulation study.
 
 
+\subsection{Agreement of predictor ranking}
 
-<<>>=
-#library(changepoint)
-#cp1 <- cpt.mean(res, method="BinSeg")
-#cp2 <- cpt.mean(res2, method="BinSeg")
-#cp1@cpts
-#cp1@param.est
-#cp2@cpts
-#cp2@param.est
-@
-
-\subsection{Stability of results}
-
-\subsection{Evaluating results from top-$k$ lists}
+#includegraphics marginalVsModel.pdf
 
 
+\subsection{Agreement of predictions}
 
-Bootstrap across a single method and compare results. Discuss collinearity
+#includegraphics thomas.pdf
+
+#includegraphics simulationTest2.pdf
+
+
 
 
 
@@ -848,7 +884,10 @@ Mention/discuss different measures.
 
 Censor lists at significane level?
 
-\subsection{Changepoint analysis}
+Bootstrap across a single method and compare results. Discuss collinearity
+
+
+Changepoint analysis
 
 
 \bibliographystyle{rss}
