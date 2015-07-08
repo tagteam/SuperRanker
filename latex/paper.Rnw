@@ -28,7 +28,7 @@
   lists}
 \author{Claus Thorn Ekstrøm}
 \author{Thomas Alexander Gerds}
-\author{Andreas Jensen}
+\author{Andreas Kryger Jensen}
 \author{Kasper Brink-Jensen}
 \affil{Biostatistics, University of Copenhagen}
 
@@ -55,7 +55,7 @@
   The comparison of ranked lists has been studied for several decades
   but since the advent of large data types it has received increased
   interest. Computer science and genomics are just two areas that need
-  to compare ranked lists in order to in- vestigate similarities
+  to compare ranked lists in order to investigate similarities
   between different analytical methods. Often the aim is to find a
   measure of similarity for two or more ordered lists that comprise
   the first k items from each list. Since ordered lists typically are
@@ -71,8 +71,6 @@
 
 Key words: sequential rank agreement, top lists, rank agreement, order statistic,
 methods comparison, variable selection
-
-Multiple lists. Weigh top over bottom. Censoring. Interpretation
 
 \section{Introduction}
 
