@@ -22,18 +22,12 @@
 
 %%% RSS specific items
 
-
-
-\title{Sequential rank agreement methods for comparison of ranked
-  lists}
+\title{Sequential rank agreement methods for comparison of lists}
 \author{Claus Thorn Ekstrøm}
 \author{Thomas Alexander Gerds}
 \author{Andreas Jensen}
 \author{Kasper Brink-Jensen}
 \affil{Biostatistics, University of Copenhagen}
-
-
-
 \renewcommand{\topfraction}{.85}
 \renewcommand{\bottomfraction}{.7}
 \renewcommand{\textfraction}{.15}
@@ -52,10 +46,9 @@
 \maketitle
 
 \begin{abstract}
-  The comparison of ranked lists has been studied for several decades
-  but since the advent of large data types it has received increased
-  interest. Computer science and genomics are just two areas that need
-  to compare ranked lists in order to in- vestigate similarities
+  The comparison of rankings has received increased interest in the
+  last decades. Computer science and genomics are just two areas that
+  need to compare ranked lists in order to investigate similarities
   between different analytical methods. Often the aim is to find a
   measure of similarity for two or more ordered lists that comprise
   the first k items from each list. Since ordered lists typically are
@@ -177,7 +170,6 @@ makeTransparent<-function(someColor, alpha=100)
   apply(newColor, 2, function(curcoldata){rgb(red=curcoldata[1], green=curcoldata[2],
     blue=curcoldata[3],alpha=alpha, maxColorValue=255)})
 }
-
 @ %
 
 \section{Methods}
