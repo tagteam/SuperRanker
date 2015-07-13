@@ -554,10 +554,9 @@ for some items will be unknown. Also, the rankings within a single
 list are not independent since each rank must appear exactly once in
 each list. Thus, we cannot simply assign the same number (e.g., the
 mean of the unassigned ranks) to the censored items since that would
-% @Claus: less variation of the ranks? or of the agreement?
-result in less variation of the agreement, and it would artificially
-introduce a (downward) bias of agreement for items that are censored
-in multiple lists.
+result in less variation of the ranks and hence less variation of the
+agreement, and it would artificially introduce a (downward) bias of
+agreement for items that are censored in multiple lists.
 
 Instead we randomize the ranks $\{d_{l}+1,\dots,P\}$ to the items that
 do not occur in list $\Lambda_l$. By randomizing the missing items of
@@ -641,7 +640,6 @@ Alternatively, we can remove the restriction on the independence among
 the methods by only requiring that there is no information in the
 ranking but that the rankings are all based on applying the
 method/approaches to the same data
-% @Claus: maybe H_1 is not a good name as people would expect H_1 to be the complement of H_0
 \begin{eqnarray*}
 \tilde H_0 & :&  \text{The list rankings are based on data containing}\\
 & &   \text{no association to the outcome.}
@@ -673,21 +671,22 @@ obtained under either $H_0$ or $\tilde H_0$ then this suggests that
 the original ranked lists agree \emph{more} than what we would expect
 in data with no information.
 
-For the analysis of the Golub data described in Section \ref{sec:amfol},
-Figure~\ref{fig:example1} shows the empirical distributions of
-sequential rank agreement under $H_0$ and $\tilde H_0$ each based on
-$400$ permutations. Not surprisingly, the sequential rank agreement
-under $\tilde H_0$ is lower than the sequential rank agreement under
-$H_0$ because the four methods used to rank the data ($t$ test,
-logistic regression, elastic net, and MIC) generally tend to identify
-(and rank high) similar predictors even if there are only spurious
-associations. The two bottom panels in
-% @Claus jeg forstaar ikke den den naste lange saetning. mener du full lists i stedet for full dataset?
+For the analysis of the Golub data described in Section
+\ref{sec:amfol}, Figure~\ref{fig:example1} shows the empirical
+distributions of sequential rank agreement under $H_0$ and
+$\tilde H_0$ each based on $400$ permutations. Not surprisingly, the
+sequential rank agreement under $\tilde H_0$ is lower than the
+sequential rank agreement under $H_0$ because the four methods used to
+rank the data ($t$ test, logistic regression, elastic net, and MIC)
+generally tend to identify (and rank high) similar predictors even if
+there are only spurious associations. The two bottom panels in
 Figure~\ref{fig:example1} also indicate that the observed sequential
-rank agreement is better than what would be expected for the full
-dataset but that the censored data (the bottom-right plot) suggests
-that there may be at most 1 or 2 ranked items that are towards the top
-of the lists that yield a result better than what would be expected.
+rank agreement (the black line) is better than what would be expected
+by chance for data that contain no information since it lies below the
+reference areas. However, the censored data also suggests that there
+may be at most 1 or 2 ranked items towards the top of the lists that
+yield a result better than what would be expected (the bottom-right
+plot).
 
 It is important to stress that neither $H_0$ nor $\tilde H_0$ are
 related to questions regarding the association between the outcome and
@@ -709,10 +708,11 @@ possible number of items found in all lists observed until depth $d$:
 \begin{equation}
   O(d) = \frac{| \cap_{l=1}^L \{\pi_l(r); r\leq d \} |}{d}. \label{def:overlap}
 \end{equation}
-Here $|A|$ is the cardinality of the set $A$.
-Originally the overlap was only considered for pairwise comparisons
-but formula \eqref{def:overlap} can be applied when $L>2$.
-% @Claus: har du en reference hvor OA bliver brugt paa to lister?
+Here $|A|$ is the cardinality of the set $A$.  Typically the overlap
+is only considered for pairwise comparisons but formula
+\eqref{def:overlap} can be applied even when $L>2$
+\citep{Bar-Ilan2006,Boulesteix2009}.
+
 The average overlap at depth $d$ is defined as the average of the
 overlaps until depth $d$,
 \begin{equation}
@@ -723,16 +723,19 @@ in the top of the lists since their item specific overlap contributes
 to the calculation of average overlap at higher depths.
 
 There are three main drawbacks of the average overlap method: First it
-is highly sensitive to single items in the top of one the lists.
-% @Claus: jeg forstaar ikke den naeste saetning.
-The average overlap profile may change dramatically depending on the
-occurrence of similar items in the lists. Secondly, when the number of
-lists, $L$, is high then it might be difficult to obtain a non-zero
-overlap (and hence a non-zero average overlap) at the beginning of the
-lists because the overlap will be zero until an item is present in all
-$L$ lists. Finally, the average overlap has an interpretation in terms
-of moving averages of percentages (of $L$ sets) which is somewhat less
-intuitive than our proposed average rank distance.
+is highly sensitive to single items in the top of one the lists.  The
+average overlap profile may change dramatically depending on the
+presence or absence of similar items in the beginning of the
+lists. For example, if all lists have the same item at the top then
+the average overlap attains its maximum at 1, but if just one of the
+lists differ then the overage overlap starts at its minimum of
+0. Secondly, when the number of lists, $L$, is high then it might be
+difficult to obtain a non-zero overlap (and hence a non-zero average
+overlap) at the beginning of the lists because the overlap will be
+zero until an item is present in all $L$ lists. Finally, the average
+overlap has an interpretation in terms of moving averages of
+percentages (of $L$ sets) which is somewhat less intuitive than our
+proposed average rank distance.
 
 In the following we compare the average overlap and the sequential
 rank agreement using the analysis of the Golub data \citep{Golub1999}
