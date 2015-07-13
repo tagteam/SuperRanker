@@ -207,7 +207,7 @@ random_list_sra <- function(object, B=1, n=1, na.strings=NULL) {
 
 #' Smooth quantiles of a matrix of sequential ranked agreements
 #'
-#' @param obj A matrix
+#' @param object A matrix
 #' @param confidence the limits to compute
 #' @return A list containing two vectors for the smoothed lower and upper limits
 #' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
@@ -217,4 +217,34 @@ smooth_sra <- function(object, confidence=0.95) {
     alpha <- (1-confidence)/2
     limits <- apply(object, 1, function(x) { quantile(x, probs=c(alpha, 1-alpha)) })
     list(lower=limits[1,], upper=limits[2,])
+}
+
+
+
+#' Compute a Kolmogorov-Smirnoff-like test for Smooth quantiles of a matrix of sequential ranked agreements
+#'
+#' @param object The results from an sra
+#' @param nullobject the limits to compute
+#' @param weights Either a single value or a vector of the same length as the number of item with the weight that should be given to specific depths
+#' @return A single value corresponding to the p-value
+#' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
+#' @export
+test_sra <- function(object, nullobject, weights=1) {
+    ## Sanity checks
+    if (! (length(weights) %in% c(1, length(object))))
+        stop("the vector of weights must have the same length as the number of items")
+    
+    ## Test statistic
+    T <- max(weights*abs(object - apply(nullobject, 1, mean)))
+
+    ## Now compute the individual jackknife variations from the null object
+    B <- ncol(nullobject)
+    nullres <- sapply(1:B, function(i) {
+        max(weights*abs(nullobject[,i] - apply(nullobject[,-i], 1, mean)))
+    })
+
+    res <- sum(nullres>=T)/(B+1)
+    attr(res, "B") <- B
+    return(res)
+    
 }

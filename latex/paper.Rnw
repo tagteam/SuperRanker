@@ -851,20 +851,37 @@ as malignant) subject to perturbations in data. In the latter case we
 further illustrate the discrepancy between the ranking stability of
 different statistical methods through a simulation study.
 
-
 \subsection{Agreement of predictor ranking}
 
-#includegraphics marginalVsModel.pdf
 
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=.5\textwidth]{pics/marginalVsModel.pdf}
+\end{center}
+ \caption{Marginal}
+ \label{fig:app1}
+\end{figure}
 
 \subsection{Agreement of predictions}
 
-#includegraphics thomas.pdf
-
-#includegraphics simulationTest2.pdf
 
 
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=.5\textwidth]{pics/thomas.pdf}
+\end{center}
+ \caption{Thomas}
+ \label{fig:app2}
+\end{figure}
 
+
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=.5\textwidth]{pics/simulationTest2.pdf}
+\end{center}
+ \caption{SimulationTest2}
+ \label{fig:app3}
+\end{figure}
 
 
 
