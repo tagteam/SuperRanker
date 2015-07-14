@@ -153,7 +153,8 @@ experiment and to identify the maximal depth until which the ranked
 lists agree to certain extent. Finally we present three different
 applications of the proposed sequential rank agreement approach to
 real data before we discuss the findings along with possible
-extensions.
+extensions. The approaches presented in this manuscript are available
+in the R package \texttt{SuperRanker}.
 
 <<echo=FALSE>>=
 #note: always pass alpha on the 0-255 scale
@@ -300,7 +301,7 @@ genes found in the top $d$ part of the lists. It can be seen that
 agreement is higher in the top of the lists (smaller values on the $y$
 axis) correspond to \emph{better} than in the tails of the lists.
 
-<<example1, echo=FALSE, eval=FALSE>>=
+<<example1, echo=FALSE, eval=TRUE>>=
 library(SuperRanker)
 library(glmnet)
 library(minerva)
@@ -369,7 +370,7 @@ res2 <- sra(inputmatrix2, B=B)
 @
 
 
-<<fig1a, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE,eval=FALSE>>=
+<<fig1a, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE,eval=TRUE>>=
 ysize <- 1000
 nreference <- 20
 ## Plot the line
@@ -405,7 +406,7 @@ polygon(c(1:length(www2$lower), rev(1:length(www2$lower))),
 @ %
 
 
-<<fig1b, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE, eval=FALSE>>=
+<<fig1b, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE, eval=TRUE>>=
 ## Same as above but zoomed in
 ysize <- 50
 plot(res[1:ysize], lwd=3, col="black", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
@@ -480,11 +481,11 @@ polygon(c(1:length(www2$lower), rev(1:length(www2$lower))),
 @ %
 
 
-<<label=tab1,echo=FALSE,results=tex, eval=FALSE>>=
+<<label=tab1,echo=FALSE,results=tex, eval=TRUE>>=
 library(xtable)
 xxx <- as.data.frame(cbind(1:10, inputmatrix[1:10,]))
 colnames(xxx) <- c("Ranking", colnames(xxx)[2:5])
-xxx2 <- xtable(xxx, caption = "Top 10 list of ranked results from the Golub data. Numbers indicate the predictor/gene for the given ranking and method")
+xxx2 <- xtable(xxx, caption = "Top 10 list of ranked results from the Golub data. Numbers indicate the predictor/gene for the given ranking and method", label="tab1")
 digits(xxx2) <- 0
 print(xxx2, table.placement = "tb", caption.placement = "top", include.rownames=FALSE)
 #print(xtable(xxx,  label = "tab:one",
@@ -762,23 +763,23 @@ plot(xvals, mmyres[xvals], xlim=c(1, 150), ylim=c(0, 110), type="l", lwd=2, ylab
 lines(xvals[-c(1,2)], mmyres2[1:498], col="red", lwd=2)
 @
 
-%% \begin{figure}[tb]
-%% \begin{center}
-%% \includegraphics[width=.45\textwidth]{paper-fig-ao1}
-%% \includegraphics[width=.45\textwidth]{paper-fig-ao2}
-%% \end{center}
- %% \caption{Average overlap (left figure) and sequential rank agreement
-   %% (right figure) for comparing two different analysis methods
-   %% (marginal $t$ test and logistic regression)
-   %% applied to the Golub data. The black lines are based on the full
-   %% set of predictors while the red lines have the two highest
-   %% associated predictors removed
-   %% from the data before computing the average overlap and sequential
-   %% rank agreement.}
- %% \label{fig:case1}
-%% \end{figure}
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=.45\textwidth]{paper-fig-ao1}
+\includegraphics[width=.45\textwidth]{paper-fig-ao2}
+\end{center}
+ \caption{Average overlap (left figure) and sequential rank agreement
+ (right figure) for comparing two different analysis methods
+ (marginal $t$ test and logistic regression)
+    applied to the Golub data. The black lines are based on the full
+    set of predictors while the red lines have the two highest
+    associated predictors removed
+    from the data before computing the average overlap and sequential
+    rank agreement.}
+  \label{fig:case1}
+ \end{figure}
 
-The black lines Figure~\ref{fig:case1} show the average overlap and
+The black lines in Figure~\ref{fig:case1} show the average overlap and
 sequential rank agreement for these data. It is clear from both plots
 that there is perfect agreement towards the top of the ranked lists:
 the average overlap is 1 and the sequential rank agreement is zero.
@@ -880,16 +881,99 @@ different statistical methods in a simulation study.
 
 
 \section{Discussion}
+In this article we address the problem of comparing ranked lists of
+the same items. Our proposed method can handle both the situation
+where the underlying data to generate the ranked lists are available
+and the situation where the only available data is the actual ranked
+lists. In addition, censored ranked lists where only the top $k$
+ranked items are known can be accommodated as well. The proposed
+agreement measure can be interpreted as the average distance between
+an item's rank and the average rank assigned to that item and thus
+determine how well the lists agree on the ranks of a specific
+item and it circumvents the problem with other existing similarity measures.
 
-Mention/discuss different measures.
+The sequential rank agreement is extremely versatile. We have shown
+that it can be used not only to compare ranked lists of items produced
+from different samples/populations but that it also can be used to
+study the ranks obtained from different analysis methods on the same
+data as well as to evalaute the stability of the ranks from a single
+method by bootstrapping the data repeatedly and comparing the ranks
+obtained from the bootstrapped data.
 
-Censor lists at significane level?
+Our applications show that XXX
+Through simulations we showed that XXX --- afventer Andreas.
 
-Bootstrap across a single method and compare results. Discuss collinearity
+The sequential rank agreement can be used to determine the depth at
+which the rank agreement becomes too large to be desirable based on
+prior requirements or acceptable differences, or it can be used to
+visually determine when the change in agreement becomes too large.  In
+that regard the investigator can have prior limits on the level of
+agreement that is acceptable.
 
-Changepoint analysis
+While the sequential rank agreement is primarily an exploratory tool
+we have suggested two null hypotheses that can be used to evaluate the
+sequential rank agreement obtained. Note that none of the two null
+hypotheses are concerned with the actual ``true ranking'' but are
+purely concerned with consistency/stability of the rankings among the
+lists. As such we cannot determine if the rankings are good but only
+whether they agree. The sequential rank agreemenet curve can be
+compared visually to the curves obtained under either of the null
+distributions and simple point-wide $p$-values can be obtained for
+each depth by counting the number of sequential rank agreements under
+the null hypothesis that is less than or equal to the observed rank
+agreement. Two simple extensions can be pursued to make more formal
+uniform tests: one would be to use a Kolmogorov-Smirnov-like test and
+use the largest difference between the variance-weighted sequential
+rank agreement curve and the mean null rank agreement curve as a test
+statistic. Alternatively, a change point analysis could be made on the
+sequential rank agreement in order to determine the depths at which
+there are ``jumps'' in the rank agreement. These jumps would
+correspond to depths for which the agreement among the lists was
+substantially worse and could serve as indicators for when the lists
+no longer agree sufficiently satisfactory.
+
+Finally, we have --- whenever possible --- used as much information
+from the lists as possible, i.e., we have used all available ranks. If
+we have information on the rankings as well as the corresponding
+evidence for significance that we could choose to censor the rankings
+of all the items that were deemed not to be significant. That would
+ensure that there would be put less emphasis on the agreement of the
+non-significant items and it would be easier to identify a change in
+agreement among the items that were deemed to relevant.
+
+We note that the sequential rank agreement is still marred by problems
+that generally apply to ranking of items and/or
+indiviuals. Collinearity in particular can be a huge problem when
+bootstrapping data or when comparing different analysis methods. For
+example, marginal analyses where each item is analyzed seperately will
+assign similar ranks to two highly correlated predictors while methods
+that provide a sparse solution such as the lasso will just rank one of
+the two predictors high while the other might have a very low
+rank. When the rankings from these two analysis methods are compared
+then the agreement will differ simply because of the way correlated
+predictors are handled. This is not a shortcoming of the sequential
+rank agreement but is a problem general to all ranked lists.
 
 
+In conclusion we have introduced a method for evaluation of ranked
+(censored) lists that can be easily interpreted and that can be
+applied to a large number of situations.  The method can be adapted
+even further by using it to identify and cluster statistical analysis
+methods that provide more or less the same agreement, or by using the
+rank agreement as a hyper-parameter in, say, elastic net regularized
+regression where the rank agreement is used to determine the mixing
+proportion between the $L_1$ and the $L_2$ penalty. Finally, the
+proposed method may be adapted (with some additional assumptions) to
+the situation where the lists are subsets of each other. We will be
+investigating these extensions further in the future.
+
+
+
+
+
+
+
+%\bibliographystyle{rss}
 \bibliographystyle{rss}
 \bibliography{paperref}
 
