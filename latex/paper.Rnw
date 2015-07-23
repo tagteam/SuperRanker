@@ -12,6 +12,8 @@
 \usepackage{authblk}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+%\usepackage{geometry}
+%\geometry{a4paper, portrait, margin=1in}
 %
 % New commands
 %
@@ -59,14 +61,14 @@
   incomplete or censored. The main idea is then a permutation based
   and graphically approach to assess the sequential changes of
   agreement as a function of the depth of the lists. This may help to
-  indentify change points in the agreement of the lists. The
+  indentify change-points in the agreement of the lists. The
   usefulness of these tools are illustrated using gene rankings, and
   using data from two Danish ovarian cancer studies on where we assess
   the within and between agreement of different statistical classification
   methods.
 \end{abstract}
 
-Key words: sequential rank agreement, order statistic, gene rankings,
+Key words: sequential rank agreement, partial ranking, order statistic, gene rankings,
 methods comparison, variable selection, permutation
 
 \section{Introduction}
@@ -92,7 +94,7 @@ identify which genes are worth to pursue in further experiments.
 Several approaches exist to measure the ``distance'' between two
 ranked lists. Of these, Kendall's $\tau$ \citep{kendall1948} and
 Spearman’s footrule $\rho$ \citep{Spearman1910} are among the most
-well-known. But these measures do not distinguish between agreement in
+well-known, but these measures do not distinguish between agreement in
 the top versus towards the bottom of the lists. \citet{Shieh1998}
 proposed a weighted version of Kendall's $\tau$ where each pair of
 rankings can be assigned different weights, and \citet{Yilmaz2008}
@@ -131,7 +133,7 @@ as a function of the depth in the lists, places high weight on the top
 of the list, accommodates censored/incomplete lists of varying
 lengths, and has a natural interpretation that directly relates to the
 ranks. The graphical illustration of sequential rank agreement
-potentially allows to infer a changepoint, i.e., a list depth where
+potentially allows to infer a change-point, i.e., a list depth where
 there is a change in the agreement of the lists.
 
 In settings where rankings are obtained from analysis of correlated
@@ -168,26 +170,34 @@ makeTransparent<-function(someColor, alpha=100)
 
 \section{Methods}
 
-Consider a set of $P$ different items $X=\{X_1,\dots,X_P\}$. An
-ordered list is a permutation function, $R: \{X_1,\dots,X_P\}\to
-\{1,\dots,P\}$, such that $R(X_p)$ is the rank of item $X_p$ in the
-list. The inverse mapping $\pi=R^{-1}$ assigns to rank
-$r\in\{1,\dots,P\}$ the item $\pi(r)$ found at that rank. The methods
-described below work for a set of $L$ lists $R_1,\dots,R_L$,
-$L\geq2$. We denote $\pi_l=R_l^{-1}$ for the corresponding inverse
-mappings. Panels (a) and (b) of Table~\ref{tab:example} show a
-schematic example of these mappings. Thus if $\pi_l(1)=X_{34}$ then
-item $X_{34}$ is ranked first in list $l$, and similarly
-$R_l(X_{34})=1$.
+Consider a set of $P$ different items $X=\{X_1,\dots,X_P\}$ and a
+ranking function $R: \{X_1,\dots,X_P\}\to \{1,\dots,P\}$, such that
+$R(X_p)$ is the rank of item $X_p$. The inverse mapping $R^{-1}$
+assigns to rank $r\in\{1,\dots,P\}$ the item $R^{-1}(r)$ that was
+given rank $r$. An ordered list is the realization of a ranking
+function $R$ applied to a data sample $X$ and we let
+$R_1(X),\dots,R_L(X)$, $L\geq2$, denote ordered lists obtained from
+$L$ different ranking functions applied to the same data $X$. We will
+use the same notation for the equivalent scenario where we have
+ordered lists obtained from applying the same ranking function to $L$
+samples from the same population, i.e., for ranked lists
+$R(X^1), \ldots, R(X^L)$.  Panels (a) and (b) of
+Table~\ref{tab:example} show a schematic example of these
+mappings. Thus if $R^{-1}(1)=X_{34}$ then item $X_{34}$ is ranked
+first in list $l$, and similarly $R_l(X_{34})=1$.
 
 \begin{table}[tb]
-  \caption{Example set of ranked lists. (a) shows the ranked list of items for each of three lists, (b) presents the ranks obtained by each item in each of the three lists and (c) shows the cumulative set of items up to a given depth in the three lists.}
+  \caption{Example set of ranked lists. (a) shows the ranked list of
+    items for each of three lists, (b) presents the ranks obtained by
+    each item in each of the three lists and (c) shows the cumulative
+    set of items up to a given depth in the three lists.}
 \begin{center}
-  \begin{subtable}{4cm}%
+\footnotesize{
+  \begin{subtable}{4.5cm}%
     \caption{}
       \begin{tabular}{cccc}
         \hline\hline % & \multicolumn{3}{c}{List} \\
-        Rank & $\pi_1$ & $\pi_2$ & $\pi_3$ \\ \hline
+        Rank & $R^{-1}_1$ & $R^{-1}_2$ & $R^{-1}_3$ \\ \hline
         1 & A & A & B \\
         2 & B & C & A \\
         3 & C & D & E \\
@@ -225,6 +235,7 @@ Depth  &  $S_d$ \\ \hline
 5 & $\{$A, B, C, D, E$\}$ \\ \hline
 \end{tabular}
 \end{subtable}
+}
 \end{center}
 \label{tab:example}
 \end{table}
@@ -234,13 +245,14 @@ measured by
 \begin{equation}
   A(X_p) = f(R_1(X_p), \ldots, R_L(X_p)),
 \end{equation}
-for a distance function $f$. Throughout this paper we will use the
+for a distance function $f.$ Throughout this paper we will use the
 sample standard error as our function $f$ and hence use
 $$A(X_p) = \sqrt{\frac{\sum_{i=1}^L (R_i(X_p) - \bar{R}(X_p))^2}{L-1}},
 $$
-but other choices could be made (see the discussion). The sample
-standard error has an interpretation as the average distance of the
-individual rankings of the lists from the average ranking.
+where $\bar{R}(X_p)$ is the average rank assigned to item $X_p$, but
+other choices could be made. The sample standard error has an
+interpretation as the average distance of the individual rankings of
+the lists from the average ranking.
 
 We now describe what is exemplified in Panel (c) of Table
 \ref{tab:example} and how it can be used to define \emph{sequential
@@ -249,24 +261,24 @@ set of items found by merging the first $d$ elements of each of the
 $L$ lists, i.e., the set of items ranked less than or equal to $d$ in
 any of the lists:
 \begin{equation}
-S_d = \{\pi_l(r) ; r \leq d, l = 1, \ldots, L \}.
+S_d = \{R_l^{-1}(r) ; r \leq d, l = 1, \ldots, L \}.
 \end{equation}
 The \emph{sequential rank agreement} is the pooled standard deviation
 of the items found in the set $S_d$:
 \begin{equation}
 \textrm{SRA}(d)= \sqrt{\frac{\sum_{\{p \in
-      S_d\}}(L-1)A(X_p)^2}{(L-1)|S_d|}}. \label{def:sra}
+      S_d\}}(L-1)A(X_p)^2}{(L-1)|S_d|}}, \label{def:sra}
 \end{equation}
-Values of \textrm{SRA} close to zero suggests that the lists agree
-while larger values suggests disagreement. If the ranked lists are
-identical then the value of SRA will be zero for all depths $d$. The
-sequential rank agreement can be interpreted as the average distance
-of the individual rankings of the lists from the average ranking for
-each of the items we have seen until depth $d$. Note that the terms
-that are part of \eqref{def:sra} are not independent since each list
-contains the ranks from 1 to $P$ exactly once. Hence we simply use the
-pooled standard deviation as a measure of the average distance between
-rankings.
+where $|S_d|$ refers to the cardinaly of the set $S_d$. Values of
+\textrm{SRA} close to zero suggests that the lists agree while larger
+values suggests disagreement. If the ranked lists are identical then
+the value of SRA will be zero for all depths $d$. The sequential rank
+agreement can be interpreted as the average distance of the individual
+rankings of the lists from the average ranking for each of the items
+we have seen until depth $d$. Note that the terms that are part of
+\eqref{def:sra} are not independent since each list contains the ranks
+from 1 to $P$ exactly once. Hence we simply use the pooled standard
+deviation as a measure of the average distance between rankings.
 
 \subsection{Agreement among fully observed lists}
 \label{sec:amfol}
@@ -294,12 +306,15 @@ content correlations (MIC) \citep{Reshef2011}. For the first two
 methods, the genes were ranked according to $p$ value, for logistic
 regression the genes were ordered by size of the corresponding
 coefficients (after standardization), and MIC was ordered by
-correlation which resulted in the rankings seen in Table~\ref{tab1}.
-The sequential rank agreement shown in Figure~\ref{fig:example1} shows
-for each depth $d$ how many ranks apart do we on average expect the
-genes found in the top $d$ part of the lists. It can be seen that
-agreement is higher in the top of the lists (smaller values on the $y$
-axis) correspond to \emph{better} than in the tails of the lists.
+correlation which resulted in the top rankings seen in Table~\ref{tab1}.
+
+
+The sequential rank agreement plotted in Figure~\ref{fig:example1}
+shows how many ranks apart we on average expect the genes found in the
+top $d$ part of the lists to be for each depth $d$.  It can be seen
+that agreement is higher in the top of the lists (smaller values on
+the $y$ axis) corresponding to \emph{better} agreement than in the
+tails of the lists.
 
 <<example1, echo=FALSE, eval=TRUE>>=
 library(SuperRanker)
@@ -513,28 +528,28 @@ print(xxx2, table.placement = "tb", caption.placement = "top", include.rownames=
 
 
 
-If the lists would agree on all items then we would expect the
-sequential rank agreement curve to be flat. And if there are changes
-in the levels of rank agreement then this would suggest that there are
-sets of items for which the lists are in high agreement and sets of
-other items where the lists rank the items differently. In gene
-association studies we generally expect the agreement among the lists
-to be better towards the top of the lists and worse towards the end of
-the lists. In this case the sequential rank agreement curve will start
-at a low level and then increase until it levels off as in
-Figure~\ref{fig:example1}.
+If the lists agree on all items then the sequential rank agreement is
+ zero for all depths. Generally,  if there are changes in the level of rank
+ agreement then this suggests that there are sets of items that are ranked
+ similarly in all lists and other sets of items that have been assigned vastly
+ different ranks in the lists. In gene association studies we
+ generally expect the agreement among the lists to be better towards
+ the top of the lists and worse towards the end of the lists. In this
+ case the sequential rank agreement curve will start at a low level
+ and then increase until it levels off as in
+ Figure~\ref{fig:example1}.
 
 \subsection{Analysis of incomplete/censored lists}
 
-Incomplete lists are also a common occurrence. They arises for example
-in case of missing data (items) or when some methods only rank a
-subset of the items. For example, penalized regression based on the
-Lasso provides a sparse set of predictors that have non-zero
-coefficients. There is no obvious ordering of the set of predictors
-whose coefficient has been shrunk to zero. Incomplete lists also occur
-when the analyst decides to censor all lists at depth $d$ such that
-the measurement of agreement is restricted to the first $d$ elements
-of each list.
+Incomplete lists are also a common occurrence. They arise for example
+in case of missing data (items), when comparing top $d$ list results
+from publications, or when some methods only rank a subset of the
+items. For example, penalized regression based on the Lasso provides a
+sparse set of predictors that have non-zero coefficients. There is no
+obvious ordering of the set of predictors whose coefficient has been
+shrunk to zero. Incomplete lists also occur when the analyst decides
+to censor all lists at depth $d$ such that the measurement of
+agreement is restricted to the first $d$ elements of each list.
 
 Sequential rank agreement can be generalized to incomplete/censored
 lists in the following way. Let $\Lambda_P$ be a set of $P$ items and
@@ -543,8 +558,8 @@ list $l$.  The case where all lists are censored at depth $d$
 corresponds to $d_1=\cdots=d_L=d$. For incomplete/censored lists the
 rank function becomes
 \begin{equation}
-  \tilde R_l(X_p) = \left\{\begin{array}{cl} \{\pi_l^{-1}(p)\} & \text{ for } p\in \Lambda_l \\
-      \{d_l+1,\dots,P\} & \text{ for } p \not\in \Lambda_l\end{array}\right.
+  \tilde R_l(X_p) = \left\{\begin{array}{cl} \{R_l(X_p)\} & \text{ for } X_p\in \Lambda_l \\
+      \{d_l+1,\dots,P\} & \text{ for } X_p \not\in \Lambda_l\end{array}\right.
 \end{equation}
 where we only know that the rank for the unobserved items in list $l$
 must be larger than the largest rank observed in that list.
@@ -612,7 +627,7 @@ completely unrelated (in which case the sequential rank agreement will
 be constant at a high level) or if the lists mostly agree on the
 ranking (in which case the sequential rank agreement will also be
 constant but at a low level). For censored lists we also expect a
-change point around the depth where the lists are censored. This is an
+change-point around the depth where the lists are censored. This is an
 artefact stemming from the fact that we assume that the remainder of
 the lists can be replaced by a simple permutation of the missing
 items.
@@ -633,8 +648,8 @@ The first reference hypothesis is
 H_0  & : &  \text{The list rankings correspond to complete randomly}\\
        &  & \text{permuted lists}.
 \end{eqnarray*}
-This does not only assume that there is no information data on which
-in the rankings are based but also that the methods are completely
+This does not only assume that there is no information in data on
+which the rankings are based but also that the methods are completely
 independent.
 
 Alternatively, we can remove the restriction on the independence among
@@ -707,11 +722,10 @@ The overlap among $L$ lists observed until depth $d$ is defined as the
 proportion of items that are found in all $L$ lists compared to the
 possible number of items found in all lists observed until depth $d$:
 \begin{equation}
-  O(d) = \frac{| \cap_{l=1}^L \{\pi_l(r); r\leq d \} |}{d}. \label{def:overlap}
+  O(d) = \frac{| \cap_{l=1}^L \{R_l^{-1}(r); r\leq d \} |}{d}. \label{def:overlap}
 \end{equation}
-Here $|A|$ is the cardinality of the set $A$.  Typically the overlap
-is only considered for pairwise comparisons but formula
-\eqref{def:overlap} can be applied even when $L>2$
+Typically the overlap is only considered for pairwise comparisons but
+formula \eqref{def:overlap} can be applied even when $L>2$
 \citep{Bar-Ilan2006,Boulesteix2009}.
 
 The average overlap at depth $d$ is defined as the average of the
@@ -804,21 +818,20 @@ tumors. The data sets are subsamples of the Danish MALOVA and DACOVA
 study populations.
 
 The MALOVA study is a multidisciplinary Danish study on ovarian cancer
-\cite{Hogdall:2004:Cancer:15160342} where all Danish women diagnosed
+\citep{Hogdall:2004:Cancer:15160342} where all Danish women diagnosed
 with an ovarian tumor and referred for surgery from the participating
 departments of gynecology were enrolled continuously from December
-1994 to May 1999.
-% @Andreas: hvorfor random subsample?
-We use a random subsample of $119$ patients with a total of $58$
-patients with malignant ovarian cancers as cases and $61$ patients
-with benign ovarian tumors as controls. The DACOVA study is another
+1994 to May 1999. For the purpose of illustration we use a random
+subsample of $119$ patients with a total of $58$ patients with
+malignant ovarian cancers as cases and $61$ patients with benign
+ovarian tumors as controls. The DACOVA study is another
 multidisciplinary Danish study on ovarian cancer which included about
 $66\%$ of the female population of Denmark
-\cite{bertelsen1991protocol}. It was aimed to continuously enroll all
+\citep{bertelsen1991protocol}. It was aimed to continuously enroll all
 patients that were referred to surgery of an ovarian tumor clinically
 suspected to be cancer during the period 1984 to 1990.
 % @Andreas: hvorfor random subsample?
-For the purpose of illustration use a random subsample of $113$
+Similarly, we use a random subsample of $113$
 patients with a total of $54$ malignant ovarian cancers and $59$
 benign ovarian tumors/gynecologic disorders.
 
@@ -830,25 +843,21 @@ standard mixture. Each spectrum consists of $49642$ samples over the
 mass-to-charge range which we down-sample on an equidistant grid of
 5000 points by linear interpolation. We further preprocess each
 spectrum by first removing the slow-varying baseline intensities with
-the SNIP algorithm \cite{ryan1988snip} followed by a normalization
+the SNIP algorithm \citep{ryan1988snip} followed by a normalization
 with respect to the total ion counts. Finally, we standardize the 5000
 predictors to have column-wise zero mean and unit variance.
 
 We use these two data sets to illustrate how the sequential rank
 agreement can be applied in two different scenarios. In the first
 scenario we assess the agreement of different statistical
-classification methods in how they rank predictors according to
-importance for classification accuracy. In the second scenario we
-assess the agreement among rankings of the same patients according to
-the predicted probabilities of having a malignant tumor. Here we apply
-the same statistical classification method to XX bootstrap samples of
-the MALOVA data to obtain XX prediction models. From each model we
-predict the risks of a malignant patients in the DACOVA study.
-Finally we estimate the agreement of the resulting XX rankings of the
-DACOVA patients to illustrate the sensitivity of the corresponding
-statistical classification method to pertubations of the learning
-data. In the latter case we further investigate the behaviour of
-different statistical methods in a simulation study.
+classification methods in how they rank predictors by different
+statistical classification methods for the two study populations. In
+the second scenario we assess the agreement among ranking of the
+predicted individual risk probabilities of having malignant tumor
+using four different prediction methods.
+For this second example we furthermore
+investigate the behaviour of different statistical methods in a
+simulation study.
 
 \subsection{Agreement of predictor ranking}
 
@@ -861,6 +870,15 @@ different statistical methods in a simulation study.
 \end{figure}
 
 \subsection{Agreement of predictions}
+
+Here we apply the same statistical classification
+method to XX bootstrap samples of the MALOVA data to obtain four
+prediction models. From each model we predict the risks of a malignant
+patients in the DACOVA study.  Finally we estimate the agreement of
+the resulting XX rankings of the DACOVA patients to illustrate the
+sensitivity of the corresponding statistical classification method to
+pertubations of the learning data.
+
 
 \begin{figure}[tb]
 \begin{center}
@@ -918,14 +936,14 @@ purely concerned with consistency/stability of the rankings among the
 lists. As such we cannot determine if the rankings are good but only
 whether they agree. The sequential rank agreemenet curve can be
 compared visually to the curves obtained under either of the null
-distributions and simple point-wide $p$-values can be obtained for
+distributions and simple point-wise $p$-values can be obtained for
 each depth by counting the number of sequential rank agreements under
 the null hypothesis that is less than or equal to the observed rank
 agreement. Two simple extensions can be pursued to make more formal
 uniform tests: one would be to use a Kolmogorov-Smirnov-like test and
 use the largest difference between the variance-weighted sequential
 rank agreement curve and the mean null rank agreement curve as a test
-statistic. Alternatively, a change point analysis could be made on the
+statistic. Alternatively, a change-point analysis could be made on the
 sequential rank agreement in order to determine the depths at which
 there are ``jumps'' in the rank agreement. These jumps would
 correspond to depths for which the agreement among the lists was
@@ -933,10 +951,10 @@ substantially worse and could serve as indicators for when the lists
 no longer agree sufficiently satisfactory.
 
 Finally, we have --- whenever possible --- used as much information
-from the lists as possible, i.e., we have used all available ranks. If
-we have information on the rankings as well as the corresponding
-evidence for significance that we could choose to censor the rankings
-of all the items that were deemed not to be significant. That would
+from the lists as possible, i.e., we have used all available ranks.
+We could choose to censor the rankings of all the items that were
+deemed not to be significant if information on both rankings and the
+corresponding evidence for significance was available. That would
 ensure that there would be put less emphasis on the agreement of the
 non-significant items and it would be easier to identify a change in
 agreement among the items that were deemed to relevant.
@@ -960,7 +978,7 @@ In conclusion we have introduced a method for evaluation of ranked
 applied to a large number of situations.  The method can be adapted
 even further by using it to identify and cluster statistical analysis
 methods that provide more or less the same agreement, or by using the
-rank agreement as a hyper-parameter in, say, elastic net regularized
+rank agreement to optimize a hyper-parameter in, say, elastic net regularized
 regression where the rank agreement is used to determine the mixing
 proportion between the $L_1$ and the $L_2$ penalty. Finally, the
 proposed method may be adapted (with some additional assumptions) to
