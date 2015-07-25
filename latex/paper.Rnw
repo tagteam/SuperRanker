@@ -859,7 +859,63 @@ For this second example we furthermore
 investigate the behaviour of different statistical methods in a
 simulation study.
 
+
+
 \subsection{Agreement of predictor ranking}
+We apply 10 different classification methods to each of the two data
+sets. All methods are capable of producing a ranking of the 5000
+predictors according to their importance with respect to the
+association with the outcome class label. The methods under
+consideration can be separated into two groups: marginal methods and
+joint methods. The marginal methods treat each of the of 5000
+predictors separately in succession while the joint models use all the
+predictors simultaneously. The marginal methods are t-test statistics,
+univariate logistic regressions, AUC-based ROC analyses and maximum
+information content correlations (MIC) statistics. For the t-test
+statistics and the logistic regressions we rank the predictors
+according to decreasing p-value while for the ROC analysis and MIC
+statistics we simply rank according to increasing numerical value. The
+joint methods are a Random Forest classifier
+\citep{breiman2001random}, logistic Lasso regression
+\citep{tibshirani1996regression}, logistic Ridge regression
+\cite{segerstedt1992ordinary}, Partial Least Squares Discriminant
+Analysis (PLS-DA) \cite{boulesteix2004pls}, Shrinkage Discriminant
+Analysis with local false discovery rate control (SDA)
+\cite{ahdesmaki2010} and nearest shrunken centroid (PAM)
+\cite{tibshirani2003class}. For the Random Forest classifier the
+importance of the predictors are ranked according to the Gini index
+while for the logistic Lasso and Ridge regressions we order by
+absolute magnitude of the estimated coefficients. For the PLS-DA
+method the importance of the predictors is based on a weighted sum of
+the absolute coefficients where the weights are proportional to the
+reduction in the sums of squares across the components, and for PAM
+the importance is given by the difference between the class centroids
+and the overall centroid. Finally, for the SDA method the ranking of
+the predictors is performed using the correlation-adjusted t-scores,
+the local false discovery rate (lFDR) is estimated and only the
+predictors with $lFDR < 0.8$ are retained. Together with the logistic
+Lasso regression and the nearest shrunken centroid methods this leads
+to a censored list according to our previous discussion. All tuning
+parameters are estimated by repeated 10-fold cross-validation using 20
+random splits. We use the implementations in the R packages
+\texttt{randomForest} \citep{liaw2002classification}, \texttt{glmnet}
+\citep{Friedman:2010aa}, \texttt{caret} \citep{Jed-Wing:2014aa},
+\texttt{sda} \citep{Ahdesmaki:2014aa} and \texttt{minerva}
+\citep{Filosi:2014aa}.
+
+The agreement of the ranking of the predictors given by the ten
+different methods can be compared in different ways using the
+sequential rank agreement. One possibility is to consider all $55$
+pair-wise agreement functions. This will be useful for identifying
+statistical methods that perform similarly on a given data set with
+respect to how the order of predictor importance is determined. This
+could for example be done by applying a statistical clustering method
+to the pair-wise sequential rank agreement curves. Here we take a
+simpler approach and consider the agreement of the importance
+determined by the different marginal methods and the agreement of the
+importance determined by the different joint methods. This leads to
+two agreement curves for each data set which we show in figure
+\ref{fig:app1}.
 
 \begin{figure}[tb]
 \begin{center}
@@ -869,16 +925,60 @@ simulation study.
  \label{fig:app1}
 \end{figure}
 
-\subsection{Agreement of predictions}
+From the figure it is seen that generally the agreement between
+ranking the predictors using the different methods is better for the
+MALOVA data than for the DACOVA data. The shapes of the agreement
+curves start at a low level followed by an increase after which they
+stabilize at some level. This corresponds to the expected behavior
+that the methods agree better with respect to the most important
+predictors than with the not so important ones. Also, it is clear that
+ranking the predictors by the marginal methods show better overall
+agreement than using the joint methods. This is not surprising due to
+the high correlation of the spectral intensities across neighboring
+mass-to-charge ratios. This leads to co-linearity problems that
+especially affects the classification methods that use a sparse
+representation of the predictors.
 
-Here we apply the same statistical classification
-method to XX bootstrap samples of the MALOVA data to obtain four
-prediction models. From each model we predict the risks of a malignant
-patients in the DACOVA study.  Finally we estimate the agreement of
-the resulting XX rankings of the DACOVA patients to illustrate the
-sensitivity of the corresponding statistical classification method to
-pertubations of the learning data.
 
+
+
+\subsection{Agreement of predicted risk probabilities}
+We now consider the case where we predict the patient-specific risks
+of having a malignant tumor. We consider this as an example of the
+clinical decision problem of deciding the order in which a group of
+patients must be treated. This order is given by ranking the patients
+according to increasing predicted probability of malignant tumor. We
+assess the agreement of estimating the rankings of the same patients
+by four different statistical prediction methods using the sequential
+rank agreement. The four prediction models are: a Random Forest
+classifier, logistic Lasso regression, logistic Ridge regression and
+Partial Least Squares Discriminant Analysis (PLSDA).
+
+For each prediction method we estimate a model based on the MALOVA
+data and predict the risks of a malignant tumor for the patients in
+the DACOVA study. We repeat this procedure on 100 bootstrap samples of
+the MALOVA data used to construct the model and then estimate the
+agreement of the resulting 100 rankings of the same DACOVA
+patients. This serves as an assessment of the sensitivity of the
+different statistical prediction methods to perturbations of the
+learning data.
+
+For the Random Forest method we grow 500 tree using 22 randomly
+selected predictors at each split. The penalty parameter for the Lasso
+and Ridge regression models is optimized with respect to the deviance
+loss function using internal repeated 10-fold cross-validation on the
+learning data using 20 random splits. The number of components for the
+PLSDA method is optimized in a similar manner using classification
+accuracy as criterion.
+
+Figure \ref{fig:app2} shows the sequential rank agreement for the four
+methods. Generally, the ranking of the predictions made by the Random
+Forest method appears to be in better agreement across resampled
+training data than for any of the other method. The only exception is
+for the patient with the overall largest risk of a malignant tumor for
+which the logistic Lasso regression method provides a better
+agreement. Something about Ridge is surprising etc. etc. etc. that we
+now look at in a simulation study.
 
 \begin{figure}[tb]
 \begin{center}
@@ -888,6 +988,24 @@ pertubations of the learning data.
  \label{fig:app2}
 \end{figure}
 
+To further investigate the apparent lack of agreement for the ridge
+regression method we consider a small simulation study. We simulate
+two data sets each with $120$ observations and $500$ predictors. Each
+vector of predictors is drawn independently from a $500$-dimensional
+Gaussian distribution with zero mean, unit variance and a correlation
+coefficient of $0.9$ in a compound symmetry structure. The 120
+observations is split into two groups where the coefficient vector for
+the first group is zero and similarly for the second group except that
+the first $100$ values are set to one. We then predict the risk
+probabilities in a similar manner as before where we repeatedly fit
+models on bootstrapped versions on the first data set and use the
+models to predict the risk probability of the same observations from
+the second data set. Here we only consider the logistic Ridge
+regression model but we consider three different ways of optimizing
+the penalty parameter. These consists of optimizing with respect to
+the total deviance, the prediction accuracy and the area under the ROC
+curve. The resulting sequential rank agreement curves from 100
+bootstrap iterations are seen in figure \ref{fig:app3}
 
 \begin{figure}[tb]
 \begin{center}
@@ -896,6 +1014,10 @@ pertubations of the learning data.
  \caption{SimulationTest2}
  \label{fig:app3}
 \end{figure}
+
+Redo the figure and comment on the result. Note that none of the loss
+functions directly considers the agreement of predicted
+probabilities. The AUC is indirectly related in a complicated manner.
 
 
 \section{Discussion}
