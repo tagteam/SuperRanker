@@ -33,12 +33,18 @@ double square( double x ){
 }
 
 
-NumericVector SdPerRow(NumericMatrix obj) {
+NumericVector SdPerRow(NumericMatrix obj, int type) {
 
   NumericVector res(obj.nrow());
   
   for (int i=0; i<obj.nrow(); i++) {
-    res[i] = var(obj.row(i));
+    if (type == 1) {
+      // MAD
+      res[i] = mean(abs(obj.row(i) - mean(obj.row(i))));
+    }
+    else {
+      res[i] = var(obj.row(i));
+    }
   }
  
   return(res);
@@ -51,15 +57,20 @@ NumericVector SdPerRow(NumericMatrix obj) {
 //' @param rankMat A matrix with k columns corresponding to the k ranked lists. Elements of each column are integers between 1 and the length of the lists
 //' @param maxlength The maximum depth that are needed XXX
 //' @param B The number of resamples to use in the presence of censored lists
-//' @param cens A vector of integer values that 
-//' @return A vector of the same length as the rows in rankMat containing the sequential rank agreement between the lists for each depth
+//' @param cens A vector of integer values that
+//' @param type The type of distance measure to use: 0 (the default) is the variance while 1 is MAD (mean absolute deviation)
+//' @return A vector of the same length as the rows in rankMat containing the squared (!) sequential rank agreement between the lists for each depth. If the MAD type was chosen then the sequential MAD values are returned
 //' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
 //' @export
 //[[Rcpp::export]]
-NumericVector sracpp(IntegerMatrix rankMat, int maxlength, int B, IntegerVector cens) {
+NumericVector sracpp(IntegerMatrix rankMat, int maxlength, int B, IntegerVector cens, int type=0) {
 
   // The number of lists
   int nLists = rankMat.ncol();
+
+  // Sanity check of type
+  if (type != 1)
+    type = 0;
 
   // Need a numeric copy of this for the sort function. Doesn't really make sense but
   // keeping it for now 
@@ -138,7 +149,7 @@ NumericVector sracpp(IntegerMatrix rankMat, int maxlength, int B, IntegerVector 
       for (int l = 0; l < nLists; l++) {
 	itemRank(_, l) = order_( x( _ , l) );
       }
-      itemMetric = SdPerRow(itemRank);
+      itemMetric = SdPerRow(itemRank, type);
 
       // Now compute the agreement for each depth
       for (int depth=0; depth<maxlength; depth++) {
@@ -168,11 +179,12 @@ NumericVector sracpp(IntegerMatrix rankMat, int maxlength, int B, IntegerVector 
 //' 
 //' @description Computes the sequential rank agreement (number of items present in all k lists divided by the current rank) for each rank in the k lists
 //' @param rankMat A matrix with k columns corresponding to the k ranked lists. Elements of each column are integers between 1 and the length of the lists
-//' @return A vector of the same length as the rows in rankMat containing the sequential rank agreement between the lists for each depth
+//' @param type The type of distance measure to use: 0 (the default) is the variance while 1 is MAD (mean absolute deviation)
+//' @return A vector of the same length as the rows in rankMat containing the sequential rank agreement between the lists for each depth (squared for type=0)
 //' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
 //' @export
 //[[Rcpp::export]]
-NumericVector sracppfull(IntegerMatrix rankMat) {
+NumericVector sracppfull(IntegerMatrix rankMat, int type=0) {
 
   // The number of lists
   int nLists = rankMat.ncol();
@@ -190,7 +202,9 @@ NumericVector sracppfull(IntegerMatrix rankMat) {
   // Keep the average result and the individual permutations
   NumericVector returnVector(maxlength);
 
-    // Input validation
+  // Input validation
+  if (type != 1)
+    type = 0;
 
     // Check that dim of x is less than maxlength
 
@@ -208,7 +222,7 @@ NumericVector sracppfull(IntegerMatrix rankMat) {
     for (int l = 0; l < nLists; l++) {
       itemRank(_, l) = order_( x( _ , l) );
     }
-    itemMetric = SdPerRow(itemRank);
+    itemMetric = SdPerRow(itemRank, type);
 
     // Now compute the agreement for each depth
     for (int depth=0; depth<maxlength; depth++) {

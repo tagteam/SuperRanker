@@ -17,8 +17,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // sracpp
-NumericVector sracpp(IntegerMatrix rankMat, int maxlength, int B, IntegerVector cens);
-RcppExport SEXP SuperRanker_sracpp(SEXP rankMatSEXP, SEXP maxlengthSEXP, SEXP BSEXP, SEXP censSEXP) {
+NumericVector sracpp(IntegerMatrix rankMat, int maxlength, int B, IntegerVector cens, int type);
+RcppExport SEXP SuperRanker_sracpp(SEXP rankMatSEXP, SEXP maxlengthSEXP, SEXP BSEXP, SEXP censSEXP, SEXP typeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -26,18 +26,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type maxlength(maxlengthSEXP);
     Rcpp::traits::input_parameter< int >::type B(BSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type cens(censSEXP);
-    __result = Rcpp::wrap(sracpp(rankMat, maxlength, B, cens));
+    Rcpp::traits::input_parameter< int >::type type(typeSEXP);
+    __result = Rcpp::wrap(sracpp(rankMat, maxlength, B, cens, type));
     return __result;
 END_RCPP
 }
 // sracppfull
-NumericVector sracppfull(IntegerMatrix rankMat);
-RcppExport SEXP SuperRanker_sracppfull(SEXP rankMatSEXP) {
+NumericVector sracppfull(IntegerMatrix rankMat, int type);
+RcppExport SEXP SuperRanker_sracppfull(SEXP rankMatSEXP, SEXP typeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< IntegerMatrix >::type rankMat(rankMatSEXP);
-    __result = Rcpp::wrap(sracppfull(rankMat));
+    Rcpp::traits::input_parameter< int >::type type(typeSEXP);
+    __result = Rcpp::wrap(sracppfull(rankMat, type));
     return __result;
 END_RCPP
 }

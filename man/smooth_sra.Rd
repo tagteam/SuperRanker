@@ -7,9 +7,9 @@
 smooth_sra(object, confidence = 0.95)
 }
 \arguments{
-\item{confidence}{the limits to compute}
+\item{object}{A matrix}
 
-\item{obj}{A matrix}
+\item{confidence}{the limits to compute}
 }
 \value{
 A list containing two vectors for the smoothed lower and upper limits

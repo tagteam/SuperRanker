@@ -4,7 +4,7 @@
 \alias{sracpp}
 \title{Compute the sequential rank agreement between k ranked lists}
 \usage{
-sracpp(rankMat, maxlength, B, cens)
+sracpp(rankMat, maxlength, B, cens, type = 0L)
 }
 \arguments{
 \item{rankMat}{A matrix with k columns corresponding to the k ranked lists. Elements of each column are integers between 1 and the length of the lists}
@@ -14,9 +14,11 @@ sracpp(rankMat, maxlength, B, cens)
 \item{B}{The number of resamples to use in the presence of censored lists}
 
 \item{cens}{A vector of integer values that}
+
+\item{type}{The type of distance measure to use: 0 (the default) is the variance while 1 is MAD (mean absolute deviation)}
 }
 \value{
-A vector of the same length as the rows in rankMat containing the sequential rank agreement between the lists for each depth
+A vector of the same length as the rows in rankMat containing the squared (!) sequential rank agreement between the lists for each depth. If the MAD type was chosen then the sequential MAD values are returned
 }
 \description{
 Computes the sequential rank agreement (number of items present in all k lists divided by the current rank) for each rank in the k lists
