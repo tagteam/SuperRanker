@@ -4,7 +4,7 @@
 \alias{plot.sra}
 \title{Plot sequential rank agreement}
 \usage{
-plot.sra(x, xlim, ylim, xlab = "List depth",
+\method{plot}{sra}(x, xlim, ylim, xlab = "List depth",
   ylab = "Sequential rank agreement", add = FALSE, ...)
 }
 \arguments{
