@@ -61,7 +61,7 @@
   incomplete or censored. The main idea is then a permutation based
   and graphically approach to assess the sequential changes of
   agreement as a function of the depth of the lists. This may help to
-  indentify change-points in the agreement of the lists. The
+  identify change-points in the agreement of the lists. The
   usefulness of these tools are illustrated using gene rankings, and
   using data from two Danish ovarian cancer studies on where we assess
   the within and between agreement of different statistical classification
@@ -269,7 +269,7 @@ of the items found in the set $S_d$:
 \textrm{SRA}(d)= \sqrt{\frac{\sum_{\{p \in
       S_d\}}(L-1)A(X_p)^2}{(L-1)|S_d|}}, \label{def:sra}
 \end{equation}
-where $|S_d|$ refers to the cardinaly of the set $S_d$. Values of
+where $|S_d|$ refers to the cardinality of the set $S_d$. Values of
 \textrm{SRA} close to zero suggests that the lists agree while larger
 values suggests disagreement. If the ranked lists are identical then
 the value of SRA will be zero for all depths $d$. The sequential rank
@@ -299,8 +299,8 @@ samples in order to classify between acute lymphoblastic leukemia
 (ALL) and acute myeloid leukemia (AML)
 \citep{Golub1999}. Preprocessing of the gene expression data was done
 as described in \citet{Dudoit2002} and the four different analysis
-approaces were: marginal two-sample $t$ tests, marginal logistic
-regression analyses, logistic regression eleastic net
+approaches were: marginal two-sample $t$ tests, marginal logistic
+regression analyses, elastic net logistic regression 
 \citep{friedman2010regularization}, and marginal maximum information
 content correlations (MIC) \citep{Reshef2011}. For the first two
 methods, the genes were ranked according to $p$ value, for logistic
@@ -715,7 +715,7 @@ information available in the data used for creating the rankings.
 The average overlap is widely used in comparisons of (two) ranked
 lists \citep{Fagin2003,Webber2010} and the idea behind the average
 overlap closely resembles the sequential rank agreement. In this
-section we present an extention of the average overlap to more that
+section we present an extension of the average overlap to more that
 two lists and compare this to sequential rank agreement.
 
 The overlap among $L$ lists observed until depth $d$ is defined as the
@@ -803,221 +803,46 @@ substantially different curves for the average overlap but not for
 sequential rank agreement (red lines in Figure~\ref{fig:case1}). For
 the sequential rank agreement we get roughly the same estimate of
 agreement from rank 3 as we did from the full dataset. This indicates
-that sequential rank is more robust against small pertubations of the
+that sequential rank is more robust against small perturbations of the
 data. For the average overlap the curves completely change when these
 two items are removed and which would lead to a different conclusion
 about the agreement among the items from rank 3 downwards.
 
-\section{Applications}
 
-We now consider an application of the sequential rank agreement to two
-data sets consisting of MALDI-TOF (Matrix-Assisted Laser
-Desorption/Ionization Time Of Flight) mass spectra obtained from blood
-samples from patients with either benign or malignant ovarian
-tumors. The data sets are subsamples of the Danish MALOVA and DACOVA
-study populations.
+\section{Application}
+We now consider an application of the sequential rank agreement to two data sets consisting of MALDI-TOF (Matrix-Assisted Laser Desorption/Ionization Time Of Flight) mass spectra obtained from blood samples from patients with either benign or malignant ovarian tumors. The data sets are subsamples of the Danish MALOVA and DACOVA study populations.
 
-The MALOVA study is a multidisciplinary Danish study on ovarian cancer
-\citep{Hogdall:2004:Cancer:15160342} where all Danish women diagnosed
-with an ovarian tumor and referred for surgery from the participating
-departments of gynecology were enrolled continuously from December
-1994 to May 1999. For the purpose of illustration we use a random
-subsample of $119$ patients with a total of $58$ patients with
-malignant ovarian cancers as cases and $61$ patients with benign
-ovarian tumors as controls. The DACOVA study is another
-multidisciplinary Danish study on ovarian cancer which included about
-$66\%$ of the female population of Denmark
-\citep{bertelsen1991protocol}. It was aimed to continuously enroll all
-patients that were referred to surgery of an ovarian tumor clinically
-suspected to be cancer during the period 1984 to 1990.
-% @Andreas: hvorfor random subsample?
-Similarly, we use a random subsample of $113$
-patients with a total of $54$ malignant ovarian cancers and $59$
-benign ovarian tumors/gynecologic disorders.
+The MALOVA study is a multidisciplinary Danish study on ovarian cancer \citep{Hogdall:2004:Cancer:15160342} where all Danish women diagnosed with an ovarian tumor and referred for surgery from the participating departments of gynecology were enrolled continuously from December 1994 to May 1999. For the purpose of illustration we use a random subsample of $119$ patients with a total of $58$ patients with malignant ovarian cancers as cases and $61$ patients with benign
+ovarian tumors as controls. The DACOVA study is another multidisciplinary Danish study on ovarian cancer which included about $66\%$ of the female population of Denmark \citep{bertelsen1991protocol}. It was aimed to continuously enroll all patients that were referred to surgery of an ovarian tumor clinically suspected to be cancer during the period 1984 to 1990. Similarly, we use a random subsample of $113$ patients with a total of $54$ malignant ovarian cancers and $59$ benign ovarian tumors/gynecologic disorders.
 
-Proteomic analysis was performed by MALDI-TOF mass spectrometry with a
-Bruker Ultraflex in positive, linear ion mode in the mass-to-charge
-range $800$ to $20000$ Dalton by an average of $500$ laser
-shots. Calibration of the instrument was performed using a protein
-standard mixture. Each spectrum consists of $49642$ samples over the
-mass-to-charge range which we down-sample on an equidistant grid of
-5000 points by linear interpolation. We further preprocess each
-spectrum by first removing the slow-varying baseline intensities with
-the SNIP algorithm \citep{ryan1988snip} followed by a normalization
-with respect to the total ion counts. Finally, we standardize the 5000
-predictors to have column-wise zero mean and unit variance.
+Each spectrum consists of $49642$ samples over a mass-to-charge range of $800$ to $20000$ which we down-sample on an equidistant grid of 5000 points by linear interpolation. We preprocess each spectrum by first removing the slow-varying baseline intensity with the SNIP algorithm \citep{ryan1988snip} followed by a normalization with respect to the total ion count. We then standardize the 5000 predictors to have column-wise zero mean and unit variance in each data set.
 
-We use these two data sets to illustrate how the sequential rank
-agreement can be applied in two different scenarios. In the first
-scenario we assess the agreement of different statistical
-classification methods in how they rank predictors by different
-statistical classification methods for the two study populations. In
-the second scenario we assess the agreement among ranking of the
-predicted individual risk probabilities of having malignant tumor
-using four different prediction methods.
-For this second example we furthermore
-investigate the behaviour of different statistical methods in a
-simulation study.
+We use the two data sets to illustrate how the sequential rank agreement can be applied in two different scenarios. In the first scenario we assess the agreement of four different statistical classification methods in how they rank the predictors according to their importance with respect to the binary outcome. In the second scenario we assess the agreement among rankings of individual predicted risk probabilities of having a malignant tumor using the four methods. The first scenario is relevant in the context of biomarker discovery and the latter is important when e.g., ranking patients according to immediacy of treatment. 
 
+We use the following four classification methods: Random Forest \citep{breiman2001random} implemented in the R package \texttt{randomForest} \citep{liaw2002classification}, logistic Lasso \citep{tibshirani1996regression} and Ridge regression \citep{segerstedt1992ordinary} both implemented in the R package \texttt{glmnet} \citep{Friedman:2010aa}, and Partial Least Squares Discriminant Analysis (PLS-DA) \citep{boulesteix2004pls} implemented in the R package \texttt{caret} \citep{Jed-Wing:2014aa}.
 
+In both scenarios we use the MALOVA data to train the statistical models, and the two types of agreements are assessed with respect to perturbations of the training data in the following manner. We repeatedly draw a sub-sample (without replication) consisting of 90\% of the MALOVA observations and train the four models on the sub-sample. Each of the models produces a ranking of the 5000 predictors according to their importance with respect to discriminating between  the tumor types, and the agreement of these rankings across the different sub-samples are used to assess the stability of ranking the importance of the predictors. For the Random Forest classifier the predictors are ranked according to the Gini index, while for the logistic Lasso and Ridge regression models we order the predictors by absolute magnitude of the estimated regression coefficients. For the PLS-DA model the importance of the predictors is based on a weighted sum of the absolute coefficients where the weights are proportional to the reduction in the sums of squares across the components. To assess the stability of the individual risk predictions we apply the predictors from the DACOVA data set to each of the models. These predicted probabilities are then ranked in decreasing order, and the agreement of the risk predictions are similarly obtained by the sequential rank agreement applied across the different sub-samples of the training data. We use 1000 iterations for the sub-sampling procedure. 
 
-\subsection{Agreement of predictor ranking}
-We apply 10 different classification methods to each of the two data
-sets. All methods are capable of producing a ranking of the 5000
-predictors according to their importance with respect to the
-association with the outcome class label. The methods under
-consideration can be separated into two groups: marginal methods and
-joint methods. The marginal methods treat each of the of 5000
-predictors separately in succession while the joint models use all the
-predictors simultaneously. The marginal methods are t-test statistics,
-univariate logistic regressions, AUC-based ROC analyses and maximum
-information content correlations (MIC) statistics. For the t-test
-statistics and the logistic regressions we rank the predictors
-according to decreasing p-value while for the ROC analysis and MIC
-statistics we simply rank according to increasing numerical value. The
-joint methods are a Random Forest classifier
-\citep{breiman2001random}, logistic Lasso regression
-\citep{tibshirani1996regression}, logistic Ridge regression
-\cite{segerstedt1992ordinary}, Partial Least Squares Discriminant
-Analysis (PLS-DA) \cite{boulesteix2004pls}, Shrinkage Discriminant
-Analysis with local false discovery rate control (SDA)
-\cite{ahdesmaki2010} and nearest shrunken centroid (PAM)
-\cite{tibshirani2003class}. For the Random Forest classifier the
-importance of the predictors are ranked according to the Gini index
-while for the logistic Lasso and Ridge regressions we order by
-absolute magnitude of the estimated coefficients. For the PLS-DA
-method the importance of the predictors is based on a weighted sum of
-the absolute coefficients where the weights are proportional to the
-reduction in the sums of squares across the components, and for PAM
-the importance is given by the difference between the class centroids
-and the overall centroid. Finally, for the SDA method the ranking of
-the predictors is performed using the correlation-adjusted t-scores,
-the local false discovery rate (lFDR) is estimated and only the
-predictors with $lFDR < 0.8$ are retained. Together with the logistic
-Lasso regression and the nearest shrunken centroid methods this leads
-to a censored list according to our previous discussion. All tuning
-parameters are estimated by repeated 10-fold cross-validation using 20
-random splits. We use the implementations in the R packages
-\texttt{randomForest} \citep{liaw2002classification}, \texttt{glmnet}
-\citep{Friedman:2010aa}, \texttt{caret} \citep{Jed-Wing:2014aa},
-\texttt{sda} \citep{Ahdesmaki:2014aa} and \texttt{minerva}
-\citep{Filosi:2014aa}.
+All four models depend on tuning parameters. These are estimated by 20 times repeated 5-fold cross-validation on the training data in each iteration. The implementation of Lasso and Ridge regression in the \texttt{glmnet} package offers three different cross-validated optimization criteria for the penalty parameter: total deviance, classification accuracy and Area Under ROC. We apply all three criteria to our data to investigate their effect on the agreement.
 
-The agreement of the ranking of the predictors given by the ten
-different methods can be compared in different ways using the
-sequential rank agreement. One possibility is to consider all $55$
-pair-wise agreement functions. This will be useful for identifying
-statistical methods that perform similarly on a given data set with
-respect to how the order of predictor importance is determined. This
-could for example be done by applying a statistical clustering method
-to the pair-wise sequential rank agreement curves. Here we take a
-simpler approach and consider the agreement of the importance
-determined by the different marginal methods and the agreement of the
-importance determined by the different joint methods. This leads to
-two agreement curves for each data set which we show in figure
-\ref{fig:app1}.
-
-\begin{figure}[tb]
+\begin{figure}[tbp]
 \begin{center}
-\includegraphics[width=.5\textwidth]{pics/marginalVsModel.pdf}
+\includegraphics[width=.5\textwidth]{pics/riskAgreementPlot}%
+\includegraphics[width=.5\textwidth]{pics/predictorAgreementPlot}
 \end{center}
- \caption{Marginal}
+ \caption{Sequential rank agreement of predicted risk probabilities for the DACOVA data (left) and estimated predictor importance (right) based on 1000 sub-samples of the MALOVA training data.}
  \label{fig:app1}
 \end{figure}
 
-From the figure it is seen that generally the agreement between
-ranking the predictors using the different methods is better for the
-MALOVA data than for the DACOVA data. The shapes of the agreement
-curves start at a low level followed by an increase after which they
-stabilize at some level. This corresponds to the expected behavior
-that the methods agree better with respect to the most important
-predictors than with the not so important ones. Also, it is clear that
-ranking the predictors by the marginal methods show better overall
-agreement than using the joint methods. This is not surprising due to
-the high correlation of the spectral intensities across neighboring
-mass-to-charge ratios. This leads to co-linearity problems that
-especially affects the classification methods that use a sparse
-representation of the predictors.
+Figure \ref{fig:app1} (left) shows the sequential rank agreement applied to the estimated risk probabilities of the $113$ patients in the DACOVA data set obtained from the $1000$ sub-samples of the MALOVA data, and Figure \ref{fig:app1} (right) shows the sequential rank agreement of the estimated importance of the 5000 predictors. For clarity we only show the agreement for the latter up to list depth 600 where all the curves have approximately become stable. We note here that the predictor importance estimated with the Lasso model is capable of producing censored lists depending on the value of the penalty parameter. With the deviance criterion the median number of non-zero coefficients was 33 (range 18 to 52). In order to calculate the sequential rank agreement we therefore applied Algorithm \ref{sra-algorithm} with $B = 1000$ and $P=5000$. The effect of the censoring caused by the sparsity of the Lasso is clearly visible in the agreement curves.
+
+For most of the sequential rank agreement curves we see as expected that they start low followed by an increase until they approximately become constant.  This has the interpretation that the classification methods show higher agreement with respect to the highest ranked items (the most high-risk patients and the most important predictors respectively) then for the items deeper in the lists across the different sub-samples. The change-point where the curves become approximately constant is the list depth where the ranks of the remaining items become almost random. The only exceptions are the predictor importance agreements using the Ridge models and the risk probability agreement using the Lasso model with the AUC criterion which show higher disagreement in the top of the lists. The reason for this in the Lasso case is that optimizing with respect to the AUC criterion tends to favor a very high value of the penalty parameter causing only a single predictor to be selected in each of the 1000 iterations. This results in a lack of generalizability to the DACOVA data which gives rise to the higher disagreement in the predicted risk probabilities. In the extreme case where the penalty becomes so high that none of the predictors are selected by the Lasso, the sequential rank agreement for the predicted probabilities becomes undefined since all the ranks will be ties.
+
+From Figure \ref{fig:app1} it can also be seen that some of the methods show better agreement with respect to the predicted probabilities than for ranking  the importance of the predictors and vice versa. Ridge regression performs very well for the risk predictions but is outperformed by PLS-DA for the predictor importances. On the other hand, PLS-DA appears to be similarly worse for the risk predictions compared to Ridge regression. The Random Forest method seems to perform equally well in both scenarios. Lasso regression (except with the AUC criterion as discussed previously) performs very well at ranking the high-risk patients but very poorly for the importance of the predictors. This reason for this is the high auto-correlation between the intensities in the mass spectra which leads to collinearity issues in the regression models. It is well-known that variable selection with the Lasso penalty does not preform very well when the predictors are highly correlated. This collinearity does, however, not affect the risk predictions, as seen on the left part of the figure, since it is not so important which specific variable that get selected from a group of highly correlated predictors when the purpose is risk predictions.
+
+Finally, it would appear that Ridge regression with the AUC criterion for the penalty parameter achieves the best performance with respect to the stability of ranking the individual predicted risk probabilities. It must, however, be stressed that the sequential rank agreement is only concerned with whether similar orderings of the patients is obtained under perturbations of the training data. It is not concerned with whether such an ordering is the correct one. This is similar to the usual distinction between accuracy and precision. Looking at the distributions of the AUCs across the $1000$ iterations for each of the models with respect to the known class labels of the DACOVA data we see that the PLS-DA model attained the best AUC with a median value of $0.71$ (IQR = 0.07) while the Ridge regression with AUC criterion has a median AUC of $0.49$ (IQR = 0.02). This means that while Ridge regression optimized with respect to the AUC criterion achieves the best rank agreement it performs similar to a random coin toss with respect to classification on the DACOVA data. Both concerns are of course important in practice and for this data set it appears that PLS-DA is the overall best method taking both agreement and classification into account.
 
 
-
-
-\subsection{Agreement of predicted risk probabilities}
-We now consider the case where we predict the patient-specific risks
-of having a malignant tumor. We consider this as an example of the
-clinical decision problem of deciding the order in which a group of
-patients must be treated. This order is given by ranking the patients
-according to increasing predicted probability of malignant tumor. We
-assess the agreement of estimating the rankings of the same patients
-by four different statistical prediction methods using the sequential
-rank agreement. The four prediction models are: a Random Forest
-classifier, logistic Lasso regression, logistic Ridge regression and
-Partial Least Squares Discriminant Analysis (PLSDA).
-
-For each prediction method we estimate a model based on the MALOVA
-data and predict the risks of a malignant tumor for the patients in
-the DACOVA study. We repeat this procedure on 100 bootstrap samples of
-the MALOVA data used to construct the model and then estimate the
-agreement of the resulting 100 rankings of the same DACOVA
-patients. This serves as an assessment of the sensitivity of the
-different statistical prediction methods to perturbations of the
-learning data.
-
-For the Random Forest method we grow 500 tree using 22 randomly
-selected predictors at each split. The penalty parameter for the Lasso
-and Ridge regression models is optimized with respect to the deviance
-loss function using internal repeated 10-fold cross-validation on the
-learning data using 20 random splits. The number of components for the
-PLSDA method is optimized in a similar manner using classification
-accuracy as criterion.
-
-Figure \ref{fig:app2} shows the sequential rank agreement for the four
-methods. Generally, the ranking of the predictions made by the Random
-Forest method appears to be in better agreement across resampled
-training data than for any of the other method. The only exception is
-for the patient with the overall largest risk of a malignant tumor for
-which the logistic Lasso regression method provides a better
-agreement. Something about Ridge is surprising etc. etc. etc. that we
-now look at in a simulation study.
-
-\begin{figure}[tb]
-\begin{center}
-\includegraphics[width=.5\textwidth]{pics/thomas.pdf}
-\end{center}
- \caption{Thomas}
- \label{fig:app2}
-\end{figure}
-
-To further investigate the apparent lack of agreement for the ridge
-regression method we consider a small simulation study. We simulate
-two data sets each with $120$ observations and $500$ predictors. Each
-vector of predictors is drawn independently from a $500$-dimensional
-Gaussian distribution with zero mean, unit variance and a correlation
-coefficient of $0.9$ in a compound symmetry structure. The 120
-observations is split into two groups where the coefficient vector for
-the first group is zero and similarly for the second group except that
-the first $100$ values are set to one. We then predict the risk
-probabilities in a similar manner as before where we repeatedly fit
-models on bootstrapped versions on the first data set and use the
-models to predict the risk probability of the same observations from
-the second data set. Here we only consider the logistic Ridge
-regression model but we consider three different ways of optimizing
-the penalty parameter. These consists of optimizing with respect to
-the total deviance, the prediction accuracy and the area under the ROC
-curve. The resulting sequential rank agreement curves from 100
-bootstrap iterations are seen in figure \ref{fig:app3}
-
-\begin{figure}[tb]
-\begin{center}
-\includegraphics[width=.5\textwidth]{pics/simulationTest2.pdf}
-\end{center}
- \caption{SimulationTest2}
- \label{fig:app3}
-\end{figure}
-
-Redo the figure and comment on the result. Note that none of the loss
-functions directly considers the agreement of predicted
-probabilities. The AUC is indirectly related in a complicated manner.
 
 
 \section{Discussion}
@@ -1036,7 +861,7 @@ The sequential rank agreement is extremely versatile. We have shown
 that it can be used not only to compare ranked lists of items produced
 from different samples/populations but that it also can be used to
 study the ranks obtained from different analysis methods on the same
-data as well as to evalaute the stability of the ranks from a single
+data as well as to evaluate the stability of the ranks from a single
 method by bootstrapping the data repeatedly and comparing the ranks
 obtained from the bootstrapped data.
 
@@ -1056,7 +881,7 @@ sequential rank agreement obtained. Note that none of the two null
 hypotheses are concerned with the actual ``true ranking'' but are
 purely concerned with consistency/stability of the rankings among the
 lists. As such we cannot determine if the rankings are good but only
-whether they agree. The sequential rank agreemenet curve can be
+whether they agree. The sequential rank agreement curve can be
 compared visually to the curves obtained under either of the null
 distributions and simple point-wise $p$-values can be obtained for
 each depth by counting the number of sequential rank agreements under
@@ -1083,9 +908,9 @@ agreement among the items that were deemed to relevant.
 
 We note that the sequential rank agreement is still marred by problems
 that generally apply to ranking of items and/or
-indiviuals. Collinearity in particular can be a huge problem when
+individuals. Collinearity in particular can be a huge problem when
 bootstrapping data or when comparing different analysis methods. For
-example, marginal analyses where each item is analyzed seperately will
+example, marginal analyses where each item is analyzed separately will
 assign similar ranks to two highly correlated predictors while methods
 that provide a sparse solution such as the lasso will just rank one of
 the two predictors high while the other might have a very low
