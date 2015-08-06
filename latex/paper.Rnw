@@ -300,7 +300,7 @@ samples in order to classify between acute lymphoblastic leukemia
 \citep{Golub1999}. Preprocessing of the gene expression data was done
 as described in \citet{Dudoit2002} and the four different analysis
 approaches were: marginal two-sample $t$ tests, marginal logistic
-regression analyses, elastic net logistic regression 
+regression analyses, elastic net logistic regression
 \citep{friedman2010regularization}, and marginal maximum information
 content correlations (MIC) \citep{Reshef2011}. For the first two
 methods, the genes were ranked according to $p$ value, for logistic
@@ -837,7 +837,7 @@ benign ovarian tumors/gynecologic disorders.
 
 Each spectrum consists of $49642$ samples over a mass-to-charge range of $800$ to $20000$ which we down-sample on an equidistant grid of 5000 points by linear interpolation. We preprocess each spectrum by first removing the slow-varying baseline intensity with the SNIP algorithm \citep{ryan1988snip} followed by a normalization with respect to the total ion count. We then standardize the 5000 predictors to have column-wise zero mean and unit variance in each data set.
 
-We use the two data sets to illustrate how the sequential rank agreement can be applied in two different scenarios. In the first scenario we assess the agreement of four different statistical classification methods in how they rank the predictors according to their importance with respect to the binary outcome. In the second scenario we assess the agreement among rankings of individual predicted risk probabilities of having a malignant tumor using the four methods. The first scenario is relevant in the context of biomarker discovery and the latter is important when e.g., ranking patients according to immediacy of treatment. 
+We use the two data sets to illustrate how the sequential rank agreement can be applied in two different scenarios. In the first scenario we assess the agreement of four different statistical classification methods in how they rank the predictors according to their importance with respect to the binary outcome. In the second scenario we assess the agreement among rankings of individual predicted risk probabilities of having a malignant tumor using the four methods. The first scenario is relevant in the context of biomarker discovery and the latter is important when e.g., ranking patients according to immediacy of treatment.
 
 Four classification methods are considered: Random Forest
 \citep{breiman2001random} implemented in the R package
@@ -849,8 +849,8 @@ Squares Discriminant Analysis (PLS-DA) \citep{boulesteix2004pls}
 implemented in the R package \texttt{caret} \citep{Jed-Wing:2014aa}.
 
 In both scenarios we use the MALOVA data to train the statistical
-models, and 
-%the two types of 
+models, and
+%the two types of
 in both situations the
 agreements are assessed with respect to
 perturbations of the training data in the following manner. We
@@ -907,9 +907,9 @@ calculate the sequential rank agreement we therefore applied Algorithm
 censoring caused by the sparsity of the Lasso is clearly visible in
 the agreement curves.
 
-For most of the sequential rank agreement curves we see, as expected, that they start low followed by an increase until they approximately become constant.  This has the interpretation that the classification methods show higher agreement with respect to the highest ranked items (the most high-risk patients and the most important predictors respectively) than for the items deeper in the lists across the different sub-samples. The change-points where the curves become approximately constant are the list depths where the ranks of the remaining items become close to random. 
+For most of the sequential rank agreement curves we see, as expected, that they start low followed by an increase until they approximately become constant.  This has the interpretation that the classification methods show higher agreement with respect to the highest ranked items (the most high-risk patients and the most important predictors respectively) than for the items deeper in the lists across the different sub-samples. The change-points where the curves become approximately constant are the list depths where the ranks of the remaining items become close to random.
 
-The only exceptions to the expected shape of the agreement curves are the predictor importance agreements from the Ridge models and the risk prediction agreement from the Lasso model with the AUC criterion. They all show higher disagreement in the top of the lists followed by a decrease. The explanations for their behavior is different for the two methods. For the Lasso model the reason is that optimizing the penalty parameter with respect to the AUC criterion tends to favor a very high penalty value causing only a single predictor to be selected in each of the 1000 iterations. This results in a lack of generalizability to the DACOVA data which gives rise to the higher disagreement in the predicted risk probabilities. In the extreme case where the penalty becomes so high that none of the predictors are selected by the Lasso, the sequential rank agreement for the predicted probabilities becomes undefined since all the ranks will be ties. 
+The only exceptions to the expected shape of the agreement curves are the predictor importance agreements from the Ridge models and the risk prediction agreement from the Lasso model with the AUC criterion. They all show higher disagreement in the top of the lists followed by a decrease. The explanations for their behavior is different for the two methods. For the Lasso model the reason is that optimizing the penalty parameter with respect to the AUC criterion tends to favor a very high penalty value causing only a single predictor to be selected in each of the 1000 iterations. This results in a lack of generalizability to the DACOVA data which gives rise to the higher disagreement in the predicted risk probabilities. In the extreme case where the penalty becomes so high that none of the predictors are selected by the Lasso, the sequential rank agreement for the predicted probabilities becomes undefined since all the ranks will be ties.
 
 \begin{figure}[htbp]
 \begin{center}
@@ -920,7 +920,7 @@ The only exceptions to the expected shape of the agreement curves are the predic
  \label{fig:app2}
 \end{figure}
 
-The reason behind the behavior of the sequential rank agreement of predictor importances estimated by the Ridge models is more subtle. Looking at the distribution of the regression coefficients it is seen that a large proportion of them are numerically very close to zero and of almost equal absolute value. This implies that when they are ranked according to their magnitude, their actual order becomes more uncertain and more close to a random permutation. This problem can be alleviate by introducing an artificial censoring depending on the absolute value of the coefficients. Figure \ref{fig:app2} (left) shows the sequential rank agreement curve of the rankings of the predictor importances from the Ridge model using the deviance criterion (same curve as in figure \ref{fig:app1} (left)) as well as an agreement curve where the absolute value of the regression coefficients have been censored at the $0.1\%$ quantile. In our application the median number of censored predictors across the 1000 sub-samples is 5 (range 1 to 11). Even though the number of censored predictors is very small compared to the total number of predictors, the effect on the sequential rank agreement is substantial as it has now flipped to show higher agreement in the top of the lists as was expected. 
+The reason behind the behavior of the sequential rank agreement of predictor importances estimated by the Ridge models is more subtle. Looking at the distribution of the regression coefficients it is seen that a large proportion of them are numerically very close to zero and of almost equal absolute value. This implies that when they are ranked according to their magnitude, their actual order becomes more uncertain and more close to a random permutation. This problem can be alleviate by introducing an artificial censoring depending on the absolute value of the coefficients. Figure \ref{fig:app2} (left) shows the sequential rank agreement curve of the rankings of the predictor importances from the Ridge model using the deviance criterion (same curve as in figure \ref{fig:app1} (left)) as well as an agreement curve where the absolute value of the regression coefficients have been censored at the $0.1\%$ quantile. In our application the median number of censored predictors across the 1000 sub-samples is 5 (range 1 to 11). Even though the number of censored predictors is very small compared to the total number of predictors, the effect on the sequential rank agreement is substantial as it has now flipped to show higher agreement in the top of the lists as was expected.
 
 Returning to Figure \ref{fig:app1}, it can further be seen that some of the methods show better agreement with respect to the predicted probabilities than for ranking the importance of the predictors and vice versa. Ridge regression performs very well for the risk predictions, but PLS-DA performs better for the predictor importances and similarly worse for the risk predictions. The Random Forest method seems to perform equally well in both scenarios. Lasso regression (except with the AUC criterion) performs very well at ranking the high-risk patients but very poorly at ranking the importance of the predictors. This reason for this is the high auto-correlation between the intensities in the mass spectra which leads to collinearity issues in the regression models. It is well-known that variable selection with the Lasso penalty does not preform very well when the predictors are highly correlated. This collinearity does, however, not affect the agreement of the risk predictions, as seen on the left part of the figure, since it is not so important which specific variable that gets selected from a group of highly correlated predictors when the purpose is risk predictions.
 
@@ -1004,6 +1004,16 @@ rank. When the rankings from these two analysis methods are compared
 then the agreement will differ simply because of the way correlated
 predictors are handled. This is not a shortcoming of the sequential
 rank agreement but is a problem general to all ranked lists.
+
+Another caveat with the way the sequential rank agreement is defined
+is the use of the standard deviation to measure agreement. The
+standard deviation is an integral part of the limits-of-agreement as
+discussed by \citet{alt:bland:1983}. However, the standard deviation
+can also be unstable when the number of observations is low and
+alternative measures such as the mean absolute deviance may prove more
+stable in some situations. However, the current definition using the
+standard deviation is analogous to the approach used for agreement in
+method comparisong studies.
 
 
 In conclusion we have introduced a method for evaluation of ranked
