@@ -4,7 +4,8 @@
 \alias{random_list_sra}
 \title{Simulate sequential rank agreement for randomized unrelated lists}
 \usage{
-random_list_sra(object, B = 1, n = 1, na.strings = NULL)
+random_list_sra(object, B = 1, n = 1, na.strings = NULL, type = c("sd",
+  "mad"))
 }
 \arguments{
 \item{B}{Either a vector or matrix}
@@ -12,6 +13,8 @@ random_list_sra(object, B = 1, n = 1, na.strings = NULL)
 \item{n}{the number of sequential rank agreement curves to produce}
 
 \item{na.strings}{A vector of character values that represent vensored observations}
+
+\item{type}{The type of measure to use. Either sd (standard deviation - the default) or mad (mean absolute deviance)}
 
 \item{obj}{A matrix}
 }

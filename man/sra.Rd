@@ -7,15 +7,15 @@
 \alias{sra.matrix}
 \title{Compute the sequential rank agreement}
 \usage{
-sra(object, B = 1, ...)
+sra(object, B = 1, type = c("sd", "mad"), ...)
 
-\method{sra}{default}(object, B = 1)
+\method{sra}{default}(object, B = 1, type = c("sd", "mad"))
 
 \method{sra}{matrix}(object, B = 1, na.strings = NULL,
-  nitems = nrow(object))
+  nitems = nrow(object), type = c("sd", "mad"))
 
 \method{sra}{list}(object, B = 1, na.strings = NULL,
-  nitems = max(sapply(object, length)))
+  nitems = max(sapply(object, length)), type = c("sd", "mad"))
 }
 \arguments{
 \item{object}{Either matrix where each column is a ranked list of
@@ -26,6 +26,8 @@ from a point onwards. See details for more information.}
 
 \item{B}{An integer giving the number of randomization to sample
 over in the case of censored observations}
+
+\item{type}{The type of measure to use. Either sd (standard deviation - the default) or mad (mean absolute deviance)}
 
 \item{na.strings}{A vector of strings/values that represent missing values in addition to NA. Defaults to NULL which means only NA are censored values.}
 }

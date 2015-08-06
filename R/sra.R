@@ -8,6 +8,7 @@
 #' @param na.strings A vector of strings/values that represent missing values in addition to NA. Defaults to NULL which means only NA are censored values.
 #' @param B An integer giving the number of randomization to sample
 #' over in the case of censored observations
+#' @param type The type of measure to use. Either sd (standard deviation - the default) or mad (mean absolute deviance)
 #' @return A vector of the sequential rank agreement
 ##' @examples
 ##'
@@ -41,19 +42,19 @@
 #'
 #' @rdname sra
 #' @export
-sra <- function(object, B=1, ...) {
+sra <- function(object, B=1, type=c("sd", "mad"), ...) {
   UseMethod("sra")
 }
 
 #' @rdname sra
 #' @export
-sra.default <- function(object, B=1) {
+sra.default <- function(object, B=1, type=c("sd", "mad")) {
     stop("Input must be either a matrix, a data.frame or a list.")
 }
 
 #' @rdname sra
 #' @export
-sra.matrix <- function(object, B=1, na.strings=NULL, nitems=nrow(object)) {
+sra.matrix <- function(object, B=1, na.strings=NULL, nitems=nrow(object), type=c("sd", "mad")) {
     if (!is.matrix(object))
         stop("Input object must be a matrix")
 
@@ -75,14 +76,14 @@ sra.matrix <- function(object, B=1, na.strings=NULL, nitems=nrow(object)) {
         object <- rbind(object, glue)
     }
     object <- lapply(1:NCOL(object),function(j)object[,j]) # Convert matrix to list
-    sra.list(object, B=B, nitems=nitems)
+    sra.list(object, B=B, nitems=nitems, type=type)
 }
 
 
 
 #' @rdname sra
 #' @export
-sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, length))) {
+sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, length)), type=c("sd", "mad")) {
     # Make sure that the input object ends up as a matrix with integer columns all
     # consisting of elements from 1 and up to listlength
 
@@ -90,6 +91,8 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
 
     nlists <- length(object)
     nitems <- nitems ## force evaluation here
+
+    type <- match.arg(type)
 
     ## Sanity checks
     object <- lapply(1:length(object),function(j){
@@ -145,6 +148,10 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
     iscensored <- any(nmiss!=0)
     if (B!=1 && (!iscensored || (max(nmiss)==1))) {B <- 1}
 
+    itype <- 0
+    if (type == "mad")
+        itype <- 1
+
     # Special version of sample needed
     resample <- function(x, ...) x[sample.int(length(x), ...)]
     tmpres <- sapply(1:B, function(b) {
@@ -157,13 +164,14 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
                                          })
                          ## bind lists
                          rankmat <- do.call("cbind",obj.b)
-                         res <- sracppfull(rankmat)
+                         res <- sracppfull(rankmat, type=itype)
                          res
                      })
-    agreement <- sqrt(rowMeans(tmpres))
+    agreement <- ifelse(itype==0, sqrt(rowMeans(tmpres)), rowMeans(tmpres))
     names(agreement) <- items
     class(agreement) <- "sra"
     attr(agreement, "B") <- B
+    attr(agreement, "type") <- type
     agreement
 
 }
@@ -175,10 +183,13 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
 #' @param B Either a vector or matrix
 #' @param n the number of sequential rank agreement curves to produce
 #' @param na.strings A vector of character values that represent vensored observations
+#' @param type The type of measure to use. Either sd (standard deviation - the default) or mad (mean absolute deviance)
 #' @return A matrix with n columns each representing the sequential rank agreement obtained from
 #' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
 #' @export
-random_list_sra <- function(object, B=1, n=1, na.strings=NULL) {
+random_list_sra <- function(object, B=1, n=1, na.strings=NULL, type=c("sd", "mad")) {
+
+    type <- match.arg(type)
 
     ## Make sure that the input object ends up as a matrix with integer columns all
     ## consisting of elements from 1 and up to listlength
@@ -197,7 +208,7 @@ random_list_sra <- function(object, B=1, n=1, na.strings=NULL) {
         for (j in 1:ncol(object)) {
             object[,j] <- c(sample(nitems, size=notmiss[j]), rep(NA, nitems-notmiss[j]))
         }
-        sra(object, B=B)
+        sra(object, B=B, type=type)
     })
     res
 
@@ -233,7 +244,7 @@ test_sra <- function(object, nullobject, weights=1) {
     ## Sanity checks
     if (! (length(weights) %in% c(1, length(object))))
         stop("the vector of weights must have the same length as the number of items")
-    
+
     ## Test statistic
     T <- max(weights*abs(object - apply(nullobject, 1, mean)))
 
@@ -246,5 +257,5 @@ test_sra <- function(object, nullobject, weights=1) {
     res <- sum(nullres>=T)/(B+1)
     attr(res, "B") <- B
     return(res)
-    
+
 }
