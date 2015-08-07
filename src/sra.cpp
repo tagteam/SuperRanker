@@ -32,6 +32,27 @@ double square( double x ){
     return x*x;
 }
 
+// [ [ Rcpp::export]]
+int median(NumericVector x) {
+  int xlen=x.size();
+  int n;
+  
+  if (xlen % 2) { /* x has odd length */
+    n = (xlen+1)/2;
+  } else {
+    n = xlen/2+1;
+  }
+  
+  NumericVector y = clone(x);
+  std::nth_element(y.begin(), y.begin()+n-1, y.end());
+
+  if (xlen % 2) { /* x has odd length */
+    return (y[n]);
+  } else {
+    return((y[n-1] + y[n])/2.0);
+  }
+}
+
 
 NumericVector SdPerRow(NumericMatrix obj, int type) {
 
