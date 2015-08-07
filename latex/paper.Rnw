@@ -916,9 +916,6 @@ clarity of presentation we zoom in on the agreement up to list depth
 \includegraphics[width=.5\textwidth]{pics/riskAgreementPlot}%
 \includegraphics[width=.5\textwidth]{pics/predictorAgreementPlot}
 \end{center}
-%% ANDREAS: kan du aendre titel for begge grafer:
-%% "Risk probabilities" -> "Predicted risks of malignant tumor in 113 patients (DACOVA)"
-%% "Predictor importance" -> "Discrimination importance of 5000 predictors"
 \caption{Left panel: Sequential rank agreement of 1000 rankings of the
   predicted risks of malignant tumor. For each method the different
   rankings were obtained by first training models in 1000 random
