@@ -835,12 +835,10 @@ clinically suspected to be cancer during the period from 1984 to
 $113$ patients with a total of $54$ malignant ovarian cancers and $59$
 benign ovarian tumors/gynecologic disorders.
 
-Each spectrum consists of $49642$ samples over a mass-to-charge range
-of $800$ to $20000$ which we down-sample on an equidistant grid of
-5000 points by linear interpolation. After this dimension reduction
-the mass spectrum is represented by 5000 predictors. We preprocess
-%% ANDREAS: det er uklar om preprocessing forgaar i de oprindelig spectra eller i de down-samplede 
-each spectrum by first removing the slow-varying baseline intensity
+Each spectrum consists of $49642$ samples over a range of mass-to-charge ratios 
+between $800$ to $20000$ Dalton which we downsample on an equidistant grid of
+5000 points by linear interpolation. We then preprocess the downsampled 
+spectra individually by first removing the slow-varying baseline intensity
 with the SNIP algorithm \citep{ryan1988snip} followed by a
 normalization with respect to the total ion count. We then standardize
 the 5000 predictors to have column-wise zero mean and unit variance in
@@ -881,10 +879,13 @@ the 1000 sub-samples of the MALOVA data produces a ranking of the 5000
 predictors according to their importance for discriminating between
 the tumor types.
 
-All four methods depend on tuning parameters. We select these
+All four methods depend on a tuning parameter. We select these
 separately for each sub-sample by a 20 times repeated 5-fold
-cross-validation.
-%% ANDREAS: hvilke tuning parameters har du optimeret for Random forest og PLS-DA?
+cross-validation procedure. For Lasso and Ridge regression the tuning parameter
+is the degree of penalization, for PLS-DA it is the number of components 
+(the dimensionality of the subspace), and for Random Forest it is the number
+ of predictors randomly sampled at each split.
+
 The implementation of LASSO and Ridge regression in the
 \texttt{glmnet} package offers three different cross-validated
 optimization criteria for the penalty parameter: total deviance,
@@ -949,7 +950,7 @@ This implies that when predictors are ranked according to the
 magnitude of their coefficients, their actual order becomes more
 uncertain and more close to a random permutation. This problem can be
 alleviated by artificially censoring all predictors with absolute
-coefficient values below a given threshold. For the Rigde models tuned
+coefficient values below a given threshold. For the Ridge models tuned
 with the deviance criterion, Figure \ref{fig:app2} (left) shows the
 the sequential rank agreement where for each of the 1000 trained
 models predictors were artificially censored when their absolute
@@ -1053,8 +1054,9 @@ random coin toss with respect to classifying the DACOVA patients.
 %% Andreas: vi boer ogsaa se paa Brier score (calibration) inden vi konkluderer at PLS-DA er den bedste
 
 
-\section{Discussion}
 
+
+\section{Discussion}
 In this article we address the problem of comparing ranked lists of
 the same items. Our proposed method can handle both the situation
 where the underlying data to generate the ranked lists are available
