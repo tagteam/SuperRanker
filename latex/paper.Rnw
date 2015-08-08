@@ -544,7 +544,7 @@ If the lists agree on all items then the sequential rank agreement is
 Incomplete lists are also a common occurrence. They arise for example
 in case of missing data (items), when comparing top $d$ list results
 from publications, or when some methods only rank a subset of the
-items. For example, penalized regression based on the LASSO provides a
+items. For example, penalized regression based on the Lasso provides a
 sparse set of predictors that have non-zero coefficients. There is no
 obvious ordering of the set of predictors whose coefficient has been
 shrunk to zero. Incomplete lists also occur when the analyst decides
@@ -857,7 +857,7 @@ treatment.
 
 Four classification methods are considered: Random Forest
 \citep{breiman2001random} implemented in the R package
-\texttt{randomForest} \citep{liaw2002classification}, logistic LASSO
+\texttt{randomForest} \citep{liaw2002classification}, logistic Lasso
 \citep{tibshirani1996regression} and Ridge regression
 \citep{segerstedt1992ordinary} both implemented in the R package
 \texttt{glmnet} \citep{friedman2010regularization}, and Partial Least
@@ -872,34 +872,27 @@ consisting of 90\% of the MALOVA observations and train the four
 models on each sub-sample. We use 1000 iterations for the sub-sampling
 procedure.
 
-\subsection{Agreement of predictor rankings}
-
-For each of the four methods, each of the 1000 models trained in on of
-the 1000 sub-samples of the MALOVA data produces a ranking of the 5000
-predictors according to their importance for discriminating between
-the tumor types.
-
 All four methods depend on a tuning parameter. We select these
 separately for each sub-sample by a 20 times repeated 5-fold
-cross-validation procedure. For Lasso and Ridge regression the tuning parameter
+cross-validation procedure. The tuning parameter for Lasso and Ridge regression 
 is the degree of penalization, for PLS-DA it is the number of components 
 (the dimensionality of the subspace), and for Random Forest it is the number
  of predictors randomly sampled at each split.
-
-The implementation of LASSO and Ridge regression in the
+The implementation of Lasso and Ridge regression in the
 \texttt{glmnet} package offers three different cross-validated
 optimization criteria for the penalty parameter: total deviance,
 classification accuracy and area under ROC. We apply all three
-criteria to our data to investigate their effect on the agreement.
-Note also that the LASSO models produce censored lists depending on
-the value of the penalty parameter. Under the deviance optimization
-criterion the median number of non-zero coefficients was 33 (range 18
-to 52). In order to calculate the sequential rank agreement for the
-LASSO we therefore applied our proposed Algorithm \ref{sra-algorithm}
-with $B = 1000$ and $P=5000$.
+criteria to our data to investigate their effect on the agreements.
+Note also that the Lasso models produce censored lists depending on
+the value of the penalty parameter.
 
-For the Random Forest classifier the predictors are ranked according
-to the Gini index, while for the logistic LASSO and Ridge regression
+
+\subsection{Agreement of predictor rankings}
+For each of the four methods, each of the 1000 models trained in on of
+the 1000 sub-samples of the MALOVA data produces a ranking of the 5000
+predictors according to their importance for discriminating between
+the tumor types. For the Random Forest classifier the predictors are ranked according
+to the Gini index, while for the logistic Lasso and Ridge regression
 models we order the predictors by absolute magnitude of the estimated
 regression coefficients. For the PLS-DA model the importance of the
 predictors is based on a weighted sum of the absolute coefficients
@@ -909,7 +902,7 @@ squares across the components.
 The right panel of Figure \ref{fig:app1} shows the sequential rank
 agreement of the estimated importance of the 5000 predictors.  For
 clarity of presentation we zoom in on the agreement up to list depth
-120. At deeper list depths all agreement curves appeared stable.
+600. At deeper list depths all agreement curves become approximately constant.
 
 
 \begin{figure}[htbp]
@@ -934,8 +927,7 @@ interpretation that the agreement across the different sub-samples is
 higher in the top as compared to the tail of the lists for all these
 classification methods. The change-points where the curves become
 approximately constant are the list depths where the ranks of the
-remaining items become close to random.
-%% ANDREAS: boer "close to random" ikke vaere ens for alle metoder?
+remaining items become close to uniformly random.
 
 A not expected shape of the agreement curves is seen for the Ridge
 models for all three tuning criteria. They all show higher
@@ -945,7 +937,6 @@ distribution of the regression coefficients we see that a large
 proportion of them are numerically very close to zero and have almost
 equal absolute value. This is a general feature of the Ridge models in
 this data set and seen for all the 1000 trained models.
-%% ANDREAS: er det sidste ok?
 This implies that when predictors are ranked according to the
 magnitude of their coefficients, their actual order becomes more
 uncertain and more close to a random permutation. This problem can be
@@ -957,39 +948,50 @@ models predictors were artificially censored when their absolute
 coefficient value was lower than the $0.1\%$ quantile of the 5000
 absolute coefficient values. The corresponding curve from Figure
 \ref{fig:app1} (left panel) is shown for comparison.
-%% ANDREAS: godkender du min aendring af de sidste 2 saetninger?
+%%%% CHECK UP: CENSOR ON POOLED DATA OR CENSOR BY INVIDIAL THRESHOLD
+
+
+
+%%%%%% DET HER ER NOGET ROD. DER ER FORSVUNDET NOGET LASSO TEKST
+%%%%%% GÅ TILBAGE OG FIND DET IGEN
+Under the deviance optimization criterion the median number of non-zero 
+coefficients was 33 (range 18 to 52). In order to calculate the sequential 
+rank agreement for the Lasso we therefore applied our proposed Algorithm \ref{sra-algorithm}
+with $B = 1000$ and $P=5000$.
+
 Thus, in our application the median number of censored predictors
 across the 1000 sub-samples was 5 (range 1 to 11). Even though the
 number of censored predictors is very small compared to the total
 number of predictors, the effect on the sequential rank agreement is
 substantial and with the artificial censoring the shape of the curves
 is as expected, starting low and then increasing. Also, the effect of
-the censoring caused by the sparsity of the LASSO is clearly visible
+the censoring caused by the sparsity of the Lasso is clearly visible
 in the agreement curves.
-%% ANDREAS: man kan desvaerre ikke se hvor LASSO agreement forsvinder
-%% (ved list-depth 5?) og om den er laver for list depth 1-5 end rigde
-%% eller om den er kun laver for list depth 1-2. maaske kan du
-%% beskrive dette i teksten?
+\textbf{ANDREAS: man kan desvaerre ikke se hvor Lasso agreement forsvinder
+  (ved list-depth 5?) og om den er laver for list depth 1-5 end rigde
+  eller om den er kun laver for list depth 1-2. maaske kan du
+  beskrive dette i teksten?}
+
+
+
+
+
 
 \subsection{Agreement of individual risk predictions}
 \label{sec:airp}
-
 To assess the stability of the individual risk predictions we apply
 the predictors from the DACOVA data set to each of the models. The
-predicted probabilities are then ranked in decreasing order such the
-patients with the highest risk of a malignant tumor appears on the top
+predicted probabilities are then ranked in decreasing order such that the
+patients with the highest risk of a malignant tumor appears in the top
 of the list. Figure \ref{fig:app1} (left) shows the sequential rank
-agreement separately for each method, based on 1000 risk predictions
+agreement separately for each method, based on the 1000 risk predictions
 obtained from the models trained in the same $1000$ random sub-samples
-of the MALOVA data. For clarity of presentation we zoom in on the
-agreement up to list depth 600. At deeper list depths all agreement
-curves appeared stable.
+of the MALOVA data. 
 
 Most curves start low and then increase indicating higher agreement
 among high risk patients.
-%% ANDREAS og CLAUS: er det ogsaa forvented eller skyldes det at vi kumulerer fra toppen?
-%% agreement boer jo igen vaere hoejt bland low risk patienter ...
-An exception is the risk prediction agreement for the LASSO tuned with
+\textbf{ANDREAS og CLAUS: er det ogsaa forvented eller skyldes det at vi kumulerer fra toppen? agreement boer jo igen vaere hoejt bland low risk patienter ... Claus indsætter måske noget her!}
+An exception is the risk prediction agreement for the Lasso tuned with
 the AUC criterion which shows very low agreement among the high values
 of the predicted risks. The reason is that optimizing the penalty
 parameter with respect to the AUC criterion tends to favor a very high
@@ -997,7 +999,7 @@ penalty value causing only a single predictor to be selected in each
 of the 1000 iterations. This results in a lack of generalizability to
 the DACOVA data which gives rise to the higher disagreement in the
 predicted risk probabilities. In the extreme case where the penalty
-becomes so high that none of the predictors are selected by the LASSO,
+becomes so high that none of the predictors are selected by the Lasso,
 the sequential rank agreement for the predicted probabilities becomes
 undefined since all the ranks will be ties.
 
@@ -1021,13 +1023,13 @@ vice versa. Ridge regression shows higher agreement across training
 sets for the risk predictions than PLS-DA, and PLS-DA shows higher
 agreement for predictor importance than Ridge regression. The Random
 Forest method seems to perform equally well in both scenarios.
-%% Andreas: jeg forstaar ikke den sidste saetning. kan man sammenligne de to rank agreements (left vs right panel)?
-LASSO shows similar agreement for ranking the risk predictions than
+\textbf{Andreas: jeg forstaar ikke den sidste saetning. kan man sammenligne de to rank agreements (left vs right panel)?}
+Lasso shows similar agreement for ranking the risk predictions than
 PLS-DA (unless with the AUC criterion), and poor agreement for ranking
 predictors. This reason for the latter is the high auto-correlation
 between the intensities in the mass spectra which leads to
 collinearity issues in the regression models. It is well-known that
-variable selection with the LASSO penalty does not preform very well
+variable selection with the Lasso penalty does not preform very well
 when the predictors are highly correlated. The collinearity does,
 however, not affect the agreement of the risk predictions, as seen on
 the left panel of Figure \ref{fig:app1}, since it is not so important
@@ -1049,10 +1051,10 @@ the AUC criterion attains a median AUC of $0.49$. This implies that
 while Ridge regression optimized with respect to the AUC criterion
 achieves the best sequential rank agreement it performs similar to a
 random coin toss with respect to classifying the DACOVA patients.
-%% and for this data set it appears that PLS-DA is the overall best
-%% method taking both agreement and discrimination ability into account.
-%% Andreas: vi boer ogsaa se paa Brier score (calibration) inden vi konkluderer at PLS-DA er den bedste
-
+\textbf{and for this data set it appears that PLS-DA is the overall best
+  method taking both agreement and discrimination ability into account.
+  Andreas: vi boer ogsaa se paa Brier score (calibration) inden vi konkluderer at PLS-DA er den bedste
+}
 
 
 
@@ -1127,10 +1129,10 @@ individuals. Collinearity in particular can be a huge problem when
 bootstrapping data or when comparing different analysis methods. For
 example, marginal analyses where each item is analyzed separately will
 assign similar ranks to two highly correlated predictors while methods
-that provide a sparse solution such as the LASSO will just rank one of
+that provide a sparse solution such as the Lasso will just rank one of
 the two predictors high while the other might have a very low rank.
 Thus in such a scenario we would expect low agreement of the rankings
-from LASSO and marginal analyses simply because of the way correlated
+from Lasso and marginal analyses simply because of the way correlated
 predictors are handled. This is not a shortcoming of the sequential
 rank agreement but is a problem general to all ranked lists.  
 
