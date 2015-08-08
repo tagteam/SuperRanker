@@ -948,12 +948,11 @@ models predictors were artificially censored when their absolute
 coefficient value was lower than the $0.1\%$ quantile of the 5000
 absolute coefficient values. The corresponding curve from Figure
 \ref{fig:app1} (left panel) is shown for comparison.
-%%%% CHECK UP: CENSOR ON POOLED DATA OR CENSOR BY INVIDIAL THRESHOLD
+\textbf{CHECK UP: CENSOR ON POOLED DATA OR CENSOR BY INDIVIDUAL THRESHOLD}
 
 
 
-%%%%%% DET HER ER NOGET ROD. DER ER FORSVUNDET NOGET LASSO TEKST
-%%%%%% GÅ TILBAGE OG FIND DET IGEN
+\textbf{DET HER ER NOGET VÆRRE ROD. DER ER FORSVUNDET NOGET LASSO TEKST. GÅ TILBAGE OG FIND DET IGEN}
 Under the deviance optimization criterion the median number of non-zero 
 coefficients was 33 (range 18 to 52). In order to calculate the sequential 
 rank agreement for the Lasso we therefore applied our proposed Algorithm \ref{sra-algorithm}
