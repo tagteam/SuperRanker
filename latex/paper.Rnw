@@ -1114,17 +1114,16 @@ correspond to depths for which the agreement among the lists was
 substantially worse and could serve as indicators for when the lists
 no longer agree sufficiently satisfactory.
 
-Finally, we have --- whenever possible --- used as much information
-from the lists as possible, i.e., we have used all available ranks.
-%% Claus: hvad vil du sige med den sidste saetning?
-We could choose to censor the rankings of all the items that were
-deemed not to be significant if information on both rankings and the
-corresponding evidence for significance was available. That would
-ensure that there would be put less emphasis on the agreement of the
-non-significant items and it would be easier to identify a change in
-agreement among the items that were deemed to relevant. In our
-application section we have successfully introduced such an artificial
-censoring for the predictor rankings obtained with ridge regression.
+Finally, we have --- whenever possible --- used all available ranks
+from the lists.  We could choose to censor the rankings of all the
+items that were deemed not to be significant if information on both
+rankings and the corresponding evidence for significance was
+available. That would ensure that there would be put less emphasis on
+the agreement of the non-significant items and it would be easier to
+identify a change in agreement among the items that were deemed to
+relevant. In our application section we have successfully introduced
+such an artificial censoring for the predictor rankings obtained with
+ridge regression.
 
 We note that the sequential rank agreement is still marred by problems
 that generally apply to ranking of items and/or
@@ -1149,30 +1148,18 @@ stable in some situations. However, the current definition using the
 standard deviation is analogous to the approach used for agreement in
 method comparison studies.
 
-%% In conclusion we have introduced a method for evaluation of ranked
-%% (censored) lists that can be easily interpreted and that can be
-%% applied to a large number of situations.
-%% CLAUS: den sidste saetning er bar en omformulering af Diskussionen's foerste saetning.
-
-%% The method here proposed can be adapted further by using it to
-%% identify and cluster statistical analysis methods that provide more or
-%% less the same agreement,
-%% Claus: det er enten for kort eller for lang
-
-
-%% or by using the rank agreement to optimize a
-%% hyper-parameter in, say, elastic net regularized regression where the
-%% rank agreement is used to determine the mixing proportion between the
-%% $L_1$ and the $L_2$ penalty.
-%% Claus: det er enten for kort eller for lang
-
-%% Finally, the proposed method may be
-%% adapted (with some additional assumptions) to the situation where the
-%% lists are subsets of each other.
-%% Claus: det er enten for kort eller for lang
-
-%% We will be investigating these
-%% extensions further in the future.
+In conclusion we have introduced a method for evaluation of ranked
+(censored) lists that can be easily interpreted and that can be
+applied to a large number of situations.  The method presented here
+can be adapted further by using it to compare and classify statistical
+analysis methods that agree on the rankings they provide or by using
+the rank agreement to optimize a hyper-parameter in, say, elastic net
+regularized regression where the rank agreement is used to determine
+the mixing proportion between the $L_1$ and the $L_2$ penalty.
+%Finally, the proposed method may be adapted (with some additional
+%assumptions) to the situation where the lists are subsets of each
+%other.  
+We will be investigating these extensions further in the future.
 
 
 %\bibliographystyle{rss}
