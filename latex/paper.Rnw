@@ -840,8 +840,8 @@ between $800$ to $20000$ Dalton which we downsample on an equidistant grid of
 5000 points by linear interpolation. We then preprocess the downsampled
 spectra individually by first removing the slow-varying baseline intensity
 with the SNIP algorithm \citep{ryan1988snip} followed by a
-normalization with respect to the total ion count. We then standardize
-the 5000 predictors to have column-wise zero mean and unit variance in
+normalization with respect to the total ion count. Finally, we standardize
+the $5000$ predictors to have column-wise zero mean and unit variance in
 each data set.
 
 We use the two data sets to illustrate how the sequential rank
@@ -852,7 +852,7 @@ their importance for distinguishing benign and malignant tumors. In
 the second scenario we assess the agreement among rankings of
 individual predicted risks of having a malignant tumor. The first
 scenario is relevant in the context of biomarker discovery and the
-latter is important, e.g., to rank patients according to immediacy of
+latter is important e.g., when ranking patients according to immediacy of
 treatment.
 
 Four classification methods are considered: Random Forest
@@ -872,12 +872,15 @@ consisting of 90\% of the MALOVA observations and train the four
 models on each sub-sample. We use 1000 iterations for the sub-sampling
 procedure.
 
-All four methods depend on a tuning parameter. We select these
-separately for each sub-sample by a 20 times repeated 5-fold
-cross-validation procedure. The tuning parameter for Lasso and Ridge regression
-is the degree of penalization, for PLS-DA it is the number of components
-(the dimensionality of the subspace), and for Random Forest it is the number
- of predictors randomly sampled at each split.
+All four methods depend on a tuning parameter. The tuning parameter for 
+Lasso and Ridge regression is the degree of penalization, and for PLS-DA 
+it is the number of components (the dimensionality of the subspace). 
+We estimate these separately for each sub-sample by a 20 times repeated 
+5-fold cross-validation procedure. For the Random Forest we grow a fixed
+number of $5000$ trees and let the tuning parameter be the number of 
+predictors randomly sampled at each split. We estimate this by a binary
+search with respect to minimizing the Out-of-Bag classification error estimate.
+
 The implementation of Lasso and Ridge regression in the
 \texttt{glmnet} package offers three different cross-validated
 optimization criteria for the penalty parameter: total deviance,
@@ -888,12 +891,12 @@ the value of the penalty parameter.
 
 
 \subsection{Agreement of predictor rankings}
-For each of the four methods, each of the 1000 models trained in on of
+For each of the four methods, each of the 1000 models trained on 
 the 1000 sub-samples of the MALOVA data produces a ranking of the 5000
 predictors according to their importance for discriminating between
 the tumor types. For the Random Forest classifier the predictors are ranked according
 to the Gini index, while for the logistic Lasso and Ridge regression
-models we order the predictors by absolute magnitude of the estimated
+models we order by absolute magnitude of the estimated
 regression coefficients. For the PLS-DA model the importance of the
 predictors is based on a weighted sum of the absolute coefficients
 where the weights are proportional to the reduction in the sums of
@@ -902,7 +905,7 @@ squares across the components.
 The right panel of Figure \ref{fig:app1} shows the sequential rank
 agreement of the estimated importance of the 5000 predictors.  For
 clarity of presentation we zoom in on the agreement up to list depth
-600. At deeper list depths all agreement curves become approximately constant.
+600. At deeper list depths all agreement curves are approximately constant.
 
 
 \begin{figure}[htbp]
@@ -914,7 +917,7 @@ clarity of presentation we zoom in on the agreement up to list depth
   predicted risks of malignant tumor. For each method the different
   rankings were obtained by first training models in 1000 random
   sub-samples of the MALOVA data and then predicting the risk of
-  malignant tumor in the 113 MALOVA patients. Right panel: Sequential
+  malignant tumor in the 113 DACOVA patients. Right panel: Sequential
   rank agreement of 1000 rankings of the 5000 predictors. The rankings
   were obtained from the same 1000 trained models.}
  \label{fig:app1}
@@ -1000,8 +1003,8 @@ risks. The reason is that optimizing the penalty parameter with
 respect to the AUC criterion tends to favor a very high penalty value
 causing only a single predictor to be selected in each of the 1000
 iterations. This results in a lack of generalizability to the DACOVA
-data which gives rise to the higher disagreement in the predicted risk
-probabilities. In the extreme case where the penalty becomes so high
+data which gives rise to the higher disagreement in the predicted risks. 
+In the extreme case where the penalty becomes so high
 that none of the predictors are selected by the Lasso, the sequential
 rank agreement for the predicted probabilities becomes undefined since
 all the ranks will be ties.
@@ -1019,14 +1022,13 @@ all the ranks will be ties.
  \label{fig:app2}
 \end{figure}
 
-In Figure \ref{fig:app1} it can further be seen that some of the
-methods show better agreement with respect to the predicted
-probabilities than for ranking the importance of the predictors and
-vice versa. Ridge regression shows higher agreement across training
+Comparing the left and right panels of Figure \ref{fig:app1} it can 
+further be seen that some of the methods show better agreement with 
+respect to the predicted probabilities than for ranking the importance 
+of the predictors and vice versa. Ridge regression shows higher agreement across training
 sets for the risk predictions than PLS-DA, and PLS-DA shows higher
-agreement for predictor importance than Ridge regression. The Random
-Forest method seems to perform equally well in both scenarios.
-\textbf{Andreas: jeg forstaar ikke den sidste saetning. kan man sammenligne de to rank agreements (left vs right panel)?}
+agreement for predictor importance than Ridge regression. 
+
 Lasso shows similar agreement for ranking the risk predictions than
 PLS-DA (unless with the AUC criterion), and poor agreement for ranking
 predictors. This reason for the latter is the high auto-correlation
@@ -1045,7 +1047,7 @@ individual predicted risk probabilities. It must, however, be stressed
 that the sequential rank agreement in this application is only
 concerned with the agreement of the risk predictions across
 sub-samples and not with the actual accuracy of the risk
-predictions. Thus, we also computed the AUC for the different models
+predictions. Thus, we also computed the AUC and Brier scores for the different models
 based on the DACOVA data. The distributions across the $1000$
 sub-samples for a selection of the models is shown in the right panel
 of Figure \ref{fig:app2}.  Here we see that PLS-DA attains the highest
@@ -1054,10 +1056,12 @@ the AUC criterion attains a median AUC of $0.49$. This implies that
 while Ridge regression optimized with respect to the AUC criterion
 achieves the best sequential rank agreement it performs similar to a
 random coin toss with respect to classifying the DACOVA patients.
-\textbf{and for this data set it appears that PLS-DA is the overall best
-  method taking both agreement and discrimination ability into account.
-  Andreas: vi boer ogsaa se paa Brier score (calibration) inden vi konkluderer at PLS-DA er den bedste
-}
+\textbf{Comment on Brier scores}
+Both concerns are of course important in practice and for this data set 
+it appears thatPLS-DA is the overall best method taking both agreement 
+and classification accuracy into account.
+
+
 
 
 
