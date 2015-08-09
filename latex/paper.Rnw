@@ -991,6 +991,8 @@ Most curves start low and then increase indicating higher agreement
 among high risk patients.
 %% ANDREAS og CLAUS: er det ogsaa forvented eller skyldes det at vi kumulerer fra toppen?
 %% agreement boer jo igen vaere hoejt bland low risk patienter ...
+
+
 An exception is the risk prediction agreement for the LASSO tuned with
 the AUC criterion which shows very low agreement among the high values
 of the predicted risks. The reason is that optimizing the penalty
