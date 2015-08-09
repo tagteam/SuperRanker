@@ -988,19 +988,23 @@ obtained from the models trained in the same $1000$ random sub-samples
 of the MALOVA data.
 
 Most curves start low and then increase indicating higher agreement
-among high risk patients.
-\textbf{ANDREAS og CLAUS: er det ogsaa forvented eller skyldes det at vi kumulerer fra toppen? agreement boer jo igen vaere hoejt bland low risk patienter ... Claus indsætter måske noget her!}
-An exception is the risk prediction agreement for the Lasso tuned with
-the AUC criterion which shows very low agreement among the high values
-of the predicted risks. The reason is that optimizing the penalty
-parameter with respect to the AUC criterion tends to favor a very high
-penalty value causing only a single predictor to be selected in each
-of the 1000 iterations. This results in a lack of generalizability to
-the DACOVA data which gives rise to the higher disagreement in the
-predicted risk probabilities. In the extreme case where the penalty
-becomes so high that none of the predictors are selected by the Lasso,
-the sequential rank agreement for the predicted probabilities becomes
-undefined since all the ranks will be ties.
+among high risk patients. This is expected if we rank the individuals
+according to highest risk of disease. However, it is also expected
+that individuals with very low risk also show high agreement. In this
+case we order the patients according to (high) risk prediction but we
+could essentially also have reversed the order to identify the
+patients that have low risk prediction.  An exception is the risk
+prediction agreement for the Lasso tuned with the AUC criterion which
+shows very low agreement among the high values of the predicted
+risks. The reason is that optimizing the penalty parameter with
+respect to the AUC criterion tends to favor a very high penalty value
+causing only a single predictor to be selected in each of the 1000
+iterations. This results in a lack of generalizability to the DACOVA
+data which gives rise to the higher disagreement in the predicted risk
+probabilities. In the extreme case where the penalty becomes so high
+that none of the predictors are selected by the Lasso, the sequential
+rank agreement for the predicted probabilities becomes undefined since
+all the ranks will be ties.
 
 \begin{figure}[htbp]
 \begin{center}
