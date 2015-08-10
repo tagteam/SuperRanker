@@ -46,8 +46,6 @@ brierMat <- cbind(sapply(res, function(a) mean((a$rf$risk - dacovaLabels)^2)),
                   sapply(res, function(a) mean((a$ridgeAUC$risk - dacovaLabels)^2)))
 colnames(brierMat) <- c("Random Forest", "PLS-DA", "Lasso deviance", "Ridge deviance", "Ridge AUC")
 
-##
-save(list=ls()[-which(ls() == "res")], file="plots.RData")
 
 
 ########## RISK PLOT ##########
