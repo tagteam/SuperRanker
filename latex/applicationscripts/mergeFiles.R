@@ -1,3 +1,5 @@
+rm(list=ls())
+
 res <- NULL
 for(i in 1:1500) {
   filename <- paste('SuperFinal-', i, '.RData', sep="")

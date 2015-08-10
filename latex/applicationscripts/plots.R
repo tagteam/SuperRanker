@@ -3,11 +3,11 @@ library(SuperRanker)
 rm(list=ls())
 load("joinedOutput.RData")
 load("DACOVAlabels.RData")
+res <- res[1:1000]
 
-B <- 2 #number of randomization for censored lists
+B <- 1000 #number of randomization for censored lists
 
-
-########## PREPARE SRA OBJECTS ##########
+########## PREPARE OBJECTS ##########
 rfRisk <- sra(lapply(res, function(a) a$rf$riskOrder))
 plsRisk <- sra(lapply(res, function(a) a$pls$riskOrder))
 
@@ -19,7 +19,7 @@ ridgeDevRisk <- sra(lapply(res, function(a) a$ridgeDev$riskOrder))
 ridgeClassRisk <- sra(lapply(res, function(a) a$ridgeClass$riskOrder))
 ridgeAucRisk <- sra(lapply(res, function(a) a$ridgeAUC$riskOrder))
 
-
+##
 rfImpSRA <- sra(lapply(res, function(a) a$rf$importance), nitems=5000, B=B)
 plsImpSRA <- sra(lapply(res, function(a) a$pls$importance))
 
@@ -30,6 +30,24 @@ lassoAucImpSRA <- sra(lapply(res, function(a) a$lassoAUC$importance), nitems=500
 ridgeDevImpSRA <- sra(lapply(res, function(a) a$ridgeDev$importance))
 ridgeClassImpSRA <- sra(lapply(res, function(a) a$ridgeClass$importance))
 ridgeAucImpSRA <- sra(lapply(res, function(a) a$ridgeAUC$importance))
+
+##
+aucMat <- cbind(sapply(res, function(a) a$rf$auc),
+                sapply(res, function(a) a$pls$auc),
+                sapply(res, function(a) a$lassoDev$auc),
+                sapply(res, function(a) a$ridgeDev$auc),
+                sapply(res, function(a) a$ridgeAUC$auc))
+colnames(aucMat) <- c("Random Forest", "PLS-DA", "Lasso deviance", "Ridge deviance", "Ridge AUC")
+
+brierMat <- cbind(sapply(res, function(a) mean((a$rf$risk - dacovaLabels)^2)),
+                  sapply(res, function(a) mean((a$pls$risk - dacovaLabels)^2)),
+                  sapply(res, function(a) mean((a$lassoDev$risk - dacovaLabels)^2)),
+                  sapply(res, function(a) mean((a$ridgeDev$risk - dacovaLabels)^2)),
+                  sapply(res, function(a) mean((a$ridgeAUC$risk - dacovaLabels)^2)))
+colnames(brierMat) <- c("Random Forest", "PLS-DA", "Lasso deviance", "Ridge deviance", "Ridge AUC")
+
+##
+save(list=ls()[-which(ls() == "res")], file="plots.RData")
 
 
 ########## RISK PLOT ##########
@@ -52,7 +70,7 @@ legend("topright", c("Random Forest", "PLS-DA", "Lasso deviance", "Lasso class",
 
 
 ########## IMPORTANCE PLOT ##########
-plot(rfImpSRA, ylim=c(0,2000), xlim=c(0,600))
+plot(rfImpSRA, ylim=c(0,1500), xlim=c(0,600))
 title("Discrimination importance of 5000 predictors")
 
 plot(lassoDevImpSRA, add=TRUE, lines.col="red")
@@ -64,6 +82,13 @@ plot(plsImpSRA, add=TRUE, lines.col="blue")
 plot(ridgeDevImpSRA, add=TRUE, lines.col="forestgreen")
 plot(ridgeClassImpSRA, add=TRUE, lines.col="forestgreen", lines.lty=2)
 plot(ridgeAucImpSRA, add=TRUE, lines.col="forestgreen", lines.lty=3)
+
+
+########## AUC PLOT ##########
+boxplot(aucMat, ylab="AUC", ylim=c(0.4,0.8), axes=FALSE, main="AUC distribution of DACOVA predictions")
+axis(2, at=seq(0.4,0.8,0.1))
+axis(1, at=1:5, labels=colnames(aucMat), cex.axis=0.8)
+abline(h=0.5, lty=3)
 
 
 ########## RIDGE CENSORING ##########
@@ -79,17 +104,43 @@ range(sapply(outOrderCens, function(a) 5000 - length(a)))
 
 
 
-########## AUC + BRIER PLOT ##########
-aucMat <- cbind(sapply(res, function(a) a$rf$auc),
-                sapply(res, function(a) a$pls$auc),
-                sapply(res, function(a) a$lassoDev$auc),
-                sapply(res, function(a) a$ridgeDev$auc),
-                sapply(res, function(a) a$ridgeAUC$auc))
-colnames(aucMat) <- c("Random Forest", "PLS-DA", "Lasso deviance", "Ridge deviance", "Ridge AUC")
+
+
+
+
+
+
+boxplot(brierMat)
+
+boxplot(cbind(aucMat[,1], brierMat[,1],
+              aucMat[,2], brierMat[,2], 
+              aucMat[,3], brierMat[,3],
+              aucMat[,4], brierMat[,4],
+              aucMat[,5], brierMat[,5]),
+              at=c(1,1.5, 4,4.5, 7,7.5, 10,10.5, 13,13.5), ylim=c(0.4,0.8))
+abline(h=0.5, lty=3)
+
+
+
 boxplot(aucMat, ylab="AUC", ylim=c(0.4,0.8), axes=FALSE, main="AUC distribution of DACOVA predictions")
 axis(2, at=seq(0.4,0.8,0.1))
 axis(1, at=1:5, labels=colnames(aucMat), cex.axis=0.8)
 abline(h=0.5, lty=3)
+
+
+########## RIDGE CENSORING ##########
+cutOff <- quantile(abs(unlist(out)), 0.001)
+outOrderCens <- lapply(out, function(a) {
+  b <- abs(a)
+  b <- b[b > cutOff]
+  order(b, decreasing=TRUE)	
+})
+
+median(sapply(outOrderCens, function(a) 5000 - length(a))) #median number of censorings
+range(sapply(outOrderCens, function(a) 5000 - length(a)))
+
+
+
 
 
 
