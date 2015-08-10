@@ -92,62 +92,18 @@ abline(h=0.5, lty=3)
 
 
 ########## RIDGE CENSORING ##########
-cutOff <- quantile(abs(unlist(out)), 0.001)
-outOrderCens <- lapply(out, function(a) {
-  b <- abs(a)
-  b <- b[b > cutOff]
+ridgeDevCens <- lapply(res, function(a) {
+  b <- abs(a$ridgeDev$coef)
+  b <- b[b > quantile(b, 0.001)]
   order(b, decreasing=TRUE)	
 })
+ridgeDevCencRisk <- sra(ridgeDevCens, nitems=5000, B=B)
 
-median(sapply(outOrderCens, function(a) 5000 - length(a))) #median number of censorings
-range(sapply(outOrderCens, function(a) 5000 - length(a)))
+plot(ridgeDevImpSRA, ylim=c(0,1500), xlim=c(0,600))
+plot(ridgeDevCencRisk, add=TRUE, lines.col="red")
+title("Discrimination importance for Ridge with thresholding")
+legend("topright", c("No censoring", "Censored at 0.1% quantile"), col=c(1,2), lwd=3, lty=1, bty="n")
 
-
-
-
-
-
-
-
-
-boxplot(brierMat)
-
-boxplot(cbind(aucMat[,1], brierMat[,1],
-              aucMat[,2], brierMat[,2], 
-              aucMat[,3], brierMat[,3],
-              aucMat[,4], brierMat[,4],
-              aucMat[,5], brierMat[,5]),
-              at=c(1,1.5, 4,4.5, 7,7.5, 10,10.5, 13,13.5), ylim=c(0.4,0.8))
-abline(h=0.5, lty=3)
-
-
-
-boxplot(aucMat, ylab="AUC", ylim=c(0.4,0.8), axes=FALSE, main="AUC distribution of DACOVA predictions")
-axis(2, at=seq(0.4,0.8,0.1))
-axis(1, at=1:5, labels=colnames(aucMat), cex.axis=0.8)
-abline(h=0.5, lty=3)
-
-
-########## RIDGE CENSORING ##########
-cutOff <- quantile(abs(unlist(out)), 0.001)
-outOrderCens <- lapply(out, function(a) {
-  b <- abs(a)
-  b <- b[b > cutOff]
-  order(b, decreasing=TRUE)	
-})
-
-median(sapply(outOrderCens, function(a) 5000 - length(a))) #median number of censorings
-range(sapply(outOrderCens, function(a) 5000 - length(a)))
-
-
-
-
-
-
-brierScaled <- function(label, pred) {
-  brier <- mean((label - pred)^2)
-  brier
-}
 
 
 ########## LASSO SUMMARY ##########
@@ -162,3 +118,5 @@ range(sapply(res, function(a) length(a$lassoAUC$importance)))
 
 
 save(list=ls()[-which(ls() == "res")], file="plots.RData")
+
+
