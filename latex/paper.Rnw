@@ -558,7 +558,7 @@ list $l$.  The case where all lists are censored at depth $d$
 corresponds to $d_1=\cdots=d_L=d$. For incomplete/censored lists the
 rank function becomes
 \begin{equation}
-  \tilde R_l(X_p) = \left\{\begin{array}{cl} \{R_l(X_p)\} & \text{ for } X_p\in \Lambda_l \\
+  \widetilde R_l(X_p) = \left\{\begin{array}{cl} \{R_l(X_p)\} & \text{ for } X_p\in \Lambda_l \\
       \{d_l+1,\dots,P\} & \text{ for } X_p \not\in \Lambda_l\end{array}\right.
 \end{equation}
 where we only know that the rank for the unobserved items in list $l$
@@ -657,7 +657,7 @@ the methods by only requiring that there is no information in the
 ranking but that the rankings are all based on applying the
 method/approaches to the same data
 \begin{eqnarray*}
-\tilde H_0 & :&  \text{The list rankings are based on data containing}\\
+\widetilde H_0 & :&  \text{The list rankings are based on data containing}\\
 & &   \text{no association to the outcome.}
 \end{eqnarray*}
 $H_0$ is a quite unrealistic null hypothesis but we can easily obtain
@@ -670,7 +670,7 @@ then censor list $l$ at $d_l$. The sequential rank agreement curve
 from the the original lists can then be compared to the pointwise rank
 agreements obtained under $H_0$.
 
-To obtain the distribution under $\tilde H_0$ the idea is to repeat
+To obtain the distribution under $\widetilde H_0$ the idea is to repeat
 many times the ranking procedures in uncorrelated data.  Thus, we
 first permute the outcome variable of the data set on which the
 rankings are based. This removes any association between the predictor
@@ -679,19 +679,19 @@ data set to generate $L$ new rankings and subsequently compute the
 sequential rank agreement. Note that we only permute the outcomes and
 preserve the structure of the candidate predictors. The randomization
 approach requires that we have the original data available and as such
-it may not be possible to evaluate $\tilde H_0$ in all situations.
+it may not be possible to evaluate $\widetilde H_0$ in all situations.
 
 If the sequential rank agreement for the original data lies
 substantially below the distribution of the sequential rank agreements
-obtained under either $H_0$ or $\tilde H_0$ then this suggests that
+obtained under either $H_0$ or $\widetilde H_0$ then this suggests that
 the original ranked lists agree \emph{more} than what we would expect
 in data with no information.
 
 For the analysis of the Golub data described in Section
 \ref{sec:amfol}, Figure~\ref{fig:example1} shows the empirical
 distributions of sequential rank agreement under $H_0$ and
-$\tilde H_0$ each based on $400$ permutations. Not surprisingly, the
-sequential rank agreement under $\tilde H_0$ is lower than the
+$\wildetilde H_0$ each based on $400$ permutations. Not surprisingly, the
+sequential rank agreement under $\widetilde H_0$ is lower than the
 sequential rank agreement under $H_0$ because the four methods used to
 rank the data ($t$ test, logistic regression, elastic net, and MIC)
 generally tend to identify (and rank high) similar predictors even if
@@ -704,7 +704,7 @@ may be at most 1 or 2 ranked items towards the top of the lists that
 yield a result better than what would be expected (the bottom-right
 plot).
 
-It is important to stress that neither $H_0$ nor $\tilde H_0$ are
+It is important to stress that neither $H_0$ nor $\widetilde H_0$ are
 related to questions regarding the association between the outcome and
 the predictors in the data set. Both hypotheses are purely considering
 how the rankings agree in a situation where there is no relevant
@@ -936,45 +936,35 @@ A not expected shape of the agreement curves is seen for the Ridge
 models for all three tuning criteria. They all show higher
 disagreement in the top of the lists followed by a decrease. The
 reason behind this behavior is rather subtle. Looking at the
-distribution of the regression coefficients we see that a large
+distribution of the absolute value of the regression coefficients we see that a large
 proportion of them are numerically very close to zero and have almost
 equal absolute value. This is a general feature of the Ridge models in
 this data set and seen for all the 1000 trained models.
 This implies that when predictors are ranked according to the
 magnitude of their coefficients, their actual order becomes more
 uncertain and more close to a random permutation. This problem can be
-alleviated by artificially censoring all predictors with absolute
-coefficient values below a given threshold. For the Ridge models tuned
-with the deviance criterion, Figure \ref{fig:app2} (left) shows the
+alleviated by truncating all predictors with absolute coefficient values 
+below a given threshold thereby introducing an artificial censoring of the lists. 
+For the Ridge models tuned with the deviance criterion, Figure \ref{fig:app2} (left) shows the
 the sequential rank agreement where for each of the 1000 trained
-models predictors were artificially censored when their absolute
+models the predictors were artificially censored when their absolute
 coefficient value was lower than the $0.1\%$ quantile of the 5000
-absolute coefficient values. The corresponding curve from Figure
-\ref{fig:app1} (left panel) is shown for comparison.
-\textbf{CHECK UP: CENSOR ON POOLED DATA OR CENSOR BY INDIVIDUAL THRESHOLD}
-
-
-
-\textbf{DET HER ER NOGET VÆRRE ROD. DER ER FORSVUNDET NOGET LASSO TEKST. GÅ TILBAGE OG FIND DET IGEN}
-Under the deviance optimization criterion the median number of non-zero
-coefficients was 33 (range 18 to 52). In order to calculate the sequential
-rank agreement for the Lasso we therefore applied our proposed Algorithm \ref{sra-algorithm}
-with $B = 1000$ and $P=5000$.
-
-Thus, in our application the median number of censored predictors
-across the 1000 sub-samples was 5 (range 1 to 11). Even though the
-number of censored predictors is very small compared to the total
+absolute coefficient values. The curve was calculated
+using Algorithm \ref{sra-algorithm} with $B=1000$ and $P=5000$. The corresponding 
+curve from Figure \ref{fig:app1} (right panel) is shown for comparison.
+Even though the number of censored predictors is very small compared to the total
 number of predictors, the effect on the sequential rank agreement is
 substantial and with the artificial censoring the shape of the curves
-is as expected, starting low and then increasing. Also, the effect of
-the censoring caused by the sparsity of the Lasso is clearly visible
-in the agreement curves.
-\textbf{ANDREAS: man kan desvaerre ikke se hvor Lasso agreement forsvinder
-  (ved list-depth 5?) og om den er laver for list depth 1-5 end rigde
-  eller om den er kun laver for list depth 1-2. maaske kan du
-  beskrive dette i teksten?}
+is as expected, starting low and then increasing. 
 
-
+Looking at the agreement curves for the Lasso models in Figure \ref{fig:app1} 
+(right) we clearly see the effect of the sparsity inducing penalization giving 
+rise to censored lists. These curves were similarly calculated using \ref{sra-algorithm} 
+and $1000$ random permutations. Under the deviance optimization criterion the 
+median number of non-zero coefficients was 33 (range 16 to 50) and for the 
+class accuracy criterion 14 (range 4 to 56). These values correspond to
+the list depths where the agreement curves become constant as a result of
+the subsequent censoring.
 
 
 
@@ -996,8 +986,9 @@ according to highest risk of disease. However, it is also expected
 that individuals with very low risk also show high agreement. In this
 case we order the patients according to (high) risk prediction but we
 could essentially also have reversed the order to identify the
-patients that have low risk prediction.  An exception is the risk
-prediction agreement for the Lasso tuned with the AUC criterion which
+patients that have low risk prediction.  
+
+An exception is the risk prediction agreement for the Lasso tuned with the AUC criterion which
 shows very low agreement among the high values of the predicted
 risks. The reason is that optimizing the penalty parameter with
 respect to the AUC criterion tends to favor a very high penalty value
@@ -1030,7 +1021,7 @@ sets for the risk predictions than PLS-DA, and PLS-DA shows higher
 agreement for predictor importance than Ridge regression. 
 
 Lasso shows similar agreement for ranking the risk predictions than
-PLS-DA (unless with the AUC criterion), and poor agreement for ranking
+PLS-DA (unless with the AUC criterion), and poorer agreement for ranking
 predictors. This reason for the latter is the high auto-correlation
 between the intensities in the mass spectra which leads to
 collinearity issues in the regression models. It is well-known that
@@ -1038,7 +1029,7 @@ variable selection with the Lasso penalty does not preform very well
 when the predictors are highly correlated. The collinearity does,
 however, not affect the agreement of the risk predictions, as seen on
 the left panel of Figure \ref{fig:app1}, since it is not so important
-which specific variable is selected from a group of highly correlated
+which specific variable that gets selected from a group of highly correlated
 predictors when the purpose is risk predictions.
 
 It appears that Ridge regression tuned with the AUC criterion achieves
@@ -1047,21 +1038,16 @@ individual predicted risk probabilities. It must, however, be stressed
 that the sequential rank agreement in this application is only
 concerned with the agreement of the risk predictions across
 sub-samples and not with the actual accuracy of the risk
-predictions. Thus, we also computed the AUC and Brier scores for the different models
+predictions. Thus, we also computed the AUC values for the different models
 based on the DACOVA data. The distributions across the $1000$
 sub-samples for a selection of the models is shown in the right panel
 of Figure \ref{fig:app2}.  Here we see that PLS-DA attains the highest
-AUC values with a median value of $0.71$ while the Ridge model with
+AUC values with a median value of $0.70$ while the Ridge model with
 the AUC criterion attains a median AUC of $0.49$. This implies that
 while Ridge regression optimized with respect to the AUC criterion
-achieves the best sequential rank agreement it performs similar to a
+achieves the best sequential rank agreement, it performs similar to a
 random coin toss with respect to classifying the DACOVA patients.
-\textbf{Comment on Brier scores}
-Both concerns are of course important in practice and for this data set 
-it appears thatPLS-DA is the overall best method taking both agreement 
-and classification accuracy into account.
-
-
+In practice both concerns are of importance.
 
 
 
@@ -1086,8 +1072,8 @@ method by bootstrapping (or sub-sampling) the data repeatedly and
 comparing the ranks obtained from training the models in the
 bootstrapped data.
 
-Our applications show that XXX
-Through simulations we showed that XXX --- afventer Andreas.
+\textbf{Our applications show that XXX
+Through simulations we showed that XXX --- afventer Andreas.}
 
 The sequential rank agreement can be used to determine the depth at
 which the rank agreement becomes too large to be desirable based on
