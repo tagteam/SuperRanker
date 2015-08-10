@@ -105,7 +105,6 @@ title("Discrimination importance for Ridge with thresholding")
 legend("topright", c("No censoring", "Censored at 0.1% quantile"), col=c(1,2), lwd=3, lty=1, bty="n")
 
 
-
 ########## LASSO SUMMARY ##########
 median(sapply(res, function(a) length(a$lassoDev$importance)))
 range(sapply(res, function(a) length(a$lassoDev$importance)))
@@ -115,6 +114,11 @@ range(sapply(res, function(a) length(a$lassoClass$importance)))
 
 median(sapply(res, function(a) length(a$lassoAUC$importance)))
 range(sapply(res, function(a) length(a$lassoAUC$importance)))
+
+########## AUC SUMMARY ##########
+median(sapply(res, function(a) a$pls$auc))
+median(sapply(res, function(a) a$ridgeAUC$auc))
+
 
 
 save(list=ls()[-which(ls() == "res")], file="plots.RData")
