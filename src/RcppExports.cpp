@@ -16,6 +16,29 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// median_rcpp
+double median_rcpp(NumericVector x);
+RcppExport SEXP SuperRanker_median_rcpp(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    __result = Rcpp::wrap(median_rcpp(x));
+    return __result;
+END_RCPP
+}
+// mad_rcpp
+double mad_rcpp(NumericVector x, double scale_factor);
+RcppExport SEXP SuperRanker_mad_rcpp(SEXP xSEXP, SEXP scale_factorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type scale_factor(scale_factorSEXP);
+    __result = Rcpp::wrap(mad_rcpp(x, scale_factor));
+    return __result;
+END_RCPP
+}
 // sracpp
 NumericVector sracpp(IntegerMatrix rankMat, int maxlength, int B, IntegerVector cens, int type);
 RcppExport SEXP SuperRanker_sracpp(SEXP rankMatSEXP, SEXP maxlengthSEXP, SEXP BSEXP, SEXP censSEXP, SEXP typeSEXP) {
@@ -40,6 +63,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerMatrix >::type rankMat(rankMatSEXP);
     Rcpp::traits::input_parameter< int >::type type(typeSEXP);
     __result = Rcpp::wrap(sracppfull(rankMat, type));
+    return __result;
+END_RCPP
+}
+// Median
+double Median(NumericVector x);
+RcppExport SEXP SuperRanker_Median(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    __result = Rcpp::wrap(Median(x));
     return __result;
 END_RCPP
 }

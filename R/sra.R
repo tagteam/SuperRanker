@@ -8,7 +8,7 @@
 #' @param na.strings A vector of strings/values that represent missing values in addition to NA. Defaults to NULL which means only NA are censored values.
 #' @param B An integer giving the number of randomization to sample
 #' over in the case of censored observations
-#' @param type The type of measure to use. Either sd (standard deviation - the default) or mad (mean absolute deviance)
+#' @param type The type of measure to use. Either sd (standard deviation - the default) or mad (median absolute deviance)
 #' @return A vector of the sequential rank agreement
 ##' @examples
 ##'
@@ -187,7 +187,7 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
 #' @param B Either a vector or matrix
 #' @param n the number of sequential rank agreement curves to produce
 #' @param na.strings A vector of character values that represent vensored observations
-#' @param type The type of measure to use. Either sd (standard deviation - the default) or mad (mean absolute deviance)
+#' @param type The type of measure to use. Either sd (standard deviation - the default) or mad (median absolute deviance)
 #' @return A matrix with n columns each representing the sequential rank agreement obtained from
 #' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
 #' @export

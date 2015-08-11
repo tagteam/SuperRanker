@@ -15,7 +15,7 @@ sracpp(rankMat, maxlength, B, cens, type = 0L)
 
 \item{cens}{A vector of integer values that}
 
-\item{type}{The type of distance measure to use: 0 (the default) is the variance while 1 is MAD (mean absolute deviation)}
+\item{type}{The type of distance measure to use: 0 (the default) is the variance while 1 is MAD (median absolute deviation)}
 }
 \value{
 A vector of the same length as the rows in rankMat containing the squared (!) sequential rank agreement between the lists for each depth. If the MAD type was chosen then the sequential MAD values are returned

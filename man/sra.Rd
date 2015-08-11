@@ -27,7 +27,7 @@ from a point onwards. See details for more information.}
 \item{B}{An integer giving the number of randomization to sample
 over in the case of censored observations}
 
-\item{type}{The type of measure to use. Either sd (standard deviation - the default) or mad (mean absolute deviance)}
+\item{type}{The type of measure to use. Either sd (standard deviation - the default) or mad (median absolute deviance)}
 
 \item{na.strings}{A vector of strings/values that represent missing values in addition to NA. Defaults to NULL which means only NA are censored values.}
 }

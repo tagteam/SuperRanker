@@ -32,25 +32,31 @@ double square( double x ){
     return x*x;
 }
 
-// [ [ Rcpp::export]]
-int median(NumericVector x) {
-  int xlen=x.size();
-  int n;
-  
-  if (xlen % 2) { /* x has odd length */
-    n = (xlen+1)/2;
-  } else {
-    n = xlen/2+1;
-  }
-  
+// [[Rcpp::export]]
+double median_rcpp(NumericVector x) {
   NumericVector y = clone(x);
-  std::nth_element(y.begin(), y.begin()+n-1, y.end());
-
-  if (xlen % 2) { /* x has odd length */
-    return (y[n]);
+  int n, half;
+  double y1, y2;
+  n = y.size();
+  half = n / 2;
+  if(n % 2 == 1) {
+    // median for odd length vector
+    std::nth_element(y.begin(), y.begin()+half, y.end());
+    return y[half];
   } else {
-    return((y[n-1] + y[n])/2.0);
+    // median for even length vector
+    std::nth_element(y.begin(), y.begin()+half, y.end());
+    y1 = y[half];
+    std::nth_element(y.begin(), y.begin()+half-1, y.begin()+half);
+    y2 = y[half-1];
+    return (y1 + y2) / 2.0;
   }
+}
+
+// [[Rcpp::export]]
+double mad_rcpp(NumericVector x, double scale_factor = 1.4826) {
+  // scale_factor = 1.4826; default for normal distribution consistent with R
+  return median_rcpp(abs(x - median_rcpp(x))) * scale_factor;
 }
 
 
@@ -61,7 +67,8 @@ NumericVector SdPerRow(NumericMatrix obj, int type) {
   for (int i=0; i<obj.nrow(); i++) {
     if (type == 1) {
       // MAD
-      res[i] = mean(abs(obj.row(i) - mean(obj.row(i))));
+      // res[i] = mean(abs(obj.row(i) - mean(obj.row(i))));
+      res[i] = mad_rcpp(obj.row(i), 1);
     }
     else {
       res[i] = var(obj.row(i));
@@ -79,7 +86,7 @@ NumericVector SdPerRow(NumericMatrix obj, int type) {
 //' @param maxlength The maximum depth that are needed XXX
 //' @param B The number of resamples to use in the presence of censored lists
 //' @param cens A vector of integer values that
-//' @param type The type of distance measure to use: 0 (the default) is the variance while 1 is MAD (mean absolute deviation)
+//' @param type The type of distance measure to use: 0 (the default) is the variance while 1 is MAD (median absolute deviation)
 //' @return A vector of the same length as the rows in rankMat containing the squared (!) sequential rank agreement between the lists for each depth. If the MAD type was chosen then the sequential MAD values are returned
 //' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
 //' @export

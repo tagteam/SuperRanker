@@ -14,7 +14,7 @@ random_list_sra(object, B = 1, n = 1, na.strings = NULL, type = c("sd",
 
 \item{na.strings}{A vector of character values that represent vensored observations}
 
-\item{type}{The type of measure to use. Either sd (standard deviation - the default) or mad (mean absolute deviance)}
+\item{type}{The type of measure to use. Either sd (standard deviation - the default) or mad (median absolute deviance)}
 
 \item{obj}{A matrix}
 }
