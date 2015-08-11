@@ -320,7 +320,11 @@ shows how many ranks apart we on average expect the genes found in the
 top $d$ part of the lists to be for each depth $d$.  It can be seen
 that the sequential rank agreement limits are better towards the top
 of the lists (smaller values on the $y$ axis) corresponding to
-\emph{better} agreement than in the tails of the lists.
+\emph{better} agreement than in the tails of the lists. It is clear
+from the curve in Figure~\ref{fig:example1} that there is a
+substantial drop in agreement even after the first depth. Thus, if we
+were to restrict attention to a small set of predictors then we would
+focus on predictors 2124, 829, and 378 as seen in Table~\ref{tab1}.
 
 <<example1, echo=FALSE, eval=TRUE>>=
 library(SuperRanker)
@@ -820,7 +824,7 @@ lines(xvals[-c(1,2)], mmyres2[1:498], col="red", lwd=2)
 
 
 
-\section{Application}
+\section{Application to ovarian cancer data}
 We now consider an application of the sequential rank agreement to two
 data sets consisting of MALDI-TOF (Matrix-Assisted Laser
 Desorption/Ionization Time Of Flight) mass spectra obtained from blood
@@ -1082,9 +1086,6 @@ method by bootstrapping (or sub-sampling) the data repeatedly and
 comparing the ranks obtained from training the models in the
 bootstrapped data.
 
-\textbf{Our applications show that XXX
-Through simulations we showed that XXX --- afventer Andreas.}
-
 The sequential rank agreement can be used to determine the depth at
 which the rank agreement becomes too large to be desirable based on
 prior requirements or acceptable differences, or it can be used to
@@ -1121,7 +1122,7 @@ rankings and the corresponding evidence for significance was
 available. That would ensure that there would be put less emphasis on
 the agreement of the non-significant items and it would be easier to
 identify a change in agreement among the items that were deemed to
-relevant. In our application section we have successfully introduced
+be relevant. In our application section we have successfully introduced
 such an artificial censoring for the predictor rankings obtained with
 ridge regression.
 
@@ -1143,10 +1144,10 @@ is the use of the standard deviation to measure agreement. The
 standard deviation is an integral part of the limits-of-agreement as
 discussed by \citet{alt:bland:1983}. However, the standard deviation
 can also be unstable when the number of observations is low and
-alternative measures such as the mean absolute deviance may prove more
+alternative measures such as the median absolute deviance may prove more
 stable in some situations. However, the current definition using the
 standard deviation is analogous to the approach used for agreement in
-method comparison studies.
+method comparison studies so we have used that.
 
 In conclusion we have introduced a method for evaluation of ranked
 (censored) lists that can be easily interpreted and that can be
