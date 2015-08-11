@@ -397,7 +397,7 @@ res2 <- sra(inputmatrix2, B=B)
 ysize <- 1000
 nreference <- 20
 ## Plot the line
-plot(res[1:ysize], col="black", lwd=3, type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth", cex=1.6)
+plot(res[1:ysize], col="black", lwd=3, type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
 
 ## Compute random list backgrounds
 null <- random_list_sra(inputmatrix, B=B, n=nreference)
@@ -451,7 +451,7 @@ polygon(c(1:length(www2$lower), rev(1:length(www2$lower))),
 
 
 
-<<fig2a, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE, eval=FALSE>>=
+<<fig2a, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE, eval=TRUE>>=
 ysize <- 1000
 nreference <- 20
 ## Plot the line
@@ -484,7 +484,7 @@ polygon(c(1:length(www2$lower), rev(1:length(www2$lower))),
 @ %
 
 
-<<fig2b, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE, eval=FALSE>>=
+<<fig2b, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE, eval=TRUE>>=
 ## Same as above but zoomed in
 ysize <- 50
 plot(res2[1:ysize], lwd=3, col="black", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
@@ -625,29 +625,27 @@ is fair in the light of the first assumption provided that we have a
 
 When the two assumptions are satisfied then it is clear that the
 interesting part of the sequential rank agreement curves is restricted
-to the depths where the percentage of censored items is
+to the depths where the number of censored items is
 low. Generally, without additional prior knowledge about the
 distribution of the censored items it seems reasonable to restrict the
 attention of the sequential rank agreement to depths smaller than
-$\max(d_1, \ldots, d_L)$.
+$\max(d_1, \ldots, d_L)$ where at least one list provides an
+uncensored item.
 
 Like for fully observed lists we generally expect the sequential rank
 agreement to start low and then increase unless the lists are
 completely unrelated (in which case the sequential rank agreement will
 be constant at a high level) or if the lists mostly agree on the
 ranking (in which case the sequential rank agreement will also be
-constant but at a low level). For censored lists we also expect a
-change-point around the depth where the lists are censored. This is an
-artefact stemming from the fact that we assume that the remainder of
-the lists can be replaced by a simple permutation of the missing
-items.
+constant but at a low level). For partially ranked lists we also
+expect a change-point around the depth where the lists are
+censored. This is an artefact stemming from the fact that we assume
+that the remainder of the lists can be replaced by a simple
+permutation of the missing items.
 
 \section{Evaluating sequential rank agreement}
 
-We now consider the special case where the rankings are obtained by
-applying different methods to the same data set which contains one
-outcome variable and a list of candidate predictors. To interpret the
-sequential rank agreement values in this situation we propose two
+To interpret the sequential rank agreement values we propose two
 different benchmark values corresponding to two different
 hypotheses. We wish to determine if we observe better agreement than
 what would be expected if there were no relevant information available
@@ -656,9 +654,9 @@ in the data.
 The first reference hypothesis is
 \begin{eqnarray*}
 H_0  & : &  \text{The list rankings correspond to complete randomly}\\
-       &  & \text{permuted lists}.
+       &  & \text{permuted lists},
 \end{eqnarray*}
-This does not only assume that there is no information in data on
+which not only assumes that there is no information in the data on
 which the rankings are based but also that the methods are completely
 independent.
 
@@ -673,16 +671,17 @@ method/approaches to the same data
 $H_0$ is a quite unrealistic null hypothesis but we can easily obtain
 realizations from that null hypothesis simply by permuting the items
 within each list and then computing the sequential rank agreement for
-the permuted lists. In the uncensored case each experiment contains
-$L$ lists of random permutations of the numbers $1,\dots,P$. For the
-censored/incomplete case we first permute the numbers $1,\dots,P$ and
-then censor list $l$ at $d_l$. The sequential rank agreement curve
-from the the original lists can then be compared to the pointwise rank
-agreements obtained under $H_0$.
+the permuted lists. In the fully observed case each experiment
+contains $L$ lists of random permutations of the items in $X$. For the
+censored/partially observed case we first permute the items
+$X_1,\dots,X_P$ and then censor list $l$ at $d_l$. The sequential rank
+agreement curve from the the original lists can then be compared to,
+say, the pointwise 95\% quantiles of the observed rank agreements
+obtained under $H_0$.
 
-To obtain the distribution under $\widetilde H_0$ the idea is to repeat
-many times the ranking procedures in uncorrelated data.  Thus, we
-first permute the outcome variable of the data set on which the
+To obtain the distribution under $\widetilde H_0$ the idea is to
+repeat the ranking procedures for unassociated data many times.  Thus,
+we first permute the outcome variable of the data set on which the
 rankings are based. This removes any association between the predictor
 variables and the outcome. Then we apply the methods to the permuted
 data set to generate $L$ new rankings and subsequently compute the
@@ -695,24 +694,24 @@ If the sequential rank agreement for the original data lies
 substantially below the distribution of the sequential rank agreements
 obtained under either $H_0$ or $\widetilde H_0$ then this suggests that
 the original ranked lists agree \emph{more} than what we would expect
-in data with no information.
+in data with no information, and therefore that the information in the
+lists is significantly more in agreement than what would be expected.
 
-For the analysis of the Golub data described in Section
-\ref{sec:amfol}, Figure~\ref{fig:example1} shows the empirical
-distributions of sequential rank agreement under $H_0$ and
-$\widetilde H_0$ each based on $400$ permutations. Not surprisingly, the
-sequential rank agreement under $\widetilde H_0$ is lower than the
-sequential rank agreement under $H_0$ because the four methods used to
-rank the data ($t$ test, logistic regression, elastic net, and MIC)
-generally tend to identify (and rank high) similar predictors even if
-there are only spurious associations. The two bottom panels in
-Figure~\ref{fig:example1} also indicate that the observed sequential
-rank agreement (the black line) is better than what would be expected
-by chance for data that contain no information since it lies below the
-reference areas. However, the censored data also suggests that there
-may be at most 1 or 2 ranked items towards the top of the lists that
-yield a result better than what would be expected (the bottom-right
-plot).
+Figure~\ref{fig:example1} shows the empirical distributions of
+sequential rank agreement under $H_0$ and $\widetilde H_0$ each based
+on $400$ permutations of the Golub data described in Section
+\ref{sec:amfol}. Not surprisingly, the sequential rank agreement under
+$\widetilde H_0$ is lower than the sequential rank agreement under
+$H_0$ because the four methods used to rank the data ($t$ test,
+logistic regression, elastic net, and MIC) generally tend to identify
+(and rank) similar predictors even if there are only spurious
+associations. The two bottom panels in Figure~\ref{fig:example1} also
+indicate that the observed sequential rank agreement (the black line)
+is better than what would be expected by chance for data that contain
+no information since it lies below the reference areas. However, the
+censored data also suggests that there may be at most 1 or 2 ranked
+items towards the top of the lists that yield a result better than
+what would be expected (the bottom-right plot).
 
 It is important to stress that neither $H_0$ nor $\widetilde H_0$ are
 related to questions regarding the association between the outcome and
@@ -722,11 +721,12 @@ information available in the data used for creating the rankings.
 
 \section{Comparison to average overlap}
 
-The average overlap is widely used in comparisons of (two) ranked
-lists \citep{Fagin2003,Webber2010} and the idea behind the average
-overlap closely resembles the sequential rank agreement. In this
-section we present an extension of the average overlap to more that
-two lists and compare this to sequential rank agreement.
+The average overlap is a measure that is widely used in comparisons of
+two fully observed ranked lists \citep{Fagin2003,Webber2010} and the
+idea behind the average overlap closely resembles the sequential rank
+agreement. In this section we present an extension of the average
+overlap to more that two lists and compare this to sequential rank
+agreement.
 
 The overlap among $L$ lists observed until depth $d$ is defined as the
 proportion of items that are found in all $L$ lists compared to the
@@ -734,14 +734,14 @@ possible number of items found in all lists observed until depth $d$:
 \begin{equation}
   O(d) = \frac{| \cap_{l=1}^L \{R_l^{-1}(r); r\leq d \} |}{d}. \label{def:overlap}
 \end{equation}
-Typically the overlap is only considered for pairwise comparisons but
-formula \eqref{def:overlap} can be applied even when $L>2$
-\citep{Bar-Ilan2006,Boulesteix2009}.
+Typically the overlap is only considered for pairwise comparisons
+\citep{Bar-Ilan2006,Boulesteix2009} but formula \eqref{def:overlap}
+is easily extended to the situation where $L>2$ as shown above.
 
 The average overlap at depth $d$ is defined as the average of the
 overlaps until depth $d$,
 \begin{equation}
-AO(d) = \sum_{i=1}^d \frac{O(d)}{d}.
+AO(d) = \frac1d\sum_{i=1}^d O(d).
 \end{equation}
 This definition directly ensures that further emphasis is put on items
 in the top of the lists since their item specific overlap contributes
@@ -760,18 +760,18 @@ overlap) at the beginning of the lists because the overlap will be
 zero until an item is present in all $L$ lists. Finally, the average
 overlap has an interpretation in terms of moving averages of
 percentages (of $L$ sets) which is somewhat less intuitive than our
-proposed average rank distance.
+proposed sequential rank distance.
 
 In the following we compare the average overlap and the sequential
-rank agreement using the analysis of the Golub data \citep{Golub1999}
-of Section \ref{sec:amfol}. We consider a typical application of the
-average overlap and thus restrict attention to only two gene rankings
-obtained by the $t$ tests and logistic regression. These two marginal
-modelling approaches should result in very similar gene rankings. The
-first two columns of Table~\ref{tab1} show the actual top-10 ranking
-of the predictors.
+rank agreement using the analysis of the Golub data
+\citep{Golub1999}. We consider a typical application of the average
+overlap and thus restrict attention to only two gene rankings obtained
+by the $t$ tests and logistic regression. These two marginal modeling
+approaches should result in very similar gene rankings. The first two
+columns of Table~\ref{tab1} show the actual top-10 ranking of the
+predictors.
 
-<<fig-ao1, echo=FALSE, fig=TRUE,include=FALSE, eval=FALSE>>=
+<<fig-ao1, echo=FALSE, fig=TRUE,include=FALSE, eval=TRUE>>=
 myres <- average_overlap(inputmatrix[,1:2])
 myres2 <- average_overlap(inputmatrix[-c(1,2),1:2])
 xvals <- 1:500
@@ -779,7 +779,7 @@ plot(xvals, myres[xvals], xlim=c(1, 150), ylim=c(0,1), type="l", lwd=2, ylab="Av
 lines(xvals[-c(1,2)], myres2[1:498], col="red", lwd=2)
 @
 
-<<fig-ao2, echo=FALSE, fig=TRUE,include=FALSE, eval=FALSE>>=
+<<fig-ao2, echo=FALSE, fig=TRUE,include=FALSE, eval=TRUE>>=
 mmyres <- sra(inputmatrix[,1:2])
 mmyres2 <- sra(inputmatrix[-c(1,2),1:2])
 xvals <- 1:500
@@ -803,20 +803,20 @@ lines(xvals[-c(1,2)], mmyres2[1:498], col="red", lwd=2)
   \label{fig:case1}
  \end{figure}
 
-The black lines in Figure~\ref{fig:case1} show the average overlap and
-sequential rank agreement for these data. It is clear from both plots
-that there is perfect agreement towards the top of the ranked lists:
-the average overlap is 1 and the sequential rank agreement is zero.
-However, if we remove those two items from the data (i.e.,
-gene/predictor 2124 and 896) and redo the analyses then we get
-substantially different curves for the average overlap but not for
-sequential rank agreement (red lines in Figure~\ref{fig:case1}). For
-the sequential rank agreement we get roughly the same estimate of
-agreement from rank 3 as we did from the full dataset. This indicates
-that sequential rank is more robust against small perturbations of the
-data. For the average overlap the curves completely change when these
-two items are removed and which would lead to a different conclusion
-about the agreement among the items from rank 3 downwards.
+ The black lines in Figure~\ref{fig:case1} show the average overlap
+ and sequential rank agreement for these data. It is clear from both
+ plots that there is perfect agreement towards the top of the ranked
+ lists: the average overlap is 1 and the sequential rank agreement is
+ zero.  However, if we remove those two items from the data (i.e.,
+ gene/predictor 2124 and 896) and redo the analyses then we get
+ substantially different curves for the average overlap but not for
+ sequential rank agreement (red lines in Figure~\ref{fig:case1}). For
+ the sequential rank agreement we get roughly the same estimate of
+ agreement from rank 3 as we did from the full dataset. This indicates
+ that sequential rank is more robust against small perturbations of
+ the data. For the average overlap the curves completely change when
+ these two items are removed and which would lead to a different
+ conclusion about the agreement among the items from rank 3 downwards.
 
 
 

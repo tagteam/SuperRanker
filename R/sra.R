@@ -167,7 +167,11 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
                          res <- sracppfull(rankmat, type=itype)
                          res
                      })
-    agreement <- ifelse(itype==0, sqrt(rowMeans(tmpres)), rowMeans(tmpres))
+    if (itype==0) {
+        agreement <- sqrt(rowMeans(tmpres))
+    } else {
+        agreement <- rowMeans(tmpres)
+    }
     names(agreement) <- items
     class(agreement) <- "sra"
     attr(agreement, "B") <- B
