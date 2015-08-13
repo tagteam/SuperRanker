@@ -47,7 +47,3 @@ sracppfull <- function(rankMat, type = 0L) {
     .Call('SuperRanker_sracppfull', PACKAGE = 'SuperRanker', rankMat, type)
 }
 
-Median <- function(x) {
-    .Call('SuperRanker_Median', PACKAGE = 'SuperRanker', x)
-}
-
