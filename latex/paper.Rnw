@@ -522,10 +522,10 @@ print(xxx2, table.placement = "tb", caption.placement = "top", include.rownames=
 
 \begin{figure}[tb]
    \begin{center}
- \includegraphics[width=.5\textwidth]{paper-fig1a}%
- \includegraphics[width=.5\textwidth]{paper-fig2a}%
- \includegraphics[width=.5\textwidth]{paper-fig1b}%
- \includegraphics[width=.5\textwidth]{paper-fig2b}
+ \includegraphics[width=.49\textwidth]{paper-fig1a}
+ \includegraphics[width=.49\textwidth]{paper-fig2a}
+ \includegraphics[width=.49\textwidth]{paper-fig1b}
+ \includegraphics[width=.49\textwidth]{paper-fig2b}
  \end{center}
  \caption{Left panels: Sequential rank agreement for 4 different
    analysis methods applied to the 3051 genes in the Golub data /black
@@ -793,8 +793,8 @@ lines(xvals[-c(1,2)], mmyres2[1:498], col="red", lwd=2)
 
 \begin{figure}[tb]
 \begin{center}
-\includegraphics[width=.5\textwidth]{paper-fig-ao1}
-\includegraphics[width=.5\textwidth]{paper-fig-ao2}
+\includegraphics[width=.49\textwidth]{paper-fig-ao1}
+\includegraphics[width=.49\textwidth]{paper-fig-ao2}
 \end{center}
  \caption{Average overlap (left figure) and sequential rank agreement
  (right figure) for comparing two different analysis methods
@@ -924,8 +924,8 @@ clarity of presentation we zoom in on the agreement up to list depth
 
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[width=.5\textwidth]{pics/riskAgreementPlot}%
-\includegraphics[width=.5\textwidth]{pics/predictorAgreementPlot}
+\includegraphics[width=.49\textwidth]{pics/riskAgreementPlot}%
+\includegraphics[width=.49\textwidth]{pics/predictorAgreementPlot}
 \end{center}
 \caption{Left panel: Sequential rank agreement of 1000 rankings of the
   predicted risks of malignant tumor. For each method the different
@@ -1016,8 +1016,8 @@ all the ranks will be ties.
 
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[width=.5\textwidth]{pics/ridgeCensoring}%
-\includegraphics[width=.5\textwidth]{pics/aucPlot}
+\includegraphics[width=.49\textwidth]{pics/ridgeCensoring}%
+\includegraphics[width=.49\textwidth]{pics/aucPlot}
 \end{center}
 \caption{Left panel: Sequential rank agreement for Ridge regression
   obtained by artificially censoring predictors when their absolute
