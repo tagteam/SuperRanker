@@ -341,7 +341,7 @@ x <- golub
 
 topk <- 20
 
-options(SweaveHooks=list(fig=function() par(cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)))
+options(SweaveHooks=list(fig=function() par(cex.lab=1.4, cex.axis=1.5, cex.main=1.2, cex.sub=1.5)))
 
 producelists <- function(x, y) {
     nitems <- nrow(x)
@@ -401,7 +401,7 @@ res2 <- sra(inputmatrix2, B=B)
 ysize <- 1000
 nreference <- 20
 ## Plot the line
-plot(res[1:ysize], col="black", lwd=3, type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
+plot(res[1:ysize], col="black", lwd=3, type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="List depth", bty="n")
 
 ## Compute random list backgrounds
 null <- random_list_sra(inputmatrix, B=B, n=nreference)
@@ -436,7 +436,7 @@ polygon(c(1:length(www2$lower), rev(1:length(www2$lower))),
 <<fig1b, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE, eval=TRUE>>=
 ## Same as above but zoomed in
 ysize <- 50
-plot(res[1:ysize], lwd=3, col="black", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
+plot(res[1:ysize], lwd=3, col="black", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="List depth", bty="n")
 
 ## Plot the random lists
 polygon(c(1:length(www$lower), rev(1:length(www$lower))),
@@ -459,7 +459,7 @@ polygon(c(1:length(www2$lower), rev(1:length(www2$lower))),
 ysize <- 1000
 nreference <- 20
 ## Plot the line
-plot(res2[1:ysize], col="black", lwd=3, type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
+plot(res2[1:ysize], col="black", lwd=3, type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="List depth", bty="n")
 
 ## Compute random list backgrounds
 null <- random_list_sra(inputmatrix2, B=B, n=nreference)
@@ -474,7 +474,7 @@ polygon(c(1:length(www$lower), rev(1:length(www$lower))),
 makereference <- function(x, y, n=100, B=20) {
     sapply(1:n, function(i) { mymat <- producelists(x, sample(y)) ; mymat[(topk+1):nrow(mymat),] <- NA ; sra(mymat, B=B) }  )
 }
-## Uncomment the two lines below to redu the analysis
+## Uncomment the two lines below to redo the analysis
 ##null2 <- makereference(x, y, n=100, B=B)
 ##save(null2, file="R/fig1null2c.rda")
 load("R/fig1null2c.rda")
@@ -491,7 +491,7 @@ polygon(c(1:length(www2$lower), rev(1:length(www2$lower))),
 <<fig2b, fig=TRUE,echo=FALSE,include=FALSE,cache=TRUE, eval=TRUE>>=
 ## Same as above but zoomed in
 ysize <- 50
-plot(res2[1:ysize], lwd=3, col="black", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="Depth")
+plot(res2[1:ysize], lwd=3, col="black", type="l", ylim=c(0,1300), ylab="Sequential rank agreement", xlab="List depth", bty="n")
 
 ## Plot the random lists
 polygon(c(1:length(www$lower), rev(1:length(www$lower))),
@@ -520,7 +520,7 @@ print(xxx2, table.placement = "tb", caption.placement = "top", include.rownames=
 @
 
 
-\begin{figure}[tb]
+\begin{figure}[htbp]
    \begin{center}
  \includegraphics[width=.49\textwidth]{paper-fig1a}
  \includegraphics[width=.49\textwidth]{paper-fig2a}
@@ -779,7 +779,7 @@ predictors.
 myres <- average_overlap(inputmatrix[,1:2])
 myres2 <- average_overlap(inputmatrix[-c(1,2),1:2])
 xvals <- 1:500
-plot(xvals, myres[xvals], xlim=c(1, 150), ylim=c(0,1), type="l", lwd=2, ylab="Average overlap", xlab="List depth")
+plot(xvals, myres[xvals], xlim=c(1, 150), ylim=c(0,1), type="l", lwd=2, ylab="Average overlap", xlab="List depth", bty="n")
 lines(xvals[-c(1,2)], myres2[1:498], col="red", lwd=2)
 @
 
@@ -787,11 +787,11 @@ lines(xvals[-c(1,2)], myres2[1:498], col="red", lwd=2)
 mmyres <- sra(inputmatrix[,1:2])
 mmyres2 <- sra(inputmatrix[-c(1,2),1:2])
 xvals <- 1:500
-plot(xvals, mmyres[xvals], xlim=c(1, 150), ylim=c(0, 110), type="l", lwd=2, ylab="Sequential rank agreement", xlab="List depth")
+plot(xvals, mmyres[xvals], xlim=c(1, 150), ylim=c(0, 110), type="l", lwd=2, ylab="Sequential rank agreement", xlab="List depth", bty="n")
 lines(xvals[-c(1,2)], mmyres2[1:498], col="red", lwd=2)
 @
 
-\begin{figure}[tb]
+\begin{figure}[htbp]
 \begin{center}
 \includegraphics[width=.49\textwidth]{paper-fig-ao1}
 \includegraphics[width=.49\textwidth]{paper-fig-ao2}

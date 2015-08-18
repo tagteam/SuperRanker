@@ -37,19 +37,20 @@ aucMat <- cbind(sapply(res, function(a) a$rf$auc),
                 sapply(res, function(a) a$lassoDev$auc),
                 sapply(res, function(a) a$ridgeDev$auc),
                 sapply(res, function(a) a$ridgeAUC$auc))
-colnames(aucMat) <- c("Random Forest", "PLS-DA", "Lasso deviance", "Ridge deviance", "Ridge AUC")
+colnames(aucMat) <- c("RF", "PLS-DA", "Lasso dev", "Ridge dev", "Ridge AUC")
 
 brierMat <- cbind(sapply(res, function(a) mean((a$rf$risk - dacovaLabels)^2)),
                   sapply(res, function(a) mean((a$pls$risk - dacovaLabels)^2)),
                   sapply(res, function(a) mean((a$lassoDev$risk - dacovaLabels)^2)),
                   sapply(res, function(a) mean((a$ridgeDev$risk - dacovaLabels)^2)),
                   sapply(res, function(a) mean((a$ridgeAUC$risk - dacovaLabels)^2)))
-colnames(brierMat) <- c("Random Forest", "PLS-DA", "Lasso deviance", "Ridge deviance", "Ridge AUC")
+colnames(brierMat) <- c("RF", "PLS-DA", "Lasso dev", "Ridge dev", "Ridge AUC")
 
 
 
 ########## RISK PLOT ##########
-plot(rfRisk, ylim=c(0,30), xlim=c(0,120))
+par(cex.lab=1.4, cex.axis=1.5, cex.main=1.2, cex.sub=1.5)
+plot(rfRisk[1:120], ylim=c(0,30), xlim=c(0,120), type="l", lwd=3, bty="n", xlab="List depth", ylab="Sequential rank agreement")
 title("Predicted risks of malignant tumor in 113 patients (DACOVA)")
 
 plot(lassoDevRisk, add=TRUE, lines.col="red")
@@ -64,11 +65,12 @@ plot(ridgeAucRisk, add=TRUE, lines.col="forestgreen", lines.lty=3)
 
 legend("topright", c("Random Forest", "PLS-DA", "Lasso deviance", "Lasso class", "Lasso AUC", "Ridge deviance", "Ridge class", "Ridge AUC"),
        col=c("black", "blue", "red", "red", "red", "forestgreen", "forestgreen", "forestgreen"), 
-       lwd=3, lty=c(1,1,1,2,3,1,2,3), bty="n")
+       lwd=3, lty=c(1,1,1,2,3,1,2,3), bty="n", cex=1.1)
 
 
 ########## IMPORTANCE PLOT ##########
-plot(rfImpSRA, ylim=c(0,1500), xlim=c(0,600))
+par(cex.lab=1.4, cex.axis=1.5, cex.main=1.2, cex.sub=1.5)
+plot(rfImpSRA[1:600], ylim=c(0,1500), xlim=c(0,600), type="l", lwd=3, bty="n", xlab="List depth", ylab="Sequential rank agreement")
 title("Discrimination importance of 5000 predictors")
 
 plot(lassoDevImpSRA, add=TRUE, lines.col="red")
@@ -83,9 +85,10 @@ plot(ridgeAucImpSRA, add=TRUE, lines.col="forestgreen", lines.lty=3)
 
 
 ########## AUC PLOT ##########
+par(cex.lab=1.4, cex.axis=1.5, cex.main=1.2, cex.sub=1.5)
 boxplot(aucMat, ylab="AUC", ylim=c(0.4,0.8), axes=FALSE, main="AUC distribution of DACOVA predictions")
 axis(2, at=seq(0.4,0.8,0.1))
-axis(1, at=1:5, labels=colnames(aucMat), cex.axis=0.8)
+axis(1, at=1:5, labels=colnames(aucMat), cex.axis=1.13)
 abline(h=0.5, lty=3)
 
 
@@ -97,10 +100,11 @@ ridgeDevCens <- lapply(res, function(a) {
 })
 ridgeDevCencRisk <- sra(ridgeDevCens, nitems=5000, B=B)
 
+par(cex.lab=1.4, cex.axis=1.5, cex.main=1.2, cex.sub=1.5)
 plot(ridgeDevImpSRA, ylim=c(0,1500), xlim=c(0,600))
 plot(ridgeDevCencRisk, add=TRUE, lines.col="red")
 title("Discrimination importance for Ridge with thresholding")
-legend("topright", c("No censoring", "Censored at 0.1% quantile"), col=c(1,2), lwd=3, lty=1, bty="n")
+legend("topright", c("No censoring", "Censored at 0.1% quantile"), col=c(1,2), lwd=3, lty=1, bty="n", cex=1.1)
 
 
 ########## LASSO SUMMARY ##########
