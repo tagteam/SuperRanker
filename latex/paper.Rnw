@@ -779,16 +779,16 @@ predictors.
 myres <- average_overlap(inputmatrix[,1:2])
 myres2 <- average_overlap(inputmatrix[-c(1,2),1:2])
 xvals <- 1:500
-plot(xvals, myres[xvals], xlim=c(1, 150), ylim=c(0,1), type="l", lwd=2, ylab="Average overlap", xlab="List depth", bty="n")
-lines(xvals[-c(1,2)], myres2[1:498], col="red", lwd=2)
+plot(xvals, myres[xvals], xlim=c(1, 150), ylim=c(0,1), type="l", lwd=3, ylab="Average overlap", xlab="List depth", bty="n")
+lines(xvals[-c(1,2)], myres2[1:498], col="red", lwd=3)
 @
 
 <<fig-ao2, echo=FALSE, fig=TRUE,include=FALSE, eval=TRUE>>=
 mmyres <- sra(inputmatrix[,1:2])
 mmyres2 <- sra(inputmatrix[-c(1,2),1:2])
 xvals <- 1:500
-plot(xvals, mmyres[xvals], xlim=c(1, 150), ylim=c(0, 110), type="l", lwd=2, ylab="Sequential rank agreement", xlab="List depth", bty="n")
-lines(xvals[-c(1,2)], mmyres2[1:498], col="red", lwd=2)
+plot(xvals, mmyres[xvals], xlim=c(1, 150), ylim=c(0, 110), type="l", lwd=3, ylab="Sequential rank agreement", xlab="List depth", bty="n")
+lines(xvals[-c(1,2)], mmyres2[1:498], col="red", lwd=3)
 @
 
 \begin{figure}[htbp]
