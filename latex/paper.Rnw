@@ -754,7 +754,7 @@ The theorem shows consistency of the plug-in estimate of
 
 Proof: We rewrite the square of the sequential rank agreement \eqref{def:sra} as
 \begin{equation}
-(\textrm{sra}(d))^2= \sum_{p=1}^P \sum_{l=1}^L 1\{R_l(X_p)\le d\}\sum_{p=1}^P(1-\prod_{l=1}^L 1\{R_l(X_p)>d\}) A(X_p)^2
+(\textrm{sra}(d))^2= \frac 1{\sum_{p=1}^P \sum_{l=1}^L 1\{R_l(X_p)\le d\}}\sum_{p=1}^P(1-\prod_{l=1}^L 1\{R_l(X_p)>d\}) A(X_p)^2
 \end{equation}
 [FIXME: Andreas details the proof with Cauchy-Schwarz.]
 [FIXME: Det er lidt kedelig for saadan en fin en som Andreas: Skal theoremet og bevis ikke vaere for en general agreement metric, ikke nodvendigvis den i equation (2), og kan vi charakterisere hvad den skal opfylde?]
