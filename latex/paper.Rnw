@@ -1,4 +1,5 @@
 \documentclass[12pt,a4paper]{article}
+\pdfoutput=1
 \usepackage[utf8]{inputenc}
 \usepackage[]{graphicx}
 \usepackage{amsmath}
