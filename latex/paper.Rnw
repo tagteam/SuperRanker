@@ -724,6 +724,42 @@ the predictors in the data set. Both hypotheses are purely considering
 how the rankings agree in a situation where there is no relevant
 information available in the data used for creating the rankings.
 
+\section{Change-point analysis}
+
+In many applications it is of interest to estimate a list depths which
+satisfies a change point criterion. In this section we investigate the
+theoretical properties of our proposed method for this specific
+task. As Hall and Schimek, we work with an infinite set of lists
+\mathcal{L} and study the asymptotic behaviour for
+$L\to\infty$. However, we do not allow the length of the lists to
+change with $L$ as in most applications the length of the lists is
+fixed [FIXME: for finite $L$ are there only finitely many forskelige
+lists (aber dass stoert keinen grossen geist, siger karlsson)]. First,
+we define the parameter of interest. For any given threshold value $q$
+a change-point $d_0(q)$ in the list agreement is defined by
+\begin{equation*}
+  d_0=\textrm{arginf}_{d\in\{1,\dots,L\}}\textrm{sra}(d)>q.
+\end{equation*}
+The value of $q$ could for example be the agreement of randomly
+permuted lists [FIXME: there is only one SRA value for infinitely many
+random permutations, no skygge!].
+
+The theorem shows consistency of the plug-in estimate of
+\begin{equation*}
+\hat{d_0} = \textrm{arginf}_{d\in\{1,\dots,L\}}\widehat{\textrm{sra}}(d)>q
+\end{equation*}
+[FIXME: $\textrm{sra}$ -> $\widehat{\textrm{sra}}$ in rest of article?]
+\begin{theorem}
+  $\hat{d_0}\overset{L\to\infty}{\longrightarrow}d_0$
+\end{theorem}
+
+Proof: We rewrite the square of the sequential rank agreement \eqref{def:sra} as
+\begin{equation}
+(\textrm{sra}(d))^2= \frac 1{\sum_{p=1}^P \sum_{l=1}^L 1\{R_l(X_p)\le d\}}\sum_{p=1}^P(1-\prod_{l=1}^L 1\{R_l(X_p)>d\}) A(X_p)^2
+\end{equation}
+[FIXME: Andreas details the proof with Cauchy-Schwarz.]
+[FIXME: Det er lidt kedelig for saadan en fin en som Andreas: Skal theoremet og bevis ikke vaere for en general agreement metric, ikke nodvendigvis den i equation (2), og kan vi charakterisere hvad den skal opfylde?]
+
 \section{Comparison to average overlap}
 
 The average overlap is a measure that is widely used in comparisons of
