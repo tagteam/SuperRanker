@@ -268,11 +268,12 @@ set of items ranked less than or equal to $d$ in any of the lists:
 S_d = \{R_l^{-1}(r) ; r \leq d, l = 1, \ldots, L \},
 \end{equation}
 which is exemplified in Panel (c) of Table \ref{tab:example}.
-We then define the \emph{sequential rank agreement} as pooled expected agreement of the items
-found in the set $S_d$:
-\begin{equation}
-\textrm{sra}(d)= \frac{\sum_{\{p \in S_d\}}(L-1)\E[A(X_p)]}{(L-1)|S_d|}\label{def:sra}
-\end{equation}
+We then define the \emph{sequential rank agreement} as the weighted expected agreement of the items
+found in the set $S_d$: [FIX: we have talked about this before, but does that redundant (L-1) factor help wrt interpretation?]
+\begin{align}
+\textrm{sra}(d)&= \frac{\sum_{\{p \in S_d\}}(L-1)\E[A(X_p)]}{(L-1)|S_d|}\label{def:sra}\\
+   &= \sum_{\{p \in S_d\}}|S_d|^{-1} \E[A(X_p)]
+\end{align}
 where $|S_d|$ refers to the cardinality of the set $S_d$, and the expectation
 is taken with respect to the distribution of the rankings of $X_p$ accross the $L$ lists.
 Values of \textrm{sra} close to zero suggests that the lists agree while larger
@@ -798,8 +799,9 @@ We start by noting that we can rewrite the sequential rank agreement in equation
 
 
 \begin{corollary}
-For fixed $q$ it follows from theorem \ref{thm:consistency}
-  $\widehat{d^\ast_L}(q) \overset{P}{\longrightarrow} d^\ast(q)$
+For fixed $q$ it follows from theorem \ref{thm:consistency} that
+$\widehat{d^\ast_L}(q) \overset{P}{\longrightarrow} d^\ast(q)$
+for $L \rightarrow \infty$.
 \begin{proof}
  hej
 \end{proof}
@@ -823,7 +825,7 @@ possible number of items found in all lists observed until depth $d$:
   O(d) = \frac{| \cap_{l=1}^L \{R_l^{-1}(r); r\leq d \} |}{d}. \label{def:overlap}
 \end{equation}
 Typically the overlap is only considered for pairwise comparisons
-\citep{Bar-Ilan2006,Boulesteix2009} but formula \eqref{def:overlap}
+\citep{Bar-Ilan2006,Boulesteix2009} but formula \ref{def:overlap}
 is easily extended to the situation where $L>2$ as shown above.
 
 The average overlap at depth $d$ is defined as the average of the
