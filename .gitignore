@@ -8,3 +8,5 @@
 *.gz
 
 *.thm
+
+*.fdb_latexmk

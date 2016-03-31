@@ -23,13 +23,13 @@
 \DeclareMathOperator{\E}{\mathbb{E}}
 \DeclareMathOperator{\Var}{Var}
 \DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\arginf}{arginf}
 
 \usepackage[amsthm,thmmarks]{ntheorem}
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}{Definition}
 \newtheorem{proposition}{Proposition}
-\newtheorem*{proposition2}{Proposition}
 \newtheorem{corollary}{Corollary}
 \newtheorem{lemma}{Lemma}
 \newtheorem{assumption}{Assumption}
@@ -751,8 +751,9 @@ the predictors in the data set. Both hypotheses are purely considering
 how the rankings agree in a situation where there is no relevant
 information available in the data used for creating the rankings.
 
-\section{Change-point analysis}
 
+
+\section{Change-point analysis}
 In many applications it is of interest to estimate a list depths which
 satisfies a change point criterion. In this section we investigate the
 theoretical properties of our proposed method for this specific
@@ -763,33 +764,46 @@ change with $L$ as in most applications the length of the lists is
 fixed [FIXME: for finite $L$ are there only finitely many forskelige
 lists (aber dass stoert keinen grossen geist, siger karlsson)]. First,
 we define the parameter of interest. For any given threshold value $q$
-a change-point $d_0(q)$ in the list agreement is defined by
-\begin{equation*}
-  d_0=\textrm{arginf}_{d\in\{1,\dots,L\}}\textrm{sra}(d)>q.
-\end{equation*}
+a change-point $d^\ast(q)$ in the list agreement is defined by
+\begin{equation}
+  d^\ast(q) = \arginf_{d\in\{1,\dots,P\}}\textrm{sra}(d)>q.
+\end{equation}
 The value of $q$ could for example be the agreement of randomly
 permuted lists [FIXME: there is only one SRA value for infinitely many
 random permutations, no skygge!].
+The corresponding estimated change-point is similarly defined by
+\begin{equation}
+\widehat{d^\ast_L}(q) = \arginf_{d\in\{1,\dots,P\}}\widehat{\textrm{sra}}_L(d)>q
+\end{equation}
 
 
-The theorem shows consistency of the plug-in estimate of
-\begin{equation*}
-\hat{d_0} = \textrm{arginf}_{d\in\{1,\dots,L\}}\widehat{\textrm{sra}}(d)>q
-\end{equation*}
-[FIXME: $\textrm{sra}$ -> $\widehat{\textrm{sra}}$ in rest of article?]
+We start by showing that $\widehat{\textrm{sra}}_L(d)$ is consistent for $\textrm{sra}(d)$ at each
+$d \in \left\{1,\ldots,P\right\}$ for $L \rightarrow \infty$. The consistency of $\widehat{d^\ast_L}(q)$
+then follows by a simple corollary.
+
 
 \begin{theorem}
-  $\hat{d_0}\overset{L\to\infty}{\longrightarrow}d_0$
-
+hej
 \begin{proof}
-Proof: We rewrite the square of the sequential rank agreement \eqref{def:sra} as
+We start by noting that we can rewrite the sequential rank agreement in equation \ref{def:sra} as
 \begin{equation}
-(\textrm{sra}(d))^2= \frac 1{\sum_{p=1}^P \sum_{l=1}^L 1\{R_l(X_p)\le d\}}\sum_{p=1}^P(1-\prod_{l=1}^L 1\{R_l(X_p)>d\}) A(X_p)^2
+\textrm{sra}(d)= \frac 1{\sum_{p=1}^P \sum_{l=1}^L 1\{R_l(X_p)\le d\}}\sum_{p=1}^P(1-\prod_{l=1}^L 1\{R_l(X_p)>d\}) \E[A(X_p)]
 \end{equation}
+
 [FIXME: Andreas details the proof with Cauchy-Schwarz.]
 [FIXME: Det er lidt kedelig for saadan en fin en som Andreas: Skal theoremet og bevis ikke vaere for en general agreement metric, ikke nodvendigvis den i equation (2), og kan vi charakterisere hvad den skal opfylde?]
 \end{proof}
+\label{thm:consistency}
 \end{theorem}
+
+
+\begin{corollary}
+For fixed $q$ it follows from theorem \ref{thm:consistency}
+  $\widehat{d^\ast_L}(q) \overset{P}{\longrightarrow} d^\ast(q)$
+\begin{proof}
+ hej
+\end{proof}
+\end{corollary}
 
 
 

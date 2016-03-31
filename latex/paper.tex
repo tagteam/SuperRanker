@@ -23,13 +23,13 @@
 \DeclareMathOperator{\E}{\mathbb{E}}
 \DeclareMathOperator{\Var}{Var}
 \DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\arginf}{arginf}
 
 \usepackage[amsthm,thmmarks]{ntheorem}
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}{Definition}
 \newtheorem{proposition}{Proposition}
-\newtheorem*{proposition2}{Proposition}
 \newtheorem{corollary}{Corollary}
 \newtheorem{lemma}{Lemma}
 \newtheorem{assumption}{Assumption}
@@ -358,7 +358,7 @@ focus on predictors 2124, 829, and 378 as seen in Table~\ref{tab1}.
 
 
 % latex table generated in R 3.2.2 by xtable 1.7-4 package
-% Thu Mar 31 16:50:36 2016
+% Thu Mar 31 17:59:03 2016
 \begin{table}[tb]
 \centering
 \caption{Top 10 list of ranked results from the Golub data. Numbers indicate the predictor/gene for the given ranking and method} 
@@ -370,13 +370,13 @@ Ranking & T & LogReg & ElasticNet & MIC \\
 1 & 2124 & 2124 & 829 & 378 \\ 
   2 & 896 & 896 & 2124 & 829 \\ 
   3 & 2600 & 829 & 2198 & 896 \\ 
-  4 & 766 & 394 & 1995 & 1037 \\ 
-  5 & 829 & 766 & 808 & 2124 \\ 
-  6 & 2851 & 2670 & 523 & 808 \\ 
-  7 & 703 & 2939 & 1042 & 108 \\ 
-  8 & 2386 & 2386 & 2489 & 515 \\ 
-  9 & 2645 & 1834 & 1665 & 2670 \\ 
-  10 & 2002 & 378 & 849 & 2600 \\ 
+  4 & 766 & 394 & 1665 & 1037 \\ 
+  5 & 829 & 766 & 1920 & 2124 \\ 
+  6 & 2851 & 2670 & 1042 & 808 \\ 
+  7 & 703 & 2939 & 808 & 108 \\ 
+  8 & 2386 & 2386 & 849 & 515 \\ 
+  9 & 2645 & 1834 & 937 & 2670 \\ 
+  10 & 2002 & 378 & 1524 & 2600 \\ 
    \hline
 \end{tabular}
 \end{table}
@@ -584,8 +584,9 @@ the predictors in the data set. Both hypotheses are purely considering
 how the rankings agree in a situation where there is no relevant
 information available in the data used for creating the rankings.
 
-\section{Change-point analysis}
 
+
+\section{Change-point analysis}
 In many applications it is of interest to estimate a list depths which
 satisfies a change point criterion. In this section we investigate the
 theoretical properties of our proposed method for this specific
@@ -596,33 +597,46 @@ change with $L$ as in most applications the length of the lists is
 fixed [FIXME: for finite $L$ are there only finitely many forskelige
 lists (aber dass stoert keinen grossen geist, siger karlsson)]. First,
 we define the parameter of interest. For any given threshold value $q$
-a change-point $d_0(q)$ in the list agreement is defined by
-\begin{equation*}
-  d_0=\textrm{arginf}_{d\in\{1,\dots,L\}}\textrm{sra}(d)>q.
-\end{equation*}
+a change-point $d^\ast(q)$ in the list agreement is defined by
+\begin{equation}
+  d^\ast(q) = \arginf_{d\in\{1,\dots,P\}}\textrm{sra}(d)>q.
+\end{equation}
 The value of $q$ could for example be the agreement of randomly
 permuted lists [FIXME: there is only one SRA value for infinitely many
 random permutations, no skygge!].
+The corresponding estimated change-point is similarly defined by
+\begin{equation}
+\widehat{d^\ast_L}(q) = \arginf_{d\in\{1,\dots,P\}}\widehat{\textrm{sra}}_L(d)>q
+\end{equation}
 
 
-The theorem shows consistency of the plug-in estimate of
-\begin{equation*}
-\hat{d_0} = \textrm{arginf}_{d\in\{1,\dots,L\}}\widehat{\textrm{sra}}(d)>q
-\end{equation*}
-[FIXME: $\textrm{sra}$ -> $\widehat{\textrm{sra}}$ in rest of article?]
+We start by showing that $\widehat{\textrm{sra}}_L(d)$ is consistent for $\textrm{sra}(d)$ at each
+$d \in \left\{1,\ldots,P\right\}$ for $L \rightarrow \infty$. The consistency of $\widehat{d^\ast_L}(q)$
+then follows by a simple corollary.
+
 
 \begin{theorem}
-  $\hat{d_0}\overset{L\to\infty}{\longrightarrow}d_0$
-
+hej
 \begin{proof}
-Proof: We rewrite the square of the sequential rank agreement \eqref{def:sra} as
+We start by noting that we can rewrite the sequential rank agreement in equation \ref{def:sra} as
 \begin{equation}
-(\textrm{sra}(d))^2= \frac 1{\sum_{p=1}^P \sum_{l=1}^L 1\{R_l(X_p)\le d\}}\sum_{p=1}^P(1-\prod_{l=1}^L 1\{R_l(X_p)>d\}) A(X_p)^2
+\textrm{sra}(d)= \frac 1{\sum_{p=1}^P \sum_{l=1}^L 1\{R_l(X_p)\le d\}}\sum_{p=1}^P(1-\prod_{l=1}^L 1\{R_l(X_p)>d\}) \E[A(X_p)]
 \end{equation}
+
 [FIXME: Andreas details the proof with Cauchy-Schwarz.]
 [FIXME: Det er lidt kedelig for saadan en fin en som Andreas: Skal theoremet og bevis ikke vaere for en general agreement metric, ikke nodvendigvis den i equation (2), og kan vi charakterisere hvad den skal opfylde?]
 \end{proof}
+\label{thm:consistency}
 \end{theorem}
+
+
+\begin{corollary}
+For fixed $q$ it follows from theorem \ref{thm:consistency}
+  $\widehat{d^\ast_L}(q) \overset{P}{\longrightarrow} d^\ast(q)$
+\begin{proof}
+ hej
+\end{proof}
+\end{corollary}
 
 
 
