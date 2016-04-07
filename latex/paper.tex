@@ -12,6 +12,7 @@
 \usepackage{authblk}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{enumitem}
 %\usepackage{geometry}
 %\geometry{a4paper, portrait, margin=1in}
 %
@@ -260,10 +261,9 @@ S_d = \{R_l^{-1}(r) ; r \leq d, l = 1, \ldots, L \},
 \end{equation}
 which is exemplified in Panel (c) of Table \ref{tab:example}.
 We then define the \emph{sequential rank agreement} as the weighted expected agreement of the items
-found in the set $S_d$: [FIX: we have talked about this before, but does that redundant (L-1) factor help wrt interpretation?]
+found in the set $S_d$:
 \begin{align}
-\textrm{sra}(d)&= \frac{\sum_{\{p \in S_d\}}(L-1)\E[A(X_p)]}{(L-1)|S_d|}\label{def:sra}\\
-   &= \sum_{\{p \in S_d\}}|S_d|^{-1} \E[A(X_p)]
+\textrm{sra}(d) &= \sum_{\{p \in S_d\}}|S_d|^{-1} \E[A(X_p)]
 \end{align}
 where $|S_d|$ refers to the cardinality of the set $S_d$, and the expectation
 is taken with respect to the distribution of the rankings of $X_p$ accross the $L$ lists.
@@ -293,7 +293,7 @@ to the pooled variance of the items found in $S_d$, and it can be interpreted as
 the average distance of the individual rankings of the lists from the
 average ranking for each of the items we have seen until depth $d$.
 
-Given a sample of $1,\ldots,L$ lists and estimator of estimated sequatial rank agreement is given by
+Given a sample of $1,\ldots,L$ lists an estimator of the sequatial rank agreement is given by
 \begin{equation}
 \widehat{\textrm{sra}}_L(d)= \frac{\sum_{\{p \in S_d\}}(L-1)\widehat{A_L}(X_p)}{(L-1)|S_d|}\label{def:sra}
 \end{equation}
@@ -301,7 +301,7 @@ where
 \begin{align}
 \widehat{A}_L(X_p) = \frac{1}{L-1}\sum_{i=1}^L (R_i(X_p) - \overline{R}(X_p))^2, \quad \overline{R}_L(X_p) = \frac{1}{L}\sum_{i=1}^L R_i(X_p)
 \end{align}
-is the sample variance of the rank of item $X_p$. For an easier interpretation we suggest to plot $\widehat{\textrm{sra}}_L(d)^{1/2}$ corresponding to the pooled standard deviation.
+is the sample variance of the rank of item $X_p$. For an easier interpretation we suggest to plot $\widehat{\textrm{sra}}_L(d)^{1/2}$ corresponding to the pooled standard deviation. The consistency of $\widehat{\textrm{sra}}_L$ as $L \rightarrow \infty$ will be discussed further in section \ref{sec:chgpoint}.
 
 
 
@@ -359,7 +359,7 @@ focus on predictors 2124, 829, and 378 as seen in Table~\ref{tab1}.
 
 
 % latex table generated in R 3.2.2 by xtable 1.7-4 package
-% Thu Mar 31 18:58:05 2016
+% Thu Apr  7 20:04:21 2016
 \begin{table}[tb]
 \centering
 \caption{Top 10 list of ranked results from the Golub data. Numbers indicate the predictor/gene for the given ranking and method} 
@@ -373,11 +373,11 @@ Ranking & T & LogReg & ElasticNet & MIC \\
   3 & 2600 & 829 & 2198 & 896 \\ 
   4 & 766 & 394 & 1665 & 1037 \\ 
   5 & 829 & 766 & 1042 & 2124 \\ 
-  6 & 2851 & 2670 & 1920 & 808 \\ 
-  7 & 703 & 2939 & 808 & 108 \\ 
+  6 & 2851 & 2670 & 808 & 808 \\ 
+  7 & 703 & 2939 & 1920 & 108 \\ 
   8 & 2386 & 2386 & 849 & 515 \\ 
-  9 & 2645 & 1834 & 937 & 2670 \\ 
-  10 & 2002 & 378 & 523 & 2600 \\ 
+  9 & 2645 & 1834 & 523 & 2670 \\ 
+  10 & 2002 & 378 & 937 & 2600 \\ 
    \hline
 \end{tabular}
 \end{table}
@@ -413,7 +413,6 @@ Ranking & T & LogReg & ElasticNet & MIC \\
  Figure~\ref{fig:example1}.
 
 \subsection{Analysis of partial/censored lists}
-
 Incomplete or partial lists are also a common occurrence. They arise
 for example in case of missing data (items), when comparing top $d$
 list results from publications, or when some methods only rank a
@@ -587,17 +586,17 @@ information available in the data used for creating the rankings.
 
 
 
-\section{Change-point analysis}
+\section{Change-point analysis}\label{sec:chgpoint}
 In many applications it is of interest to estimate a list depths which
 satisfies a change point criterion. In this section we investigate the
 theoretical properties of our proposed method for this specific
 task. As Hall and Schimek, we work with an infinite set of lists
-$\mathcal{L}$ and study the asymptotic behaviour for
-$L\to\infty$. However, we do not allow the length of the lists to
-change with $L$ as in most applications the length of the lists is
-fixed [FIXME: for finite $L$ are there only finitely many forskelige
-lists (aber dass stoert keinen grossen geist, siger karlsson)]. First,
-we define the parameter of interest. For any given threshold value $q$
+$\mathcal{L}$ and study the asymptotic behaviour for $L\to\infty$.
+%However, we do not allow the length of the lists to
+%change with $L$ as in most applications the length of the lists is
+%fixed [FIXME: for finite $L$ are there only finitely many forskelige
+%lists (aber dass stoert keinen grossen geist, siger karlsson)]. 
+First, we define the parameter of interest. For any given threshold value $q$
 a change-point $d^\ast(q)$ in the list agreement is defined by
 \begin{equation}
   d^\ast(q) = \arginf_{d\in\{1,\dots,P\}}\textrm{sra}(d)>q.
@@ -611,21 +610,31 @@ The corresponding estimated change-point is similarly defined by
 \end{equation}
 
 
-We start by showing that $\widehat{\textrm{sra}}_L(d)$ is consistent for $\textrm{sra}(d)$ at each
-$d \in \left\{1,\ldots,P\right\}$ for $L \rightarrow \infty$. The consistency of $\widehat{d^\ast_L}(q)$
-then follows by a simple corollary.
+We start by showing that $\widehat{\textrm{sra}}_L$ is consistent for $\textrm{sra}$ for $P,L \rightarrow \infty$ and $\frac{P}{L} \rightarrow 0$. 
+The consistency of $\widehat{d^\ast_L}(q)$ then follows by a simple corollary. The proof requires the following assumptions.
 
+\begin{assumption}
+We assume that:
+\begin{enumerate}[label=\Alph*)]
+\item{hej}
+\item{med}
+\item{dig}
+\end{enumerate}
+\end{assumption}
 
 \begin{theorem}
-hej
+Under the assumptions it follows that $\widehat{\textrm{sra}}_L \overset{P}{\longrightarrow} \textrm{sra}$ for $L,P\rightarrow \infty$ and $\frac{P}{L} \rightarrow 0$.
 \begin{proof}
 We start by noting that we can rewrite the sequential rank agreement in equation \ref{def:sra} as
-\begin{equation}
-\textrm{sra}(d)= \frac 1{\sum_{p=1}^P \sum_{l=1}^L 1\{R_l(X_p)\le d\}}\sum_{p=1}^P(1-\prod_{l=1}^L 1\{R_l(X_p)>d\}) \E[A(X_p)]
-\end{equation}
-
-[FIXME: Andreas details the proof with Cauchy-Schwarz.]
-[FIXME: Det er lidt kedelig for saadan en fin en som Andreas: Skal theoremet og bevis ikke vaere for en general agreement metric, ikke nodvendigvis den i equation (2), og kan vi charakterisere hvad den skal opfylde?]
+\begin{align}
+\textrm{sra}(d) &= \frac 1{\sum_{p=1}^P \sum_{l=1}^L 1\{R_l(X_p)\le d\}}\sum_{p=1}^P(1-\prod_{l=1}^L 1\{R_l(X_p)>d\}) \E[A(X_p)]\\
+    &= \frac{1}{L} \sum_{l=1}^L \sum_{p=1}^P S_l(p)
+\end{align}
+where
+\begin{align}
+  S_l(p) &= ?
+\end{align}
+Maybe we can use the LLN for triangular arrays?
 \end{proof}
 \label{thm:consistency}
 \end{theorem}
@@ -642,6 +651,10 @@ for $L \rightarrow \infty$.
 
 
 
+
+
+
+
 \section{Comparison to average overlap}
 
 The average overlap is a measure that is widely used in comparisons of
@@ -655,7 +668,7 @@ The overlap among $L$ lists observed until depth $d$ is defined as the
 proportion of items that are found in all $L$ lists compared to the
 possible number of items found in all lists observed until depth $d$:
 \begin{equation}
-  O(d) = \frac{| \cap_{l=1}^L \{R_l^{-1}(r); r\leq d \} |}{d}. \label{def:overlap}
+  O(d) = \frac{| \cap_{l=1}^L \{R_l^{-1}(r); r\leq d \} |}{d}\label{def:overlap}
 \end{equation}
 Typically the overlap is only considered for pairwise comparisons
 \citep{Bar-Ilan2006,Boulesteix2009} but formula \ref{def:overlap}
