@@ -1,0 +1,12 @@
+
+*.aux
+
+*.bbl
+
+*.log
+
+*.gz
+
+*.thm
+
+*.fdb_latexmk
