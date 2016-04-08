@@ -47,7 +47,7 @@
 \author{Claus Thorn Ekstrøm}
 \author{Thomas Alexander Gerds}
 \author{Andreas Kryger Jensen}
-\author{Kasper Brink-Jensen}
+%\author{Kasper Brink-Jensen}
 \affil{Biostatistics, University of Copenhagen}
 \renewcommand{\topfraction}{.85}
 \renewcommand{\bottomfraction}{.7}
@@ -144,28 +144,52 @@ list. However, the interpretation may not be straightforward,
 especially in the case of more than two lists, and they may not
 accommodate partial rankings.
 
+
+Very recently, \citet{hall:schi:2012} proposed a method for comparing
+pairwise rankings and derived the asymptotic distribution of the
+endpoint where the two ranked lists no longer are in agreement. Their
+approach was based on anchoring one of the two lists and subsequently
+generating a sequence of 0s and 1s depending on whether the ranks in
+the second list was close to the rank from the anchored
+list. \citet{samp:verd:2013} followed up on this idea for pairwise
+comparison of lists but used penalties based on a truncated geometric
+probability instead of a 0-1 process and they evaluated the
+distribution of the endpoint of agreement by computational approaches.
+The asymptotic distribution in the \citet{hall:schi:2012} paper is
+based on letting the number of \emph{lists} increase to infinity which
+is a situation that is only relevant in special cases, and the
+simulation-based null distribution approach of \citet{samp:verd:2013}
+is guaranteed to work also for small samples.
+
+
 In this article we introduce sequential rank agreement for measuring
 agreement among (partially) ranked lists.  The general idea is to
 define agreement based on the sequence of ranks from the first $d$
-elements in each list. As agreement metric we adapt the limits of
+items in each list. As agreement metric we adapt the limits of
 agreement known from agreement between quantitative variables
-\citep{alt:bland:1983,Carstensen2010}. Our proposed approach allows us
-to compare more than two lists simultaneously, it provides a dynamic
+\citep{alt:bland:1983,Carstensen2010} but any measure for agreement
+could be essentially be used. Our proposed approach allows us to
+compare more than two lists simultaneously, it provides a dynamic
 measure of agreement as a function of the depth in the lists, places
-high weight on the top of the list, accommodates censored/incomplete
-lists of varying lengths, and has a natural interpretation that
-directly relates to the ranks. Graphical illustration of sequential
-rank agreement potentially allows us to infer a change-point, i.e., a
-list depth where a change in the agreement of the lists occur but we
-also provide randomization-based graphical tools to compare the
-observed rank agreement to the expected agreement found in
-non-informative data.  In this sense our approach is a combination and
-generalization of some of the ideas of \citet{Carterette2009} and
-\citet{Boulesteix2009}. The former compares two rankings based on the
-distance between them as measured by a multivariate Gaussian
-distribution and the latter presents an overview of approaches for
-aggregation of ranked lists including bootstrap and leave-one-out
-jackknife approaches.
+high weight on items at the top of the list, accommodates partially
+observed lists of varying lengths, and has a natural interpretation
+that directly relates to the ranks.  Graphical illustration of
+sequential rank agreement potentially allows us to infer a
+change-point, i.e., a list depth where a change in the agreement of
+the lists occur but we also provide randomization-based graphical
+tools to compare the observed rank agreement to the expected agreement
+found in non-informative data.  In this sense our approach is a
+combination and generalization of some of the ideas of
+\citet{Carterette2009} and \citet{Boulesteix2009}. The former compares
+two rankings based on the distance between them as measured by a
+multivariate Gaussian distribution and the latter presents an overview
+of approaches for aggregation of ranked lists including bootstrap and
+leave-one-out jackknife approaches. We show the asymptotic
+distribution of the endpoint of agreement and discuss how to infer the
+distribution in small-sample situations using computational
+methods. This enables us to make inferences about the endpoint of
+agreement even for situations where there is no actual changepoint
+present but just a gradual decline in agreement.
 
 The manuscript is organized as follows: In the next section we define
 sequential rank agreement for multiple ranked lists and discuss how to
@@ -174,7 +198,8 @@ discuss approaches to evaluate the results obtained from sequential
 rank agreement. Finally we apply the sequential rank agreement to two
 Danish ovarian cancer studies before we discuss the findings along
 with possible extensions. The approaches presented in this manuscript
-are available in the R package \texttt{SuperRanker}.
+are available in the R package \texttt{SuperRanker}. [XXX check dette
+passer, submit pakke]
 
 <<echo=FALSE>>=
 #note: always pass alpha on the 0-255 scale
@@ -763,7 +788,7 @@ $\mathcal{L}$ and study the asymptotic behaviour for $L\to\infty$.
 %However, we do not allow the length of the lists to
 %change with $L$ as in most applications the length of the lists is
 %fixed [FIXME: for finite $L$ are there only finitely many forskelige
-%lists (aber dass stoert keinen grossen geist, siger karlsson)]. 
+%lists (aber dass stoert keinen grossen geist, siger karlsson)].
 First, we define the parameter of interest. For any given threshold value $q$
 a change-point $d^\ast(q)$ in the list agreement is defined by
 \begin{equation}
@@ -778,7 +803,7 @@ The corresponding estimated change-point is similarly defined by
 \end{equation}
 
 
-We start by showing that $\widehat{\textrm{sra}}_L$ is consistent for $\textrm{sra}$ for $P,L \rightarrow \infty$ and $\frac{P}{L} \rightarrow 0$. 
+We start by showing that $\widehat{\textrm{sra}}_L$ is consistent for $\textrm{sra}$ for $P,L \rightarrow \infty$ and $\frac{P}{L} \rightarrow 0$.
 The consistency of $\widehat{d^\ast_L}(q)$ then follows by a simple corollary. The proof requires the following assumptions.
 
 \begin{assumption}
