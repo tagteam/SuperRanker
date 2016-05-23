@@ -388,6 +388,31 @@ substantial drop in agreement even after the first depth. Thus, if we
 were to restrict attention to a small set of predictors then we would
 focus on predictors 2124, 829, and 378 as seen in Table~\ref{tab1}.
 
+
+% latex table generated in R 3.2.3 by xtable 1.8-2 package
+% Fri Apr  8 10:22:58 2016
+\begin{table}[tb]
+\centering
+\caption{Top 10 list of ranked results from the Golub data. Numbers indicate the predictor/gene for the given ranking and method} 
+\label{tab1}
+\begin{tabular}{rrrrr}
+  \hline
+Ranking & T & LogReg & ElasticNet & MIC \\ 
+  \hline
+1 & 2124 & 2124 & 829 & 378 \\ 
+  2 & 896 & 896 & 2124 & 829 \\ 
+  3 & 2600 & 829 & 2198 & 896 \\ 
+  4 & 766 & 394 & 1665 & 1037 \\ 
+  5 & 829 & 766 & 1920 & 2124 \\ 
+  6 & 2851 & 2670 & 1042 & 808 \\ 
+  7 & 703 & 2939 & 808 & 108 \\ 
+  8 & 2386 & 2386 & 849 & 515 \\ 
+  9 & 2645 & 1834 & 937 & 2670 \\ 
+  10 & 2002 & 378 & 1995 & 2600 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
 % chunks 2,3,4,5,6,7
 
 \begin{figure}[htbp]
@@ -687,25 +712,35 @@ information available in the data used for creating the rankings.
 In many applications it is of interest to estimate a list depths which
 satisfies a change point criterion. In this section we investigate the
 theoretical properties of our proposed method for this specific
-task. As Hall and Schimek \mcomment{REF}, we work with an infinite set of lists
-and study the asymptotic behaviour for $L\to\infty$.
-However, we do not allow the length of the lists to
-change with $L$ as in most applications the length of the lists is fixed.
+task. As Hall and Schimek \mcomment{REF}, we work with an infinite set
+of lists and study the asymptotic behaviour for $L\to\infty$.
+However, we do not allow the length of the lists to change with $L$
+because in most applications the lengths of the lists are fixed.
 
-We start by showing that $\widehat{\textrm{sra}}_L$ is a consistent estimator of $\textrm{sra}$ for $L \rightarrow \infty$.
-The proof is given in Theorem \ref{thm:consistency} below and requires the following assumptions.
-\begin{assumption}
-We assume that:
-\begin{enumerate}[label=\Alph*)]
-\item{The $L$ lists are independent and identically distributed samples from $Q$.}
-\item{$\E_Q[R(X_p)^2] < \infty$ uniformly in $p$.}
-\item{$|S(d)| > 0$ uniformly in $d$}.
-\end{enumerate}
-\end{assumption}
-We note that assumption $C$ implies that for every list depth $d$ there must be a non-zero probability of ... under the probability measure $Q$.
+We start by showing that $\widehat{\textrm{sra}}_L$ is a consistent
+estimator of $\textrm{sra}$ for $L \rightarrow \infty$. The result is
+stated in Theorem \ref{thm:consistency}.
+
+% below and requires the
+% following assumptions.
+% \begin{assumption}
+% We assume that:
+% \begin{enumerate}[label=\Alph*)]
+% \item{The $L$ lists are independent and identically distributed
+    % samples from a probability distribution $Q$ on the set of lists.}
+% \item{$\E_Q[R(X_p)^2] < \infty$ uniformly in $p$.}
+% \item{$|S(d)| > 0$ uniformly in $d$}.
+% \end{enumerate}
+% \end{assumption}
+% We note that assumption $C$ implies that for every list depth $d$
+% there must be a non-zero probability of ... under the probability
+% measure $Q$.
 
 \begin{theorem}
-Under the assumptions it follows that $\left\|\widehat{\textrm{sra}}_L - \textrm{sra}\right\|_\infty = o_P(1)$.
+  Assume that $\{R_l(X)\}_{l=1}^L$ are independent draws from the a
+  probability distribution $Q$ on the set of lists.  Then,
+  $\left\|\widehat{\textrm{sra}}_L - \textrm{sra}\right\|_\infty =
+  o_P(1)$.
 \label{thm:consistency}
 \end{theorem}
 
@@ -1095,59 +1130,84 @@ We will be investigating these extensions further in the future.
 
 \newpage
 \section{Proof of Theorem \ref{thm:consistency}}
-We start by defining the following cadlag function
+
+We start by defining the following counting process
 \begin{align}
   N(p; d) = \sum_{s=1}^p 1\left(Q(R(X_s) \leq d) > 0\right), \quad p = 1,\ldots, P
 \end{align}
-which jumps with an increment of one at time $p$ if the probability that the rank of $X_p$ is less than or equal to $d$ is bounded away from zero under the probability measure $Q$.
-Similarly, we have the empirical counterpart
+which runs through the list elements in an arbitrary order and counts
+how many list elements have a strictly positive probability to have
+rank less than or equal to $d$ under the probability measure $Q$.
+Note that the cardinality of the set $S(d)$ in equation
+(\ref{eq:sumset}) is equal to the counting process evaluated at the last element:
+\begin{equation*}
+  |S(d)| = N(P;d).
+\end{equation*}
+
+The empirical counterpart of the counting process is given by
 \begin{align}
   \widehat{N}_L(p; d) &= \sum_{s=1}^p 1\left( \frac{1}{L} \sum_{l=1}^L 1(R_l(X_s) \leq d) > 0\right)\\
-        &= \sum_{s=1}^p 1\left(\widehat{Q}_L(R(X_s) \leq d) > 0\right)\nn
+        &= \sum_{s=1}^p 1\left(\widehat{Q}_L(R(X_s) \leq d) > 0\right)\nn.
 \end{align}
-The joint law of $\{\widehat{N}_L(p;d)\}_{1\leq p \leq P}$ is completely determined by its finite set of jump times, and because
-$1(R_l(X_s) \leq d)$ are independent and identically Bernoulli distributed over $l$ with expectation $Q(R(X_s) \leq d)$ 
-it follows from the law of large numbers that $\widehat{Q}_L(R(X_p) \leq d) \overset{P}{\longrightarrow} Q(R(X_p) \leq d)$ for every $p$ and $d$ 
-for $L \rightarrow \infty$, and therefore
+The joint law of the sequence
+$\{\widehat{N}_L(p;d)\}_{1\leq p \leq P}$ is completely determined by
+the finite set of the jump times of $N(p;d)$. Since
+$\{1(R_l(X_s) \leq d); l=1,\dots, L\}$ consists of independent and
+identically Bernoulli distributed variables with expectation
+$Q(R(X_s) \leq d)$ it follows from the law of large numbers that
+$\widehat{Q}_L(R(X_p) \leq d) \overset{P}{\longrightarrow} Q(R(X_p)
+\leq d)$ for every $p$ and $d$ as $L \rightarrow \infty$. 
+Therefore, we have
 \begin{align}
-  \sup_{d \in 1,\ldots,P}\sup_{p \in 1,\ldots, P} \left|\widehat{N}_L(p; d) - N(p; d)\right| = o_P(1)\label{eq:countingConv}
+  \sup_{d \in 1,\ldots,P}\sup_{p \in 1,\ldots, P} \left|\widehat{N}_L(p; d) - N(p; d)\right| = o_P(1).\label{eq:countingConv}
 \end{align}
 
-
-
-The sequential rank agreement given in equation (\ref{def:sra}) may therefore be rewritten as the following integral with respect to the counting measure induced by $N$
+The sequential rank agreement given in equation
+(\ref{def:sra}) may therefore be rewritten as the following integral
+with respect to $N$
 \begin{align}
-  \textrm{sra}(d) = \int_{1}^P \frac{A(X_p)}{N(P; d)}dN(p; d)
+  \textrm{sra}(d) = \int_{1}^P \frac{A(X_p)}{N(P; d)}\mathrm dN(p; d).
 \end{align}
-where we note that the cardinality of the set $S(d)$ in equation (\ref{eq:sumset}) is equal to the counting process evaluated at time $P$.
 The empirical sequential rank agreement is similarly given by
 \begin{align}
-  \widehat{\textrm{sra}}_L(d) &= \int_1^P \frac{\widehat{A}_L(X_p)}{\widehat{N}_L(P; d)}d\widehat{N}_L(p; d) 
+  \widehat{\textrm{sra}}_L(d) &= \int_1^P \frac{\widehat{A}_L(X_p)}{\widehat{N}_L(P; d)}\mathrm d \widehat{N}_L(p; d) 
 \end{align}
-and by elementary algebra it follows that
+and it follows that
 \begin{align}
   \sup_{d \in 1,\ldots,P}\left|\widehat{\textrm{sra}}_L(d) - \textrm{sra}(d)\right| \leq \sup_{d \in 1,\ldots,P}\left|U_L(d)\right| - \sup_{d \in 1,\ldots,P}\left|V_L(d)\right|
 \end{align}
 where
 \begin{align}
-  U_L(d) &= \int_1^P\frac{A(X_p)}{N(P;d)} d\left(\widehat{N}_L(p; d) - N(p; d)\right)\\
-  V_L(d) &=  \int_1^P \left(\frac{\widehat{A}_L(X_p)}{\widehat{N}_L(P; d)} - \frac{A(X_p)}{N(P;d)}\right)d\widehat{N}_L(p; d)
+  U_L(d) &= \int_1^P\frac{A(X_p)}{N(P;d)} \mathrm d\left(\widehat{N}_L(p; d) - N(p; d)\right)\\
+  V_L(d) &=  \int_1^P \left(\frac{\widehat{A}_L(X_p)}{\widehat{N}_L(P; d)} - \frac{A(X_p)}{N(P;d)}\right)\mathrm d\widehat{N}_L(p; d)
 \end{align}
-The conclusion of the proof therefore follows if each of these two terms are uniformly of order $o_P(1)$ in $d$.
-
-Starting with the first term, we have that
+The conclusion of the proof therefore follows if each of these two
+terms are uniformly of order $o_P(1)$ in $d$.  For the first term we
+have that
 \begin{align}
   \left|U_L(d)\right| \leq \left(\sup_{p \in 1,\ldots,P}\left|\frac{A(X_p)}{N(P;d)}\right|\right)\left(\widehat{N}_L(p; d) - N(p; d)\right)\biggr\rvert_1^P
 \end{align}
-where the second factor is $o_P(1)$ uniformly in $d$ by equation (\ref{eq:countingConv}). The first factor is $O(1)$ since $N(P;d)$ uniformly bounded away from zero in d by assumption C and $A(X_p)$ is uniformly bounded in $p$ by assumption B. It thus follows that $\left|U_L(d)\right| = o_P(1)$ uniformly in $d$.
+where the second factor is $o_P(1)$ uniformly in $d$ by equation
+(\ref{eq:countingConv}). The first factor is $O(1)$ since $N(P;d)>0$
+uniformly in $d$ and because $A(X_p)\le 2L^2$ u uniformly in $p$. . It
+thus follows that $\left|U_L(d)\right| = o_P(1)$ uniformly in $d$.
 
-Continuing with $V_L(d)$ we may similarly bound as
+Similarly we derive an upper bound for $V_L(d)$ by
 \begin{align}
- V_L(d) &\leq \sup_{p \in 1,\ldots,P}\left|\frac{\widehat{A}_L(X_p)}{\widehat{N}_L(P; d)} - \frac{A(X_p)}{N(P;d)}\right| \int_1^P \left|d\widehat{N}_L(p; d)\right|\label{eq:secondTerm}
+ V_L(d) &\leq \sup_{p \in 1,\ldots,P}\left|\frac{\widehat{A}_L(X_p)}{\widehat{N}_L(P; d)} - \frac{A(X_p)}{N(P;d)}\right| \int_1^P \left|\mathrm d\widehat{N}_L(p; d)\right|\label{eq:secondTerm}
 \end{align}
-It follows directly from the law of large numbers that $\widehat{A_L}(X_p) = A(X_p) + o_P(1)$ uniformly in $p$ since $R_i(X_p)$ in equation (\ref{eq:empDistance}) for $i=1,\ldots,L$ are independent and identically distributed random variables from $Q$ with finite second moment by assumption B). Again by equation (\ref{eq:countingConv}) it follows that $\widehat{N}_L(P; d) = N(P;d) + o_P(1)$ uniformly in $d$ and therefore by the continuous mapping theorem and assumption C) the first factor in equation (\ref{eq:secondTerm}) is of order $o_P(1)$ uniformly in $p$ and $d$. The result then follows by noting that the second factor is bounded by $P$ uniformly in $d$. 
-
-This completes the proof.
+It follows directly from the law of large numbers that
+$\widehat{A_L}(X_p) = A(X_p) + o_P(1)$ uniformly in $p$ since
+$R_i(X_p)$ in equation (\ref{eq:empDistance}) for $i=1,\ldots,L$ are
+independent and $Q$-identically distributed random variables with
+finite second moment since $A(X_p)\le 2L^2$). Again by equation
+(\ref{eq:countingConv}) it follows that
+$\widehat{N}_L(P; d) = N(P;d) + o_P(1)$ uniformly in $d$ and therefore
+by the continuous mapping theorem and since $N(P;d)>0$) the first factor
+in equation (\ref{eq:secondTerm}) is of order $o_P(1)$ uniformly in
+$p$ and $d$. The result then follows by noting that the second factor
+is bounded by $P$ uniformly in $d$.
+% This completes the proof.
 
 \section{Proof of corollary \ref{cor:consistency}}
 
