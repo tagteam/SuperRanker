@@ -748,12 +748,12 @@ stated in Theorem \ref{thm:consistency}.
 We now define the parameter of interest. For any given threshold value $q$, 
 a change-point $d^\ast(q)$ in the list agreement is defined by
 \begin{equation}
-  d^\ast(q) = \argmin_{d\in\{1,\dots,P\}}\textrm{sra}(d)>q.
+  d^\ast(q) = \min\left\{\argmin_{d\in\{1,\dots,P\}}\textrm{sra}(d)>q, P\right\}.
 \end{equation}
 The value of $q$ could for example be the agreement of randomly
 permuted lists. The corresponding estimated change-point is similarly defined by
 \begin{equation}
-\widehat{d^\ast_L}(q) = \argmin_{d\in\{1,\dots,P\}}\widehat{\textrm{sra}}_L(d)>q
+\widehat{d^\ast_L}(q) = \min\left\{\argmin_{d\in\{1,\dots,P\}}\widehat{\textrm{sra}}_L(d)>q, P \right\}
 \end{equation}
 The consistency of $\widehat{d^\ast_L}(q)$ then follows by a simple corollary. 
 
@@ -1131,7 +1131,7 @@ We will be investigating these extensions further in the future.
 \newpage
 \section{Proof of Theorem \ref{thm:consistency}}
 
-We start by defining the following counting process
+We start by defining the following cadlag function
 \begin{align}
   N(p; d) = \sum_{s=1}^p 1\left(Q(R(X_s) \leq d) > 0\right), \quad p = 1,\ldots, P
 \end{align}
@@ -1189,7 +1189,7 @@ have that
 \end{align}
 where the second factor is $o_P(1)$ uniformly in $d$ by equation
 (\ref{eq:countingConv}). The first factor is $O(1)$ since $N(P;d)>0$
-uniformly in $d$ and because $A(X_p)\le 2L^2$ u uniformly in $p$. . It
+uniformly in $d$ and because $A(X_p)\le 2P^2$ u uniformly in $p$ \mcomment{double check bound}. It
 thus follows that $\left|U_L(d)\right| = o_P(1)$ uniformly in $d$.
 
 Similarly we derive an upper bound for $V_L(d)$ by
