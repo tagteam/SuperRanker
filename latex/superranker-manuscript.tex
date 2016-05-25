@@ -311,11 +311,10 @@ For an integer $1\le d\le P$ we define the expected set of unique
 items found by merging the first $d$ elements across the possible
 lists:
 \begin{align}
-S(d) &= \left\{X_p; \left(\sum_{r=1}^{P!} 1\left(r(X_p)\le d\right) Q(r)\right) >0\right\}\label{eq:sumset}\\
-     &= \left\{X_p; Q(R(X_p) \leq d) > 0 \right\}\nn
+S(d) &= \left\{X_p; \left(\sum_{r=1}^{P!} 1\left(r(X_p)\le d\right) Q(r)\right) >0\right\}\label{eq:sumset}
 \end{align}
 where $1(\cdot)$ denotes the indicator function.
-The empirical counterpart the set of unique items ranked less than or
+The empirical counterpart is the set of unique items ranked less than or
 equal to $d$ in any of the $L$ lists:
 \begin{equation}
 \widehat{S}_{L}(d) = \left\{X_p; \left(\frac{1}{L}\sum_{l=1}^L 1\left(R_l(X_p)\le d\right)\right)>0\right\},
@@ -1189,7 +1188,7 @@ have that
 \end{align}
 where the second factor is $o_P(1)$ uniformly in $d$ by equation
 (\ref{eq:countingConv}). The first factor is $O(1)$ since $N(P;d)>0$
-uniformly in $d$ and because $A(X_p)\le 2P^2$ u uniformly in $p$ \mcomment{double check bound}. It
+uniformly in $d$ and because $A(X_p)\le 2P^2$ uniformly in $p$ \mcomment{double check bound}. It
 thus follows that $\left|U_L(d)\right| = o_P(1)$ uniformly in $d$.
 
 Similarly we derive an upper bound for $V_L(d)$ by
