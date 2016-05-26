@@ -464,8 +464,10 @@ that have been ranked highest in list $l$.  The case where all lists are
 censored at the same depth $d$ corresponds to $d_1=\cdots=d_L=d$. For
 incomplete/censored lists the rank function becomes
 \begin{equation}
-  \widetilde R_l(X_p) = \left\{\begin{array}{cl} \{R_l(X_p)\} & \text{ for } X_p\in \Lambda_l \\
-      \{d_l+1,\dots,P\} & \text{ for } X_p \not\in \Lambda_l\end{array}\right.
+	\widetilde R_l(X_p) = \begin{cases}
+	     \{R_l(X_p)\} & \text{for } X_p\in \Lambda_l\\
+	     \{d_l+1,\dots,P\} & \text{for} X_p \not\in \Lambda_l
+        \end{cases}
 \end{equation}
 where we only know that the rank for the unobserved items in list $l$
 must be larger than the largest rank observed in that list.
@@ -638,10 +640,10 @@ what would be expected if there were no relevant information available
 in the data.
 
 The first reference hypothesis is
-\begin{eqnarray*}
-H_0  & : &  \text{The list rankings correspond to complete randomly}\\
-       &  & \text{permuted lists},
-\end{eqnarray*}
+\begin{eqnarray}
+H_0  & : &  \text{The list rankings correspond to complete randomly}\label{eq:permutationHypothesis}\\
+       &  & \text{permuted lists}\nn
+\end{eqnarray}
 which not only assumes that there is no information in the data on
 which the rankings are based but also that the methods are completely
 independent.
@@ -711,7 +713,7 @@ information available in the data used for creating the rankings.
 In many applications it is of interest to estimate a list depths which
 satisfies a change point criterion. In this section we investigate the
 theoretical properties of our proposed method for this specific
-task. As Hall and Schimek \mcomment{REF}, we work with an infinite set
+task. As in \cite{hall:schi:2012} we work with an infinite set
 of lists and study the asymptotic behaviour for $L\to\infty$.
 However, we do not allow the length of the lists to change with $L$
 because in most applications the lengths of the lists are fixed.
@@ -744,26 +746,38 @@ stated in Theorem \ref{thm:consistency}.
 \end{theorem}
 
 
-We now define the parameter of interest. For any given threshold value $q$, 
-a change-point $d^\ast(q)$ in the list agreement is defined by
-\begin{equation}
-  d^\ast(q) = \min\left\{\argmin_{d\in\{1,\dots,P\}}\textrm{sra}(d)>q, P\right\}.
-\end{equation}
-The value of $q$ could for example be the agreement of randomly
-permuted lists. The corresponding estimated change-point is similarly defined by
-\begin{equation}
-\widehat{d^\ast_L}(q) = \min\left\{\argmin_{d\in\{1,\dots,P\}}\widehat{\textrm{sra}}_L(d)>q, P \right\}
-\end{equation}
-The consistency of $\widehat{d^\ast_L}(q)$ then follows by a simple corollary. 
+We now define the parameter of interest. For any given deterministic threshold function $q\colon\, 1,\ldots,P \mapsto \mathbb{R}_{\geq 0}$
+we define the population superlevel set of the sequential rank agreement as
+\begin{align}
+  \mathcal{L}(q) = \left\{d : \textrm{sra}(d) \geq q(d)\right\}
+\end{align}
+The values of $q$ could for example be the limits-of-agreement for randomly
+permuted lists as in the null-hypothesis in equation (\ref{eq:permutationHypothesis}).
+A change-point $d^\ast(q)$ in the list agreement is then defined by the position
+\begin{align}
+  d^\ast(q) &= 1\left(|\mathcal{L}(q)| > 0\right)\inf \mathcal{L}(q) + 1\left(|\mathcal{L}(q)| = 0\right)P
+\end{align}
+corresponding to the first list depth where the sequential rank agreement exceeds the threshold 
+if such a position exists. Otherwise, the full list is in agreement according to $q$ and the change-point
+is defined as the length of the lists. The empirical superlevel set is similarly defined as
+\begin{align}
+ \widehat{\mathcal{L}}_L(\widehat{q}_L) = \left\{d : \widehat{\textrm{sra}}_L(d) \geq \widehat{q}_L(d)\right\}
+\end{align}
+where we allow that the threshold function can depend on the sample size as well. The estimated change-point is therefore
+\begin{align}
+  \widehat{d^\ast_L}(\widehat{q}_L) &= 1(|\widehat{\mathcal{L}}_L(\widehat{q}_L)| > 0)\inf \widehat{\mathcal{L}}_L(\widehat{q}_L) + 1(|\widehat{\mathcal{L}}_L(\widehat{q}_L)| = 0)P
+\end{align}
 
+The consistency of the estimated change-point, $\widehat{d^\ast_L}(\widehat{q}_L)$, follows from Theorem \ref{thm:consistency} by the following corollary. 
 \begin{corollary}
-For fixed $q$ it follows from Theorem \ref{thm:consistency} that
-$\widehat{d^\ast_L}(q) \overset{P}{\longrightarrow} d^\ast(q)$
-for $L \rightarrow \infty$.
+Let $\widehat{q}_L$ be a threshold function such that $\left\|\widehat{q}_L - q\right\|_\infty = o_P(1)$ for some limiting
+function $q$.  Then, $\widehat{d^\ast_L}(\widehat{q}_L) \overset{P}{\longrightarrow} d^\ast(q)$ for $L \rightarrow \infty$.
 \label{cor:consistency}
 \end{corollary}
 
-\mcomment{Comment on how to apply this in practice (finite sample/bootstrap/etc.) and that $q$ is similar to LoA BA-style.}
+
+
+\mcomment{Elaborate more on how to apply this in practice (finite sample/bootstrap/etc.) and that $q$ is similar to LoA BA-style?}
 
 
 
@@ -1138,11 +1152,7 @@ which runs through the list elements in an arbitrary order and counts
 how many list elements have a strictly positive probability to have
 rank less than or equal to $d$ under the probability measure $Q$.
 Note that the cardinality of the set $S(d)$ in equation
-(\ref{eq:sumset}) is equal to the counting process evaluated at the last element:
-\begin{equation*}
-  |S(d)| = N(P;d).
-\end{equation*}
-
+(\ref{eq:sumset}) is equal to the counting process evaluated at the last element: $|S(d)| = N(P;d)$.
 The empirical counterpart of the counting process is given by
 \begin{align}
   \widehat{N}_L(p; d) &= \sum_{s=1}^p 1\left( \frac{1}{L} \sum_{l=1}^L 1(R_l(X_s) \leq d) > 0\right)\\
@@ -1188,21 +1198,19 @@ have that
 \end{align}
 where the second factor is $o_P(1)$ uniformly in $d$ by equation
 (\ref{eq:countingConv}). The first factor is $O(1)$ since $N(P;d)>0$
-uniformly in $d$ and because $A(X_p)\le 2P^2$ uniformly in $p$ \mcomment{double check bound}. It
+uniformly in $d$ and because $A(X_p) = O(P^2)$ uniformly in $p$ by the Cauchy-Ekstr{\o}m inequality. It
 thus follows that $\left|U_L(d)\right| = o_P(1)$ uniformly in $d$.
 
 Similarly we derive an upper bound for $V_L(d)$ by
 \begin{align}
  V_L(d) &\leq \sup_{p \in 1,\ldots,P}\left|\frac{\widehat{A}_L(X_p)}{\widehat{N}_L(P; d)} - \frac{A(X_p)}{N(P;d)}\right| \int_1^P \left|\mathrm d\widehat{N}_L(p; d)\right|\label{eq:secondTerm}
 \end{align}
-It follows directly from the law of large numbers that
+and it follows directly from the law of large numbers that
 $\widehat{A_L}(X_p) = A(X_p) + o_P(1)$ uniformly in $p$ since
 $R_i(X_p)$ in equation (\ref{eq:empDistance}) for $i=1,\ldots,L$ are
 independent and $Q$-identically distributed random variables with
-finite second moment since $A(X_p)\le 2L^2$). Again by equation
-(\ref{eq:countingConv}) it follows that
-$\widehat{N}_L(P; d) = N(P;d) + o_P(1)$ uniformly in $d$ and therefore
-by the continuous mapping theorem and since $N(P;d)>0$) the first factor
+finite second moment. Again, $\widehat{N}_L(P; d) = N(P;d) + o_P(1)$ uniformly in $d$ by equation
+(\ref{eq:countingConv}) and $N(P;d)>0$ so by the continuous mapping theorem the first factor
 in equation (\ref{eq:secondTerm}) is of order $o_P(1)$ uniformly in
 $p$ and $d$. The result then follows by noting that the second factor
 is bounded by $P$ uniformly in $d$.
