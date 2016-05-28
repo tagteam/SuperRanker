@@ -1213,20 +1213,33 @@ finite second moment. Again, $\widehat{N}_L(P; d) = N(P;d) + o_P(1)$ uniformly i
 (\ref{eq:countingConv}) and $N(P;d)>0$ so by the continuous mapping theorem the first factor
 in equation (\ref{eq:secondTerm}) is of order $o_P(1)$ uniformly in
 $p$ and $d$. The result then follows by noting that the second factor
-is bounded by $P$ uniformly in $d$.
-% This completes the proof.
+is bounded by $P$ uniformly in $d$. 
 
 \section{Proof of Corollary \ref{cor:consistency}}
-We have that 	
+Let $A \triangle B = (A \setminus B) \cup (B \setminus A)$ is the symmetric difference between sets $A$ and $B$. It is then sufficient to show that
+$|\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \mathcal{L}(q)|$ converges to zero in probability as $L \rightarrow \infty$. By the triangle inequality
+we have that
 \begin{align}
-  |\widehat{d^\ast_L}(\widehat{q}_L) - d^\ast(q)| &\leq  |\widehat{d^\ast_L}(q)  - d^\ast(q)| + |\widehat{d^\ast_L}(\widehat{q}_L)  - \widehat{d^\ast_L}(q_L)|
+ \left|\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \mathcal{L}(q)\right| &= \left|\left(\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \widehat{\mathcal{L}}_L(q)\right) \cup \left(\widehat{\mathcal{L}}_L(q) \triangle \mathcal{L}(q)\right)\right|\label{eq:corSetDiff}\\
+   &\leq \left|\widehat{\mathcal{L}}_L(q) \triangle \mathcal{L}(q)\right| + \left|\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \widehat{\mathcal{L}}_L(q)\right|\nn
 \end{align}
-The first term is of order $o_P(1)$ by the continuous mapping theorem if a) $|\inf \widehat{\mathcal{L}}_L(q) - \inf  \mathcal{L}(q)| = o_P(1)$ and b) $|1(|\widehat{\mathcal{L}}_L(q)| = 0) - 1(|\mathcal{L}(q)| = 0)| = o_P(1)$ since $1(|\mathcal{L}(q)| > 0) = 1 - 1(|\mathcal{L}(q)| = 0)$. Similarly, the second term is of order $o_P(1)$ by the same reasoning if c) $|\inf \widehat{\mathcal{L}}_L(\widehat{q}_L) - \inf \widehat{\mathcal{L}}_L(q)| = o_P(1)$ and d) $|1(|\widehat{\mathcal{L}}_L(\widehat{q}_L)| = 0) - 1(|\widehat{\mathcal{L}}_L(q)| = 0)| = o_P(1)$.
+Looking at the first term we have
+\begin{align}
+  \left|\widehat{\mathcal{L}}_L(q) \triangle \mathcal{L}(q)\right| &= \sum_{d=1}^P \left|1\left(\widehat{\textrm{sra}}_L(d) \geq q(d)\right)  - 1\left(\textrm{sra}(d)  \geq q(d)\right)\right|\\
+   &=
+\end{align}
+Similarly we have
+\begin{align}
+\left|\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \widehat{\mathcal{L}}_L(q)\right| &= \sum_{d=1}^P \left|1\left(\widehat{\textrm{sra}}_L(d) \geq \widehat{q}_L(d)\right) - 1\left(\widehat{\textrm{sra}}_L(d) \geq q(d)\right)\right|\\
+   &=
+\end{align}
 
-\begin{align}
-\inf \left\{d : \widehat{\textrm{sra}}_L(d) \geq \widehat{q}_L(d)\right\} = \inf \left\{d : \widehat{\textrm{sra}}_L(d) \geq q(d) + o_P(1)\right\}\\
-\inf \left\{d : \widehat{\textrm{sra}}_L(d) \geq q(d)\right\}
-\end{align}
+%We have that 	
+%\begin{align}
+%  |\widehat{d^\ast_L}(\widehat{q}_L) - d^\ast(q)| &\leq  |\widehat{d^\ast_L}(q)  - d^\ast(q)| + |\widehat{d^\ast_L}(\widehat{q}_L)  - \widehat{d^\ast_L}(q_L)|
+%\end{align}
+%The first term is of order $o_P(1)$ by the continuous mapping theorem if a) $|\inf \widehat{\mathcal{L}}_L(q) - \inf  \mathcal{L}(q)| = o_P(1)$ and b) $|1(|\widehat{\mathcal{L}}_L(q)| = 0) - 1(|\mathcal{L}(q)| = 0)| = o_P(1)$ since $1(|\mathcal{L}(q)| > 0) = 1 - 1(|\mathcal{L}(q)| = 0)$. Similarly, the second term is of order $o_P(1)$ by the same reasoning if c) $|\inf \widehat{\mathcal{L}}_L(\widehat{q}_L) - \inf \widehat{\mathcal{L}}_L(q)| = o_P(1)$ and d) $|1(|\widehat{\mathcal{L}}_L(\widehat{q}_L)| = 0) - 1(|\widehat{\mathcal{L}}_L(q)| = 0)| = o_P(1)$.
+
 This completes the proof.
 
 \end{document}
