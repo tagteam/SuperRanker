@@ -1,14 +1,19 @@
 #' Compute the sequential rank agreement
 #'
 #' @param object Either matrix where each column is a ranked list of
-#' items or a list of ranked lists of items. Elements are integers
-#' between 1 and the length of the lists. The lists should have the
-#' same length but censoring can be used by setting the list to zero
-#' from a point onwards. See details for more information.
-#' @param na.strings A vector of strings/values that represent missing values in addition to NA. Defaults to NULL which means only NA are censored values.
+#'     items or a list of ranked lists of items. Elements are integers
+#'     between 1 and the length of the lists. The lists should have
+#'     the same length but censoring can be used by setting the list
+#'     to zero from a point onwards. See details for more information.
 #' @param B An integer giving the number of randomization to sample
-#' over in the case of censored observations
-#' @param type The type of measure to use. Either sd (standard deviation - the default) or mad (median absolute deviance)
+#'     over in the case of censored observations
+#' @param na.strings A vector of strings/values that represent missing
+#'     values in addition to NA. Defaults to NULL which means only NA
+#'     are censored values.
+#' @param nitems Claus: please describe this argument
+#' @param type The type of measure to use. Either sd (standard
+#'     deviation - the default) or mad (median absolute deviance)
+#' @param ... Arguments passed to methods.
 #' @return A vector of the sequential rank agreement
 ##' @examples
 ##'
@@ -42,19 +47,19 @@
 #'
 #' @rdname sra
 #' @export
-sra <- function(object, B=1, type=c("sd", "mad"), ...) {
+sra <- function(object,B,na.strings,nitems,type,...) {
   UseMethod("sra")
 }
 
 #' @rdname sra
 #' @export
-sra.default <- function(object, B=1, type=c("sd", "mad")) {
+sra.default <- function(object,B,na.strings,nitems,type,...) {
     stop("Input must be either a matrix, a data.frame or a list.")
 }
 
 #' @rdname sra
 #' @export
-sra.matrix <- function(object, B=1, na.strings=NULL, nitems=nrow(object), type=c("sd", "mad")) {
+sra.matrix <- function(object, B=1, na.strings=NULL, nitems=nrow(object), type=c("sd", "mad"),...) {
     if (!is.matrix(object))
         stop("Input object must be a matrix")
 
@@ -83,7 +88,7 @@ sra.matrix <- function(object, B=1, na.strings=NULL, nitems=nrow(object), type=c
 
 #' @rdname sra
 #' @export
-sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, length)), type=c("sd", "mad")) {
+sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, length)), type=c("sd", "mad"),...) {
     # Make sure that the input object ends up as a matrix with integer columns all
     # consisting of elements from 1 and up to listlength
 
@@ -183,12 +188,15 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
 
 #' Simulate sequential rank agreement for randomized unrelated lists
 #'
-#' @param obj A matrix
+#' @param object A matrix
 #' @param B Either a vector or matrix
 #' @param n the number of sequential rank agreement curves to produce
-#' @param na.strings A vector of character values that represent vensored observations
-#' @param type The type of measure to use. Either sd (standard deviation - the default) or mad (median absolute deviance)
-#' @return A matrix with n columns each representing the sequential rank agreement obtained from
+#' @param na.strings A vector of character values that represent
+#'     vensored observations
+#' @param type The type of measure to use. Either sd (standard
+#'     deviation - the default) or mad (median absolute deviance)
+#' @return A matrix with n columns each representing the sequential
+#'     rank agreement
 #' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
 #' @export
 random_list_sra <- function(object, B=1, n=1, na.strings=NULL, type=c("sd", "mad")) {
@@ -230,7 +238,7 @@ random_list_sra <- function(object, B=1, n=1, na.strings=NULL, type=c("sd", "mad
 smooth_sra <- function(object, confidence=0.95) {
 
     alpha <- (1-confidence)/2
-    limits <- apply(object, 1, function(x) { quantile(x, probs=c(alpha, 1-alpha)) })
+    limits <- apply(object, 1, function(x) {stats::quantile(x, probs=c(alpha, 1-alpha)) })
     list(lower=limits[1,], upper=limits[2,])
 }
 
