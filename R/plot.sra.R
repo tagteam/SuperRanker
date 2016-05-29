@@ -6,7 +6,8 @@
 ##' @param ylim y-axis limits
 ##' @param xlab x-axis lab
 ##' @param ylab y-axis lab
-##' @param ... Processed by \code{\link{prodlim::SmartControl}}.
+##' @param add Logical. If \code{TRUE} add graph to existing plot.
+##' @param ... Processed by function \code{prodlim::SmartControl}.
 ##' @return Graph
 ##' @examples
 ##' R1=c(1,2,3,4,5,7,6,8,9,10,11,12,13)
