@@ -1,5 +1,6 @@
 #' Compute the average overlap
 #'
+#'
 #' @param obj Either a vector or matrix
 #' @return A vector of the average overlap
 #' @export
