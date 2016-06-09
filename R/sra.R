@@ -188,16 +188,27 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
 
 #' Simulate sequential rank agreement for randomized unrelated lists
 #'
-#' @param object A matrix
-#' @param B Either a vector or matrix
-#' @param n the number of sequential rank agreement curves to produce
+#' Simulate sequential rank agreement from completely uninformative lists (ie., raw permutations of items) and compute the corresponding sequential rank agreement curve.
+#' The number of lists, items and amount of censoring is identical to the input object.
+#'
+#' @param object A matrix or list of vectors representing ranked lists.
+#' @param B An integer giving the number of randomization to sample
+#'     over in the case of censored observations
+#' @param n the number of sequential rank agreement curves to simulate
 #' @param na.strings A vector of character values that represent
-#'     vensored observations
+#'     censored observations
 #' @param type The type of measure to use. Either sd (standard
 #'     deviation - the default) or mad (median absolute deviance)
-#' @return A matrix with n columns each representing the sequential
-#'     rank agreement
+#' @return A matrix with n columns and the same number of rows as for the input object. Each column contains one simulated sequential
+#'     rank agreement curve from the distri
 #' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
+#' @examples
+#'
+#' mlist <- matrix(cbind(1:8,c(1,2,3,5,6,7,4,8),c(1,5,3,4,2,8,7,6)),ncol=3)
+#' sra(mlist)
+#'
+#' random_list_sra(mlist, n=5)
+#'
 #' @export
 random_list_sra <- function(object, B=1, n=1, na.strings=NULL, type=c("sd", "mad")) {
 

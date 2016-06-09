@@ -8,24 +8,34 @@ random_list_sra(object, B = 1, n = 1, na.strings = NULL, type = c("sd",
   "mad"))
 }
 \arguments{
-\item{object}{A matrix}
+\item{object}{A matrix or list of vectors representing ranked lists.}
 
-\item{B}{Either a vector or matrix}
+\item{B}{An integer giving the number of randomization to sample
+over in the case of censored observations}
 
-\item{n}{the number of sequential rank agreement curves to produce}
+\item{n}{the number of sequential rank agreement curves to simulate}
 
 \item{na.strings}{A vector of character values that represent
-vensored observations}
+censored observations}
 
 \item{type}{The type of measure to use. Either sd (standard
 deviation - the default) or mad (median absolute deviance)}
 }
 \value{
-A matrix with n columns each representing the sequential
-    rank agreement
+A matrix with n columns and the same number of rows as for the input object. Each column contains one simulated sequential
+    rank agreement curve from the distri
 }
 \description{
-Simulate sequential rank agreement for randomized unrelated lists
+Simulate sequential rank agreement from completely uninformative lists (ie., raw permutations of items) and compute the corresponding sequential rank agreement curve.
+The number of lists, items and amount of censoring is identical to the input object.
+}
+\examples{
+
+mlist <- matrix(cbind(1:8,c(1,2,3,5,6,7,4,8),c(1,5,3,4,2,8,7,6)),ncol=3)
+sra(mlist)
+
+random_list_sra(mlist, n=5)
+
 }
 \author{
 Claus Ekstrøm <ekstrom@sund.ku.dk>
