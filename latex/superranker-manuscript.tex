@@ -72,22 +72,23 @@
 
 \begin{abstract}
   The comparison of alternative rankings of a set of items is a
-  general and prominent task in applied statistics. Predictor
-  variables are ranked according to magnitude of association with an
-  outcome, prediction models rank subjects according to the
-  personalized risk of an event, and genetic studies rank genes
-  according to their difference in gene expression levels. This
-  article constructs measures of the agreement of two or more ordered
-  lists. We use the standard deviation of the ranks to define a
-  measure of agreement that both provides an intuitive interpretation
-  and can be applied to any number of lists even if some or all are
-  incomplete or censored. The approach can identify change-points in
-  the agreement of the lists and the sequential changes of agreement
-  as a function of the depth of the lists can be compared graphically
-  to a permutation based reference set.  The usefulness of these tools
-  are illustrated using gene rankings, and using data from two Danish
-  ovarian cancer studies where we assess the within and between
-  agreement of different statistical classification methods.
+  general and common task in applied statistics. Predictor variables
+  are ranked according to magnitude of association with an outcome,
+  prediction models rank subjects according to the personalized risk
+  of an event, and genetic studies rank genes according to their
+  difference in gene expression levels. This article constructs
+  measures of agreement among two or more ordered lists. We use the
+  standard deviation of the ranks to define a measure of agreement
+  that both provides an intuitive interpretation and can be applied to
+  any number of lists even if some or all are incomplete or
+  censored. The approach can identify change-points in the agreement
+  of the lists, and the sequential changes of agreement as a function
+  of the depth of the lists can be compared graphically to a
+  permutation based reference set or evaluated using asymptotic
+  results.  The usefulness of these tools are illustrated using gene
+  rankings, and using data from two Danish ovarian cancer studies
+  where we assess the within and between agreement of different
+  statistical classification methods.
 \end{abstract}
 
 Key words: sequential rank agreement, partial ranking, order
@@ -120,7 +121,7 @@ Several approaches exist to measure the ``distance'' between two
 ranked lists. Of these, Kendall's $\tau$ \citep{kendall1948} and
 Spearman’s footrule $\rho$ \citep{Spearman1910} are among the most
 well-known, but these measures do not distinguish between agreement in
-the top versus towards the bottom of the lists and the provide a
+the top versus towards the bottom of the lists and they both provide a
 single measure of the overall distance. \citet{Shieh1998} proposed a
 weighted version of Kendall's $\tau$ where each pair of rankings can
 be assigned different weights, and \citet{Yilmaz2008} proposed the
@@ -132,18 +133,19 @@ to calculate the similarity measure.
 
 
 
-Other recent approaches consider the intersection of lists as the basis
+Other more recent approaches consider the intersection of lists as the basis
 for a similarity measure. However, simple intersection also places
 equal weights on all depths of the list and therefore \citet{Fagin2003} and
 \citet{Webber2010} proposed weighted intersections which put more
-emphasis on the top of the lists. One proposal is denoted the average
-overlap (AO) and used for comparison later on. Specifically,
-\citet{Webber2010} define their rank-biased overlap (RBO) by weighting
-with a converging series to ensure that the top is weighted higher
-than the potentially non-informative bottom of the lists.
-It is possible to use the existing methods to calculate agreement of
-lists until a given depth, i.e., limited to the $d$ items of each
-list. However, the interpretation may not be straightforward,
+emphasis on the top of the lists. 
+% One proposal is denoted the average overlap (AO) and used for
+% comparison later on. 
+Specifically, \citet{Webber2010} define their rank-biased overlap
+(RBO) by weighting with a converging series to ensure that the top is
+weighted higher than the potentially non-informative bottom of the
+lists.  It is possible to use the existing methods to calculate
+agreement of lists until a given depth, i.e., limited to the $d$ items
+of each list. However, the interpretation may not be straightforward,
 especially in the case of more than two lists, and they may not
 accommodate partial rankings.
 
@@ -160,7 +162,7 @@ probability instead of a 0-1 process and they evaluated the
 distribution of the endpoint of agreement by computational approaches.
 The asymptotic distribution in the \citet{hall:schi:2012} paper is
 based on letting the number of \emph{lists} increase to infinity which
-is a situation that is only relevant in special cases, and the
+is a situation that is only relevant in special cases, whereas the
 simulation-based null distribution approach of \citet{samp:verd:2013}
 is guaranteed to work also for small samples.
 
@@ -178,7 +180,7 @@ high weight on items at the top of the list, accommodates partially
 observed lists of varying lengths, and has a natural interpretation
 that directly relates to the ranks.  Graphical illustration of
 sequential rank agreement potentially allows us to infer a
-change-point, i.e., a list depth where a change in the agreement of
+change-point, i.e., a list depth where a substantial change in the agreement of
 the lists occur but we also provide randomization-based graphical
 tools to compare the observed rank agreement to the expected agreement
 found in non-informative data.  In this sense our approach is a
@@ -201,9 +203,8 @@ discuss approaches to evaluate the results obtained from sequential
 rank agreement. Finally we apply the sequential rank agreement to two
 Danish ovarian cancer studies before we discuss the findings along
 with possible extensions. The approaches presented in this manuscript
-are available in the R package \texttt{SuperRanker}. \mcomment{XXX check dette
-passer, submit pakke}
-
+are available in the R package \texttt{SuperRanker} which can be found
+on CRAN.
 % chunk 1
 
 
@@ -214,29 +215,21 @@ ranking function $R: \{X_1,\dots,X_P\}\to \{1,\dots,P\}$, such that
 $R(X_p)$ is the rank of item $X_p$. The inverse mapping $R^{-1}$ gives
 the item $R^{-1}(r)$ that was assigned to rank $r\in\{1,\dots,P\}$. An
 ordered list is the realization of a ranking function $R$ applied to
-the set of items $X$. In all what follows we condition on the set of
-items and consider the ranking function to be a random variable. Thus,
-let $R_1(X),\dots,R_L(X)$, $L\geq2$, be a sample of $L$ independent
+the set of items $X$.  Panels (a) and (b) of Table~\ref{tab:example}
+show a schematic example of these mappings. Thus if
+$R_l^{-1}(1)=X_{34}$ then item $X_{34}$ is ranked first in list $l$
+and similarly $R_l(X_{34})=1$.
+
+In all what follows we consider a fixed set of items and consider the
+ranking function to be a random variable. Thus, let
+$R_1(X),\dots,R_L(X)$, $L\geq2$, be a sample of $L$ independent
 identically distributed draws from an unknown probability distribution
 function $Q$. One aim is then to test how much $Q$ resembles the
-uniform distribution which assigns probability $(P!)^{-1}$ to each of
-the $P!$ different rankings.
-Panels (a) and (b) of
-Table~\ref{tab:example} show a schematic example of these
-mappings. Thus if $R_l^{-1}(1)=X_{34}$ then item $X_{34}$ is ranked
-first in list $l$ and similarly $R_l(X_{34})=1$.
-
-\bigskip\hrule HOV: er det virkelig equivalent ogsaa mht vores nye theoretiske
-ideer? Og bruger vi det nogen steder?  enten skal det forklares med et
-konkret eksempel eller ud?  We will use the same notation for the
-equivalent scenario where we have ordered lists obtained from applying
-the same ranking function to $L$ samples from the same population,
-i.e., for ranked lists $R(X^1), \ldots, R(X^L)$.  
-\hrule\bigskip
-
+uniform distribution which assigns probability $1/P!$ to each of
+the $P!$ different possible rankings.
 
 \begin{table}[tb]
-  \caption{Example set of ranked lists. (a) shows the ranked list of
+  \caption{Example set of ranked lists. (a) shows the ranked lists of
     items for each of three lists, (b) presents the ranks obtained by
     each item in each of the three lists and (c) shows the cumulative
     set of items up to a given depth in the three lists.}
@@ -293,13 +286,14 @@ The agreement of the lists regarding the rank given to an item $X_p$
 can be measured by the variance across the lists
 \begin{align}
   A(X_p) &= \E_Q\left[\left(R(X_P)-\E_Q R(X_P)\right)^2\right]\\
-   &= \sum_{r=1}^{P!} \left(r(X_P)-\E_Q R(X_P)\right)^2 Q(r)\nn
+   &= \sum_{r=1}^{P!} \left(r(X_P)-\E_Q R(X_P)\right)^2 Q(r),\nn
 \end{align}
+\textsf{Ikke så vild med notationen her ovenfor}
 where $\E_Q R(X_p)=\sum_{r=1}^{P!} r(X_p)Q(r)$ and $Q$ is a probability mass function
 on the space of all permutations of lists with $P$ elements.
 The empirical counterpart is
 \begin{align}
-\widehat{A}_L(X_p) = \frac{1}{L-1}\sum_{i=1}^L (R_i(X_p) - \overline{R}_L(X_p))^2, \quad \overline{R}_L(X_p) = \frac{1}{L}\sum_{i=1}^L R_i(X_p)\label{eq:empDistance}
+\widehat{A}_L(X_p) = \frac{1}{L-1}\sum_{i=1}^L (R_i(X_p) - \overline{R}_L(X_p))^2, \quad \overline{R}_L(X_p) = \frac{1}{L}\sum_{i=1}^L R_i(X_p).\label{eq:empDistance}
 \end{align}
 For each item, the function $\widehat{A}_L$ has an interpretation as the expected
 Euclidean distance of the individual rankings from the expected
@@ -320,7 +314,8 @@ equal to $d$ in any of the $L$ lists:
 \widehat{S}_{L}(d) = \left\{X_p; \left(\frac{1}{L}\sum_{l=1}^L 1\left(R_l(X_p)\le d\right)\right)>0\right\},
 \end{equation}
 which is exemplified in Panel (c) of Table \ref{tab:example}.
-We then define the \emph{sequential rank agreement} as the weighted
+
+We define the \emph{sequential rank agreement} as the weighted
 expected agreement of the items found in the set $S(d)$:
 \begin{align}
   \textrm{sra}(d) = \frac{1}{|S(d)|}\sum_{p \in S(d)}A(X_p)\label{def:sra}
@@ -331,18 +326,18 @@ The empirical counterpart is equivalently given by
   \widehat{\textrm{sra}}_L(d) = \frac{\sum_{\{p \in \widehat{S}_{L}(d)\}}(L-1)\widehat{A}_L(X_p)}{(L-1)|\widehat {S}_{L}(d)|}\label{def:sraEst}
 \end{equation}
 
-Values of \textrm{sra} close to zero suggests that the lists agree
-while larger values suggest disagreement.
-Just like in method comparison studies we prefer smaller limits of
-agreement because that means that the differences between the methods
-is small. If the ranked lists are identical then the value of
-sequential rank agreement will be zero for all depths $d$.
-The sequential rank agreement is  equivalent to the pooled
-variance of the items found in $S(d)$, and it can be interpreted as the
-average distance of the individual rankings of the lists from the
-average ranking for each of the items we have seen until depth $d$.
-For an easier interpretation we suggest to plot $\widehat{\textrm{sra}}_L(d)^{1/2}$ 
-corresponding to the pooled standard deviation. 
+Values of \textrm{sra} close to zero suggests that the lists agree on
+the rankings while larger values suggest disagreement.  Just like in
+method comparison studies we prefer smaller limits of agreement
+because that means that the differences between the methods is
+small. If the ranked lists are identical then the value of sequential
+rank agreement will be zero for all depths $d$.  The sequential rank
+agreement is equivalent to the pooled variance of the items found in
+$S(d)$, and it can be interpreted as the average distance of the
+individual rankings of the lists from the average ranking for each of
+the items we have seen until depth $d$.  For an easier interpretation
+we suggest to plot $\sqrt{\widehat{\textrm{sra}}_L(d)}$ corresponding
+to the pooled standard deviation.
 
 
 
