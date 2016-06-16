@@ -353,15 +353,15 @@ or if the same analysis method is applied to data from different
 populations.
 
 With fully observed lists we can plot the sequential rank agreement
-\ref{def:sra} as a function of depth $d$. An example is seen in top
+\eqref{def:sra} as a function of depth $d$. An example is seen in top
 panels of Figure~\ref{fig:example1} where four analysis methods were
 used to rank 3051 gene expression values measured on 38 tumor mRNA
 samples in order to classify between acute lymphoblastic leukemia
 (ALL) and acute myeloid leukemia (AML)
 \citep{Golub1999}. Preprocessing of the gene expression data was done
 as described in \citet{Dudoit2002} and the four different analysis
-approaches were: marginal two-sample $t$ tests, marginal logistic
-regression analyses, elastic net logistic regression
+approaches were: marginal unequal variances two-sample $t$ tests,
+marginal logistic regression analyses, elastic net logistic regression
 \citep{friedman2010regularization}, and marginal maximum information
 content correlations (MIC) \citep{Reshef2011}. For the first two
 methods, the genes were ranked according to minimum $p$ value, for
@@ -371,12 +371,12 @@ ordered by absolute correlation which resulted in the top rankings
 seen in Table~\ref{tab1}.
 
 
-The sequential rank agreement plotted in Figure~\ref{fig:example1}
-shows how many ranks apart we on average expect the genes found in the
+The sequential rank agreement curve plotted in Figure~\ref{fig:example1}
+roughly shows how many ranks apart we on average expect the genes found in the
 top $d$ part of the lists to be for each depth $d$.  It can be seen
 that the sequential rank agreement limits are better towards the top
 of the lists (smaller values on the $y$ axis) corresponding to
-\emph{better} agreement than in the tails of the lists. It is clear
+\emph{better} agreement than towards the tails of the lists. It is clear
 from the curve in Figure~\ref{fig:example1} that there is a
 substantial drop in agreement even after the first depth. Thus, if we
 were to restrict attention to a small set of predictors then we would
@@ -420,7 +420,8 @@ Ranking & T & LogReg & ElasticNet & MIC \\
    analysis methods applied to the 3051 genes in the Golub data /black
    line). Right
    panels: Corresponding sequential rank agreement for the same data
-   but where only the top 20 ranked items are available. The blue and
+   but where only the top 20 ranked items are available and the rest
+   of the items have been censored. The blue and
    red areas correspond to the independent and randomized reference
    hypothesis areas, respectively. The bottom plots are identical to
    the corresponding top plots but have been zoomed in on the first
@@ -436,22 +437,22 @@ Ranking & T & LogReg & ElasticNet & MIC \\
  association studies we generally expect the agreement among the lists
  to be better towards the top of the lists and worse towards the end
  of the lists. In this case the sequential rank agreement curve will
- start at a low level and then increase until it levels off as in
+ start at a low level and then increase until it levels off as seen in
  Figure~\ref{fig:example1}.
 
 \subsection{Analysis of partial/censored lists}
-Incomplete or partial lists are also a common occurrence. They arise
-for example in case of missing data (items), when comparing top $d$
-list results from publications, or when some methods only rank a
-subset of the items. For example, penalized regression based on the
-Lasso provides a sparse set of predictors that have non-zero
+Incomplete or partial lists are a common occurrence that arise, for
+example, in case of missing data (items), when comparing top $d$ list
+results from publications, or when some methods only rank a subset of
+the items. For example, penalized regression based on the Lasso
+provides a sparse set of predictors that have non-zero
 coefficients. There is no obvious ordering of the set of predictors
 whose coefficient has been shrunk to zero and thus we end up with a
 partial ordering. Incomplete lists also occur when the analyst decides
-to censor all lists at depth $d$ such that the measurement of
-agreement is restricted to the first $d$ elements of each list, or
-when the analyst only wants to consider the ranking of items that have
-been found to be statistically significant.
+to censor all lists at depth $d$ (\ie, top $d$ lists) such that the
+measurement of agreement is restricted to the first $d$ elements of
+each list, or when the analyst only wants to consider the ranking of
+items that have been found to be statistically significant.
 
 Sequential rank agreement can be generalized to partial lists in the
 following way. Let $\Lambda_l\subset X$ be the subset of $d_l$ items
@@ -473,7 +474,7 @@ for some items will be unknown. Also, recall that the rankings within
 a single list are not independent since each rank must appear exactly
 once in each list. Thus, we cannot simply assign the same number
 (e.g., the mean of the unassigned ranks) to the censored items since
-that would result in less variation of the ranks and hence less
+that would result in \emph{less} variation of the ranks and hence less
 variation of the agreement, and it would artificially introduce a
 (downward) bias of agreement for items that are censored in multiple
 lists.
@@ -539,89 +540,89 @@ permutation of the missing items.
 
 
 
-\subsection{Comparison to average overlap}
-The average overlap is a measure that is widely used in comparisons of
-two fully observed ranked lists \citep{Fagin2003,Webber2010} and the
-idea behind the average overlap closely resembles the sequential rank
-agreement. In this section we present an extension of the average
-overlap to more that two lists and compare this to sequential rank
-agreement.
+% \subsection{Comparison to average overlap}
+% The average overlap is a measure that is widely used in comparisons of
+% two fully observed ranked lists \citep{Fagin2003,Webber2010} and the
+% idea behind the average overlap closely resembles the sequential rank
+% agreement. In this section we present an extension of the average
+% overlap to more that two lists and compare this to sequential rank
+% agreement.
 
-The overlap among $L$ lists observed until depth $d$ is defined as the
-proportion of items that are found in all $L$ lists compared to the
-possible number of items found in all lists observed until depth $d$:
-\begin{align}
-  O(d) = \frac{| \cap_{l=1}^L \{R_l^{-1}(r); r\leq d \} |}{d}\label{def:overlap}
-\end{align}
-Typically the overlap is only considered for pairwise comparisons
-\citep{Bar-Ilan2006,Boulesteix2009} but formula \ref{def:overlap}
-is easily extended to the situation where $L>2$ as shown above.
+% The overlap among $L$ lists observed until depth $d$ is defined as the
+% proportion of items that are found in all $L$ lists compared to the
+% possible number of items found in all lists observed until depth $d$:
+% \begin{align}
+%   O(d) = \frac{| \cap_{l=1}^L \{R_l^{-1}(r); r\leq d \} |}{d}\label{def:overlap}
+% \end{align}
+% Typically the overlap is only considered for pairwise comparisons
+% \citep{Bar-Ilan2006,Boulesteix2009} but formula \ref{def:overlap}
+% is easily extended to the situation where $L>2$ as shown above.
 
-The average overlap at depth $d$ is defined as the average of the
-overlaps until depth $d$,
-\begin{equation}
-AO(d) = \frac1d\sum_{i=1}^d O(d).
-\end{equation}
-This definition directly ensures that further emphasis is put on items
-in the top of the lists since their item specific overlap contributes
-to the calculation of average overlap at higher depths.
+% The average overlap at depth $d$ is defined as the average of the
+% overlaps until depth $d$,
+% \begin{equation}
+% AO(d) = \frac1d\sum_{i=1}^d O(d).
+% \end{equation}
+% This definition directly ensures that further emphasis is put on items
+% in the top of the lists since their item specific overlap contributes
+% to the calculation of average overlap at higher depths.
 
-There are three main drawbacks of the average overlap method: First it
-is highly sensitive to single items in the top of one the lists.  The
-average overlap profile may change dramatically depending on the
-presence or absence of similar items in the beginning of the
-lists. For example, if all lists have the same item at the top then
-the average overlap attains its maximum at 1, but if just one of the
-lists differ then the overage overlap starts at its minimum of
-0. Secondly, when the number of lists, $L$, is high then it might be
-difficult to obtain a non-zero overlap (and hence a non-zero average
-overlap) at the beginning of the lists because the overlap will be
-zero until an item is present in all $L$ lists. Finally, the average
-overlap has an interpretation in terms of moving averages of
-percentages (of $L$ sets) which is somewhat less intuitive than our
-proposed sequential rank distance.
+% There are three main drawbacks of the average overlap method: First it
+% is highly sensitive to single items in the top of one the lists.  The
+% average overlap profile may change dramatically depending on the
+% presence or absence of similar items in the beginning of the
+% lists. For example, if all lists have the same item at the top then
+% the average overlap attains its maximum at 1, but if just one of the
+% lists differ then the overage overlap starts at its minimum of
+% 0. Secondly, when the number of lists, $L$, is high then it might be
+% difficult to obtain a non-zero overlap (and hence a non-zero average
+% overlap) at the beginning of the lists because the overlap will be
+% zero until an item is present in all $L$ lists. Finally, the average
+% overlap has an interpretation in terms of moving averages of
+% percentages (of $L$ sets) which is somewhat less intuitive than our
+% proposed sequential rank distance.
 
-In the following we compare the average overlap and the sequential
-rank agreement using the analysis of the Golub data
-\citep{Golub1999}. We consider a typical application of the average
-overlap and thus restrict attention to only two gene rankings obtained
-by the $t$ tests and logistic regression. These two marginal modeling
-approaches should result in very similar gene rankings. The first two
-columns of Table~\ref{tab1} show the actual top-10 ranking of the
-predictors.
+% In the following we compare the average overlap and the sequential
+% rank agreement using the analysis of the Golub data
+% \citep{Golub1999}. We consider a typical application of the average
+% overlap and thus restrict attention to only two gene rankings obtained
+% by the $t$ tests and logistic regression. These two marginal modeling
+% approaches should result in very similar gene rankings. The first two
+% columns of Table~\ref{tab1} show the actual top-10 ranking of the
+% predictors.
 
-% chunks 8,9
+% % chunks 8,9
 
-\begin{figure}[htbp]
-\begin{center}
-\includegraphics[width=.49\textwidth]{paper-fig-ao1}
-\includegraphics[width=.49\textwidth]{paper-fig-ao2}
-\end{center}
- \caption{Average overlap (left figure) and sequential rank agreement
- (right figure) for comparing two different analysis methods
- (marginal $t$ test and logistic regression)
-    applied to the Golub data. The black lines are based on the full
-    set of predictors while the red lines have the two highest
-    associated predictors removed
-    from the data before computing the average overlap and sequential
-    rank agreement.}
-  \label{fig:case1}
- \end{figure}
+% \begin{figure}[htbp]
+% \begin{center}
+% \includegraphics[width=.49\textwidth]{paper-fig-ao1}
+% \includegraphics[width=.49\textwidth]{paper-fig-ao2}
+% \end{center}
+%  \caption{Average overlap (left figure) and sequential rank agreement
+%  (right figure) for comparing two different analysis methods
+%  (marginal $t$ test and logistic regression)
+%     applied to the Golub data. The black lines are based on the full
+%     set of predictors while the red lines have the two highest
+%     associated predictors removed
+%     from the data before computing the average overlap and sequential
+%     rank agreement.}
+%   \label{fig:case1}
+%  \end{figure}
 
- The black lines in Figure~\ref{fig:case1} show the average overlap
- and sequential rank agreement for these data. It is clear from both
- plots that there is perfect agreement towards the top of the ranked
- lists: the average overlap is 1 and the sequential rank agreement is
- zero.  However, if we remove those two items from the data (i.e.,
- gene/predictor 2124 and 896) and redo the analyses then we get
- substantially different curves for the average overlap but not for
- sequential rank agreement (red lines in Figure~\ref{fig:case1}). For
- the sequential rank agreement we get roughly the same estimate of
- agreement from rank 3 as we did from the full dataset. This indicates
- that sequential rank is more robust against small perturbations of
- the data. For the average overlap the curves completely change when
- these two items are removed and which would lead to a different
- conclusion about the agreement among the items from rank 3 downwards.
+%  The black lines in Figure~\ref{fig:case1} show the average overlap
+%  and sequential rank agreement for these data. It is clear from both
+%  plots that there is perfect agreement towards the top of the ranked
+%  lists: the average overlap is 1 and the sequential rank agreement is
+%  zero.  However, if we remove those two items from the data (i.e.,
+%  gene/predictor 2124 and 896) and redo the analyses then we get
+%  substantially different curves for the average overlap but not for
+%  sequential rank agreement (red lines in Figure~\ref{fig:case1}). For
+%  the sequential rank agreement we get roughly the same estimate of
+%  agreement from rank 3 as we did from the full dataset. This indicates
+%  that sequential rank is more robust against small perturbations of
+%  the data. For the average overlap the curves completely change when
+%  these two items are removed and which would lead to a different
+%  conclusion about the agreement among the items from rank 3 downwards.
 
 
 
@@ -636,7 +637,7 @@ in the data.
 
 The first reference hypothesis is
 \begin{eqnarray}
-H_0  & : &  \text{The list rankings correspond to complete randomly}\label{eq:permutationHypothesis}\\
+H_0  & : &  \text{The list rankings correspond to completely randomly}\label{eq:permutationHypothesis}\\
        &  & \text{permuted lists}\nn
 \end{eqnarray}
 which not only assumes that there is no information in the data on
@@ -651,16 +652,20 @@ method/approaches to the same data
 \widetilde H_0 & :&  \text{The list rankings are based on data containing}\\
 & &   \text{no association to the outcome.}
 \end{eqnarray*}
+
+\subsection{Permutation-based inference}
+
 $H_0$ is a quite unrealistic null hypothesis but we can easily obtain
 realizations from that null hypothesis simply by permuting the items
 within each list and then computing the sequential rank agreement for
 the permuted lists. In the fully observed case each experiment
 contains $L$ lists of random permutations of the items in $X$. For the
 censored/partially observed case we first permute the items
-$X_1,\dots,X_P$ and then censor list $l$ at $d_l$. The sequential rank
-agreement curve from the the original lists can then be compared to,
-say, the pointwise 95\% quantiles of the observed rank agreements
-obtained under $H_0$.
+$X_1,\dots,X_P$ and then censor list $l$ at $d_l$ (\ie, each list so
+it has the same number of observed rankings as was observed for list
+$l$ in the original dataset). The sequential rank agreement curve from
+the the original lists can then be compared to, say, the pointwise
+95\% quantiles of the observed rank agreements obtained under $H_0$.
 
 To obtain the distribution under $\widetilde H_0$ the idea is to
 repeat the ranking procedures for unassociated data many times.  Thus,
@@ -703,12 +708,12 @@ how the rankings agree in a situation where there is no relevant
 information available in the data used for creating the rankings.
 
 
-
-\section{Asymptotics}\label{sec:chgpoint}
-In many applications it is of interest to estimate a list depths which
-satisfies a change point criterion. In this section we investigate the
+\subsection{Asymptotic inference of change in agreement}\label{sec:chgpoint}
+In many applications it is of interest to estimate a list depth which
+satisfies a change point criterion since that corresponds to a change
+in agreement among the list ranks. In this section we investigate the
 theoretical properties of our proposed method for this specific
-task. As in \cite{hall:schi:2012} we work with an infinite set
+task. As in \cite{hall:schi:2012} we consider an infinite set
 of lists and study the asymptotic behaviour for $L\to\infty$.
 However, we do not allow the length of the lists to change with $L$
 because in most applications the lengths of the lists are fixed.
@@ -733,7 +738,7 @@ stated in Theorem \ref{thm:consistency}.
 % measure $Q$.
 
 \begin{theorem}
-  Assume that $\{R_l(X)\}_{l=1}^L$ are independent draws from the a
+  Assume that $\{R_l(X)\}_{l=1}^L$ are independent draws from a
   probability distribution $Q$ on the set of lists.  Then,
   $\left\|\widehat{\textrm{sra}}_L - \textrm{sra}\right\|_\infty =
   o_P(1)$.
@@ -744,7 +749,7 @@ stated in Theorem \ref{thm:consistency}.
 We now define the parameter of interest. For any given deterministic threshold function $q\colon\, 1,\ldots,P \mapsto \mathbb{R}_{\geq 0}$
 we define the population superlevel set of the sequential rank agreement as
 \begin{align}
-  \mathcal{L}(q) = \left\{d : \textrm{sra}(d) \geq q(d)\right\}
+  \mathcal{L}(q) = \left\{d : \textrm{sra}(d) \geq q(d)\right\}.
 \end{align}
 The values of $q$ could for example be the limits-of-agreement for randomly
 permuted lists as in the null-hypothesis in equation (\ref{eq:permutationHypothesis}).
@@ -758,7 +763,7 @@ is defined as the length of the lists. The empirical superlevel set is similarly
 \begin{align}
  \widehat{\mathcal{L}}_L(\widehat{q}_L) = \left\{d : \widehat{\textrm{sra}}_L(d) \geq \widehat{q}_L(d)\right\}
 \end{align}
-where we allow that the threshold function can depend on the sample size as well. The estimated change-point is therefore
+where we allow the threshold function to depend on the sample size as well. The estimated change-point is therefore
 \begin{align}
   \widehat{d^\ast_L}(\widehat{q}_L) &= 1(|\widehat{\mathcal{L}}_L(\widehat{q}_L)| > 0)\inf \widehat{\mathcal{L}}_L(\widehat{q}_L) + 1(|\widehat{\mathcal{L}}_L(\widehat{q}_L)| = 0)P
 \end{align}
@@ -772,7 +777,9 @@ function $q$.  Then, $\widehat{d^\ast_L}(\widehat{q}_L) \overset{P}{\longrightar
 
 
 
-\mcomment{Elaborate more on how to apply this in practice (finite sample/bootstrap/etc.) and that $q$ is similar to LoA BA-style?}
+\mcomment{Elaborate more on how to apply this in practice (finite
+  sample/bootstrap/etc.) and that $q$ is similar to LoA BA-style? Show
+some result althrough }
 
 
 
@@ -1193,7 +1200,7 @@ have that
 \end{align}
 where the second factor is $o_P(1)$ uniformly in $d$ by equation
 (\ref{eq:countingConv}). The first factor is $O(1)$ since $N(P;d)>0$
-uniformly in $d$ and because $A(X_p) = O(P^2)$ uniformly in $p$ by the Cauchy-Ekstr{\o}m inequality. It
+uniformly in $d$ and because $A(X_p) = O(P^2)$ uniformly in $p$ by the Cauchy-Schwarz inequality. It
 thus follows that $\left|U_L(d)\right| = o_P(1)$ uniformly in $d$.
 
 Similarly we derive an upper bound for $V_L(d)$ by
