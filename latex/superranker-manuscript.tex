@@ -765,24 +765,35 @@ is defined as the length of the lists. The empirical superlevel set is similarly
 \end{align}
 where we allow the threshold function to depend on the sample size as well. The estimated change-point is therefore
 \begin{align}
-  \widehat{d^\ast_L}(\widehat{q}_L) &= 1(|\widehat{\mathcal{L}}_L(\widehat{q}_L)| > 0)\inf \widehat{\mathcal{L}}_L(\widehat{q}_L) + 1(|\widehat{\mathcal{L}}_L(\widehat{q}_L)| = 0)P
+  \widehat{d^\ast_L}(\widehat{q}_L) &= 1(|\widehat{\mathcal{L}}_L(\widehat{q}_L)| > 0)\inf \widehat{\mathcal{L}}_L(\widehat{q}_L) + 1(|\widehat{\mathcal{L}}_L(\widehat{q}_L)| = 0)P.
 \end{align}
 
 The consistency of the estimated change-point, $\widehat{d^\ast_L}(\widehat{q}_L)$, follows from Theorem \ref{thm:consistency} by the following corollary. 
-\begin{corollary}
+\begin{corollary}\label{thecor}
 Let $\widehat{q}_L$ be a threshold function such that $\left\|\widehat{q}_L - q\right\|_\infty = o_P(1)$ for some limiting
 function $q$.  Then, $\widehat{d^\ast_L}(\widehat{q}_L) \overset{P}{\longrightarrow} d^\ast(q)$ for $L \rightarrow \infty$.
 \label{cor:consistency}
 \end{corollary}
 
 
+Corollary \ref{thecor} tells us that we can use the a threshold
+function $\widehat{q}_L$ estimated under the null hypothesis as
+discussed in the previous section as a limiting threshold function for
+inferring the depth $d$, where the observed sequential rank agreement
+first crosses the threshold of the null threshold, \ie, the depth
+until which the observed ranked lists are in better agreement than
+expected under the null hypothesis. In that sense the threshold
+function serves the same role as the limits of agreement in method
+comparison studies, except that the threshold funciton is not constant
+but can accommodate the changing nature of the number of items used
+for the computation of the equential rank agreement for a given depth.
+
+In practice we can compute an estimate of the threshold function under
+the null using the permutation approach sketched in the previous
+section which makes it relevant even in small sample settings.
 
 \mcomment{Elaborate more on how to apply this in practice (finite
-  sample/bootstrap/etc.) and that $q$ is similar to LoA BA-style? Show
-some result althrough }
-
-
-
+  sample/bootstrap/etc.) and that $q$ is similar to LoA BA-style?  }
 
 
 \section{Application to ovarian cancer data}
@@ -1111,7 +1122,7 @@ standard deviation is analogous to the approach used for agreement in
 method comparison studies so we have used that.
 
 In conclusion we have introduced a method for evaluation of ranked
-(censored) lists that can be easily interpreted and that can be
+(partial/censored) lists that can be easily interpreted and that can be
 applied to a large number of situations.  The method presented here
 can be adapted further by using it to compare and classify statistical
 analysis methods that agree on the rankings they provide or by using
