@@ -160,18 +160,18 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
     # Special version of sample needed
     resample <- function(x, ...) x[sample.int(length(x), ...)]
     tmpres <- sapply(1:B, function(b) {
-                         obj.b <- lapply(1:nlists,function(j){
-                                             list <- object[[j]]
-                                             if (nmiss[[j]]>0){
-                                                 list[list==0] <- resample(missing.items[[j]])
-                                             }
-                                             list
-                                         })
-                         ## bind lists
-                         rankmat <- do.call("cbind",obj.b)
-                         res <- sracppfull(rankmat, type=itype)
-                         res
-                     })
+        obj.b <- lapply(1:nlists,function(j){
+            list <- object[[j]]
+            if (nmiss[[j]]>0){
+                list[list==0] <- resample(missing.items[[j]])
+            }
+            list
+        })
+        ## bind lists
+        rankmat <- do.call("cbind",obj.b)
+        res <- sracppfull(rankmat, type=itype)
+        res
+    })
     if (itype==0) {
         agreement <- sqrt(rowMeans(tmpres))
     } else {
@@ -188,25 +188,27 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
 
 #' Simulate sequential rank agreement for randomized unrelated lists
 #'
-#' Simulate sequential rank agreement from completely uninformative lists (ie., raw permutations of items) and compute the corresponding sequential rank agreement curve.
-#' The number of lists, items and amount of censoring is identical to the input object.
+#' Simulate sequential rank agreement from completely uninformative lists (ie., raw permutations of items) and compute the corresponding sequential rank agreement curves.
+#' The following attributes are copied from the input object: number of lists, number of items and amount of censoring.
 #'
 #' @param object A matrix or list of vectors representing ranked lists.
-#' @param B An integer giving the number of randomization to sample
+#' @param B An integer giving the number of randomizations to sample
 #'     over in the case of censored observations
-#' @param n the number of sequential rank agreement curves to simulate
+#' @param n Integer: the number of permutation runs. For each permutation run we permute each of the lists in object
+#' and compute corresponding the sequential rank agreement curves 
 #' @param na.strings A vector of character values that represent
 #'     censored observations
 #' @param type The type of measure to use. Either sd (standard
 #'     deviation - the default) or mad (median absolute deviance)
-#' @return A matrix with n columns and the same number of rows as for the input object. Each column contains one simulated sequential
-#'     rank agreement curve from the distri
+#' @return A matrix with n columns and the same number of rows as for the input object. Each column contains one
+#' simulated sequential rank agreement curve from one permutation run.
 #' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
 #' @examples
-#'
+#' # setting with 3 lists
 #' mlist <- matrix(cbind(1:8,c(1,2,3,5,6,7,4,8),c(1,5,3,4,2,8,7,6)),ncol=3)
+#' # compute sequential rank agreement of lists
 #' sra(mlist)
-#'
+#' # compute sequential rank agreement of 5 random permutations
 #' random_list_sra(mlist, n=5)
 #'
 #' @export
@@ -239,12 +241,19 @@ random_list_sra <- function(object, B=1, n=1, na.strings=NULL, type=c("sd", "mad
 
 
 
-#' Smooth quantiles of a matrix of sequential ranked agreements
+#' Smooth quantiles of a matrix of sequential ranked agreements. 
 #'
 #' @param object A matrix
 #' @param confidence the limits to compute
 #' @return A list containing two vectors for the smoothed lower and upper limits
-#' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
+#' @author Claus Ekstrøm <ekstrom@@sund.ku.dk> 
+#' @examples
+#' # setting with 3 lists
+#' mlist <- matrix(cbind(1:8,c(1,2,3,5,6,7,4,8),c(1,5,3,4,2,8,7,6)),ncol=3)
+#' # compute rank agreement of 5 random permutations
+#' null=random_list_sra(mlist,n=15)
+#' # now extract point-wise quantiles according to confidence level
+#' smooth_sra(null)
 #' @export
 smooth_sra <- function(object, confidence=0.95) {
 
@@ -255,19 +264,31 @@ smooth_sra <- function(object, confidence=0.95) {
 
 
 
-#' Compute a Kolmogorov-Smirnoff-like test for Smooth quantiles of a matrix of sequential ranked agreements
+#' Compute a Kolmogorov-Smirnoff-like test for Smooth quantiles of a matrix of sequential rank agreements
 #'
-#' @param object The results from an sra
-#' @param nullobject the limits to compute
-#' @param weights Either a single value or a vector of the same length as the number of item with the weight that should be given to specific depths
+#' @param object An object created with \code{sra}.
+#' @param nullobject An object created with \code{random_list_sra}.
+#' @param weights Either a single value or a vector of the same length as the number of item with the weight that should be given to specific depths.
 #' @return A single value corresponding to the p-value
 #' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
+#' @examples
+#' # setting with 3 lists
+#' mlist <- matrix(cbind(1:8,c(1,2,3,5,6,7,4,8),c(1,5,3,4,2,8,7,6)),ncol=3)
+#' # compute sequential rank agreements
+#' x=sra(mlist)
+#' # compute rank agreement of 5 random permutations
+#' null=random_list_sra(mlist,n=15)
+#' # now extract point-wise quantiles according to confidence level
+#' test_sra(x,null)
+#' # compare to when we use the result of the first permutation run
+#' test_sra(null[,1],null[,-1])
+#' 
 #' @export
 test_sra <- function(object, nullobject, weights=1) {
     ## Sanity checks
     if (! (length(weights) %in% c(1, length(object))))
         stop("the vector of weights must have the same length as the number of items")
-
+    
     ## Test statistic
     T <- max(weights*abs(object - apply(nullobject, 1, mean)))
 

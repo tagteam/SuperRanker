@@ -12,3 +12,14 @@ overlap <- function(rankMat) {
     .Call('SuperRanker_overlap', PACKAGE = 'SuperRanker', rankMat)
 }
 
+#' Compute the sequential rank agreement between k ranked lists
+#' 
+#' @description Computes the sequential rank agreement (number of items present in all k lists divided by the current rank) for each rank in the k lists
+#' @param rankMat A matrix with k columns corresponding to the k ranked lists. Elements of each column are integers between 1 and the length of the lists
+#' @param type The type of distance measure to use: 0 (the default) is the variance while 1 is MAD (mean absolute deviation)
+#' @return A vector of the same length as the rows in rankMat containing the sequential rank agreement between the lists for each depth (squared for type=0)
+#' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
+sracppfull <- function(rankMat, type = 0L) {
+    .Call('SuperRanker_sracppfull', PACKAGE = 'SuperRanker', rankMat, type)
+}
+

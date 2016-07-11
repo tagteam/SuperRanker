@@ -2,7 +2,7 @@
 % Please edit documentation in R/sra.R
 \name{smooth_sra}
 \alias{smooth_sra}
-\title{Smooth quantiles of a matrix of sequential ranked agreements}
+\title{Smooth quantiles of a matrix of sequential ranked agreements.}
 \usage{
 smooth_sra(object, confidence = 0.95)
 }
@@ -15,7 +15,15 @@ smooth_sra(object, confidence = 0.95)
 A list containing two vectors for the smoothed lower and upper limits
 }
 \description{
-Smooth quantiles of a matrix of sequential ranked agreements
+Smooth quantiles of a matrix of sequential ranked agreements.
+}
+\examples{
+# setting with 3 lists
+mlist <- matrix(cbind(1:8,c(1,2,3,5,6,7,4,8),c(1,5,3,4,2,8,7,6)),ncol=3)
+# compute rank agreement of 5 random permutations
+null=random_list_sra(mlist,n=15)
+# now extract point-wise quantiles according to confidence level
+smooth_sra(null)
 }
 \author{
 Claus Ekstrøm <ekstrom@sund.ku.dk>

@@ -10,10 +10,11 @@ random_list_sra(object, B = 1, n = 1, na.strings = NULL, type = c("sd",
 \arguments{
 \item{object}{A matrix or list of vectors representing ranked lists.}
 
-\item{B}{An integer giving the number of randomization to sample
+\item{B}{An integer giving the number of randomizations to sample
 over in the case of censored observations}
 
-\item{n}{the number of sequential rank agreement curves to simulate}
+\item{n}{Integer: the number of permutation runs. For each permutation run we permute each of the lists in object
+and compute corresponding the sequential rank agreement curves}
 
 \item{na.strings}{A vector of character values that represent
 censored observations}
@@ -22,18 +23,19 @@ censored observations}
 deviation - the default) or mad (median absolute deviance)}
 }
 \value{
-A matrix with n columns and the same number of rows as for the input object. Each column contains one simulated sequential
-    rank agreement curve from the distri
+A matrix with n columns and the same number of rows as for the input object. Each column contains one
+simulated sequential rank agreement curve from one permutation run.
 }
 \description{
-Simulate sequential rank agreement from completely uninformative lists (ie., raw permutations of items) and compute the corresponding sequential rank agreement curve.
-The number of lists, items and amount of censoring is identical to the input object.
+Simulate sequential rank agreement from completely uninformative lists (ie., raw permutations of items) and compute the corresponding sequential rank agreement curves.
+The following attributes are copied from the input object: number of lists, number of items and amount of censoring.
 }
 \examples{
-
+# setting with 3 lists
 mlist <- matrix(cbind(1:8,c(1,2,3,5,6,7,4,8),c(1,5,3,4,2,8,7,6)),ncol=3)
+# compute sequential rank agreement of lists
 sra(mlist)
-
+# compute sequential rank agreement of 5 random permutations
 random_list_sra(mlist, n=5)
 
 }
