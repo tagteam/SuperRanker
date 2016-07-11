@@ -16,3 +16,15 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// sracppfull
+NumericVector sracppfull(IntegerMatrix rankMat, int type);
+RcppExport SEXP SuperRanker_sracppfull(SEXP rankMatSEXP, SEXP typeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< IntegerMatrix >::type rankMat(rankMatSEXP);
+    Rcpp::traits::input_parameter< int >::type type(typeSEXP);
+    __result = Rcpp::wrap(sracppfull(rankMat, type));
+    return __result;
+END_RCPP
+}

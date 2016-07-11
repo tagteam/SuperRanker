@@ -225,8 +225,8 @@ ranking function to be a random variable. Thus, let
 $R_1(X),\dots,R_L(X)$, $L\geq2$, be a sample of $L$ independent
 identically distributed draws from an unknown probability distribution
 function $Q$. One aim is then to test how much $Q$ resembles the
-uniform distribution which assigns probability $1/P!$ to each of
-the $P!$ different possible rankings.
+uniform distribution which assigns probability $1/P!$ to each of the
+$P!$ different possible rankings. 
 
 \begin{table}[tb]
   \caption{Example set of ranked lists. (a) shows the ranked lists of
@@ -285,13 +285,12 @@ Depth  &  $S_d$ \\ \hline
 The agreement of the lists regarding the rank given to an item $X_p$
 can be measured by the variance across the lists
 \begin{align}
-  A(X_p) &= \E_Q\left[\left(R(X_P)-\E_Q R(X_P)\right)^2\right]\\
-   &= \sum_{r=1}^{P!} \left(r(X_P)-\E_Q R(X_P)\right)^2 Q(r),\nn
+  A(X_p) &= \E_Q\left[\left(R(X_p)-\E_Q R(X_p)\right)^2\right]\\
+   &= \sum_{r\in\Pi} \left(r(X_p)-\E_Q R(X_p)\right)^2 Q(r),\nn
 \end{align}
-\textsf{Ikke så vild med notationen her ovenfor}
-where $\E_Q R(X_p)=\sum_{r=1}^{P!} r(X_p)Q(r)$ and $Q$ is a probability mass function
-on the space of all permutations of lists with $P$ elements.
-The empirical counterpart is
+where $\Pi$ is the set of all permutations of $X$, $Q$ is a
+probability mass function on $\Pi$, and
+$\E_Q R(X_p)=\sum_{r\in\Pi} r(X_p)Q(r)$. The empirical counterpart is
 \begin{align}
 \widehat{A}_L(X_p) = \frac{1}{L-1}\sum_{i=1}^L (R_i(X_p) - \overline{R}_L(X_p))^2, \quad \overline{R}_L(X_p) = \frac{1}{L}\sum_{i=1}^L R_i(X_p).\label{eq:empDistance}
 \end{align}
@@ -305,7 +304,7 @@ For an integer $1\le d\le P$ we define the expected set of unique
 items found by merging the first $d$ elements across the possible
 lists:
 \begin{align}
-S(d) &= \left\{X_p; \left(\sum_{r=1}^{P!} 1\left(r(X_p)\le d\right) Q(r)\right) >0\right\}\label{eq:sumset}
+S(d) &= \left\{X_p; \left(\sum_{r\in\Pi} 1\left(r(X_p)\le d\right) Q(r)\right) >0\right\}\label{eq:sumset}
 \end{align}
 where $1(\cdot)$ denotes the indicator function.
 The empirical counterpart is the set of unique items ranked less than or
@@ -739,31 +738,42 @@ stated in Theorem \ref{thm:consistency}.
 
 \begin{theorem}
   Assume that $\{R_l(X)\}_{l=1}^L$ are independent draws from a
-  probability distribution $Q$ on the set of lists.  Then,
+  probability distribution $Q$ on the set of lists $\Pi$. Then,
   $\left\|\widehat{\textrm{sra}}_L - \textrm{sra}\right\|_\infty =
   o_P(1)$.
 \label{thm:consistency}
 \end{theorem}
+\proof See Appendix \ref{sec:appA}.
 
-
-We now define the parameter of interest. For any given deterministic threshold function $q\colon\, 1,\ldots,P \mapsto \mathbb{R}_{\geq 0}$
-we define the population superlevel set of the sequential rank agreement as
+We now define the change point as the first crossing point of the
+sequential rank agreement and a threshold function
+$q\colon\,\{1,\ldots,P\} \mapsto \mathbb{R}_{\geq 0}$. The values of
+$q$ could be a deterministic constant, or in the experimental setting,
+for example, the limits-of-agreement obtained in randomly permuted
+lists corresponding to the null-hypothesis in equation
+(\ref{eq:permutationHypothesis}). We define the superlevel set of the
+sequential rank agreement with respect to $q$ as
 \begin{align}
   \mathcal{L}(q) = \left\{d : \textrm{sra}(d) \geq q(d)\right\}.
 \end{align}
-The values of $q$ could for example be the limits-of-agreement for randomly
-permuted lists as in the null-hypothesis in equation (\ref{eq:permutationHypothesis}).
 A change-point $d^\ast(q)$ in the list agreement is then defined by the position
-\begin{align}
-  d^\ast(q) &= 1\left(|\mathcal{L}(q)| > 0\right)\inf \mathcal{L}(q) + 1\left(|\mathcal{L}(q)| = 0\right)P
-\end{align}
-corresponding to the first list depth where the sequential rank agreement exceeds the threshold 
-if such a position exists. Otherwise, the full list is in agreement according to $q$ and the change-point
-is defined as the length of the lists. The empirical superlevel set is similarly defined as
+\begin{equation}
+  d^\ast(q) =
+  \begin{cases}
+    \inf(\mathcal{L}(q)) & |\mathcal{L}(q)| > 0\\
+  P & |\mathcal{L}(q)| = 0
+  \end{cases}
+\end{equation}
+corresponding to the first list depth where the sequential rank
+agreement exceeds the threshold if such a position exists. Otherwise,
+the full list is in agreement according to $q$ and the change-point is
+set to the length of the lists. The empirical superlevel set is
+similarly defined as
 \begin{align}
  \widehat{\mathcal{L}}_L(\widehat{q}_L) = \left\{d : \widehat{\textrm{sra}}_L(d) \geq \widehat{q}_L(d)\right\}
 \end{align}
-where we allow the threshold function to depend on the sample size as well. The estimated change-point is therefore
+where we allow the threshold function to depend on the sample size as
+well. The estimated change-point is therefore
 \begin{align}
   \widehat{d^\ast_L}(\widehat{q}_L) &= 1(|\widehat{\mathcal{L}}_L(\widehat{q}_L)| > 0)\inf \widehat{\mathcal{L}}_L(\widehat{q}_L) + 1(|\widehat{\mathcal{L}}_L(\widehat{q}_L)| = 0)P.
 \end{align}
@@ -774,9 +784,9 @@ Let $\widehat{q}_L$ be a threshold function such that $\left\|\widehat{q}_L - q\
 function $q$.  Then, $\widehat{d^\ast_L}(\widehat{q}_L) \overset{P}{\longrightarrow} d^\ast(q)$ for $L \rightarrow \infty$.
 \label{cor:consistency}
 \end{corollary}
+\proof See Appendix \ref{sec:appB}.
 
-
-Corollary \ref{thecor} tells us that we can use the a threshold
+Corollary \ref{thecor} indicates that we can use the a threshold
 function $\widehat{q}_L$ estimated under the null hypothesis as
 discussed in the previous section as a limiting threshold function for
 inferring the depth $d$, where the observed sequential rank agreement
@@ -792,9 +802,8 @@ In practice we can compute an estimate of the threshold function under
 the null using the permutation approach sketched in the previous
 section which makes it relevant even in small sample settings.
 
-\mcomment{Elaborate more on how to apply this in practice (finite
-  sample/bootstrap/etc.) and that $q$ is similar to LoA BA-style?  }
-
+% \mcomment{Elaborate more on how to apply this in practice (finite
+  % sample/bootstrap/etc.) and that $q$ is similar to LoA BA-style?  }
 
 \section{Application to ovarian cancer data}
 We now consider an application of the sequential rank agreement to two
@@ -1139,23 +1148,11 @@ We will be investigating these extensions further in the future.
 \bibliographystyle{rss}
 \bibliography{paperref}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 \appendix
 
 \newpage
 \section{Proof of Theorem \ref{thm:consistency}}
+\label{sec:appA}
 
 We start by defining the following cadlag function
 \begin{align}
@@ -1229,9 +1226,16 @@ $p$ and $d$. The result then follows by noting that the second factor
 is bounded by $P$ uniformly in $d$. 
 
 \section{Proof of Corollary \ref{cor:consistency}}
-Let $A \triangle B = (A \setminus B) \cup (B \setminus A)$ is the symmetric difference between sets $A$ and $B$. It is then sufficient to show that
-$|\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \mathcal{L}(q)|$ converges to zero in probability as $L \rightarrow \infty$. By the triangle inequality
-we have that
+\label{sec:appB}
+
+Recall that $\mathcal{L}$ is the superlevel set of list positions
+where the sequential rank agreement exceeds the threshold function
+$q$. Let $A \triangle B = (A \setminus B) \cup (B \setminus A)$ is the
+symmetric difference between sets $A$ and $B$. It is then sufficient
+to show that
+$|\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \mathcal{L}(q)|$
+converges to zero in probability as $L \rightarrow \infty$. By the
+triangle inequality we have that
 \begin{align}
  \left|\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \mathcal{L}(q)\right| &= \left|\left(\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \widehat{\mathcal{L}}_L(q)\right) \cup \left(\widehat{\mathcal{L}}_L(q) \triangle \mathcal{L}(q)\right)\right|\label{eq:corSetDiff}\\
    &\leq \left|\widehat{\mathcal{L}}_L(q) \triangle \mathcal{L}(q)\right| + \left|\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \widehat{\mathcal{L}}_L(q)\right|\nn
