@@ -30,7 +30,7 @@
 \DeclareMathOperator{\Var}{Var}
 \DeclareMathOperator{\Cov}{Cov}
 \newcommand{\argmin}{\operatornamewithlimits{arg\,min}}
-
+\newcommand{\plim}{\operatornamewithlimits{plim}}
 
 \usepackage[amsthm,thmmarks]{ntheorem}
 \theoremstyle{plain}
@@ -782,7 +782,7 @@ well. The estimated change-point is therefore
 
 The consistency of the estimated change-point, $\widehat{d^\ast_L}(\widehat{q}_L)$, follows from Theorem \ref{thm:consistency} by the following corollary. 
 \begin{corollary}\label{thecor}
-Let $\widehat{q}_L$ be a threshold function such that $\left\|\widehat{q}_L - q\right\|_\infty = o_P(1)$ for some limiting
+Let $\widehat{q}_L$ be a positive threshold function such that $\left\|\widehat{q}_L - q\right\|_\infty = o_P(1)$ for some limiting
 function $q$.  Then, $\widehat{d^\ast_L}(\widehat{q}_L) \overset{P}{\longrightarrow} d^\ast(q)$ for $L \rightarrow \infty$.
 \label{cor:consistency}
 \begin{proof}
@@ -1178,7 +1178,7 @@ $\{\widehat{N}_L(p;d)\}_{1\leq p \leq P}$ is completely determined by
 the finite set of the jump times of $N(p;d)$. Since
 $\{1(R_l(X_s) \leq d); l=1,\dots, L\}$ consists of independent and
 identically Bernoulli distributed variables with expectation
-$Q(R(X_s) \leq d)$ it follows from the law of large numbers that
+$Q(R(X_s) \leq d)$ and finite variance it follows from the law of large numbers that
 $\widehat{Q}_L(R(X_p) \leq d) \overset{P}{\longrightarrow} Q(R(X_p)
 \leq d)$ for every $p$ and $d$ as $L \rightarrow \infty$. 
 Therefore, we have
@@ -1230,39 +1230,26 @@ in equation (\ref{eq:secondTerm}) is of order $o_P(1)$ uniformly in
 $p$ and $d$. The result then follows by noting that the second factor
 is bounded by $P$ uniformly in $d$. 
 
+
+
+
 \section{Proof of Corollary \ref{cor:consistency}}
 \label{sec:appB}
-
 Recall that $\mathcal{L}$ is the superlevel set of list positions
 where the sequential rank agreement exceeds the threshold function
-$q$. Let $A \triangle B = (A \setminus B) \cup (B \setminus A)$ is the
+$q$. Let $A \triangle B = (A \setminus B) \cup (B \setminus A)$ be the
 symmetric difference between sets $A$ and $B$. It is then sufficient
-to show that
-$|\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \mathcal{L}(q)|$
-converges to zero in probability as $L \rightarrow \infty$. By the
-triangle inequality we have that
+to show that $\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \mathcal{L}(q) \overset{P}{\longrightarrow} \emptyset$
+for $L \rightarrow \infty$ where $\emptyset$ denotes the empty set.
+We have that
 \begin{align}
- \left|\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \mathcal{L}(q)\right| &= \left|\left(\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \widehat{\mathcal{L}}_L(q)\right) \cup \left(\widehat{\mathcal{L}}_L(q) \triangle \mathcal{L}(q)\right)\right|\label{eq:corSetDiff}\\
-   &\leq \left|\widehat{\mathcal{L}}_L(q) \triangle \mathcal{L}(q)\right| + \left|\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \widehat{\mathcal{L}}_L(q)\right|\nn
+  \plim_{L \rightarrow \infty}\left(\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \mathcal{L}(q)\right) &=   \left(\plim_{L \rightarrow \infty}\widehat{\mathcal{L}}_L(\widehat{q}_L)\right) \triangle \mathcal{L}(q)\\
+  &= \left\{d : \plim_{L\rightarrow \infty} \left(\widehat{\textrm{sra}}_L(d) - \widehat{q}_L(d)\right)\geq 0\right\} \triangle \mathcal{L}(q)\nn\\
+  &= \left\{d : \textrm{sra}(d) - q(d) \geq 0\right\}\triangle \mathcal{L}(q)\nn\\
+  &= \mathcal{L}(q)\triangle \mathcal{L}(q)\nn\\
+  &= \emptyset\nn
 \end{align}
-Looking at the first term we have
-\begin{align}
-  \left|\widehat{\mathcal{L}}_L(q) \triangle \mathcal{L}(q)\right| &= \sum_{d=1}^P \left|1\left(\widehat{\textrm{sra}}_L(d) \geq q(d)\right)  - 1\left(\textrm{sra}(d)  \geq q(d)\right)\right|\\
-   &=
-\end{align}
-Similarly we have
-\begin{align}
-\left|\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \widehat{\mathcal{L}}_L(q)\right| &= \sum_{d=1}^P \left|1\left(\widehat{\textrm{sra}}_L(d) \geq \widehat{q}_L(d)\right) - 1\left(\widehat{\textrm{sra}}_L(d) \geq q(d)\right)\right|\\
-   &=
-\end{align}
-
-%We have that 	
-%\begin{align}
-%  |\widehat{d^\ast_L}(\widehat{q}_L) - d^\ast(q)| &\leq  |\widehat{d^\ast_L}(q)  - d^\ast(q)| + |\widehat{d^\ast_L}(\widehat{q}_L)  - \widehat{d^\ast_L}(q_L)|
-%\end{align}
-%The first term is of order $o_P(1)$ by the continuous mapping theorem if a) $|\inf \widehat{\mathcal{L}}_L(q) - \inf  \mathcal{L}(q)| = o_P(1)$ and b) $|1(|\widehat{\mathcal{L}}_L(q)| = 0) - 1(|\mathcal{L}(q)| = 0)| = o_P(1)$ since $1(|\mathcal{L}(q)| > 0) = 1 - 1(|\mathcal{L}(q)| = 0)$. Similarly, the second term is of order $o_P(1)$ by the same reasoning if c) $|\inf \widehat{\mathcal{L}}_L(\widehat{q}_L) - \inf \widehat{\mathcal{L}}_L(q)| = o_P(1)$ and d) $|1(|\widehat{\mathcal{L}}_L(\widehat{q}_L)| = 0) - 1(|\widehat{\mathcal{L}}_L(q)| = 0)| = o_P(1)$.
-
-This completes the proof.
+as a consequence of Theorem \ref{thm:consistency}, the assumption that $\left\|\widehat{q}_L - q\right\|_\infty = o_P(1)$ and the continuous mapping theorem. This completes the proof.
 
 \end{document}
 
