@@ -26,6 +26,7 @@
 ##' })
 ##' c(mean(aa),sd(aa))
 ##'
+##' @importFrom graphics plot axis lines
 #' @export
 ##' @author Thomas A. Gerds <tag@@biostat.ku.dk>
 plot.sra <- function(x, xlim, ylim, xlab="List depth", ylab="Sequential rank agreement", add=FALSE, ...){
