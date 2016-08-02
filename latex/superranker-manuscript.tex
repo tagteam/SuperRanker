@@ -84,7 +84,7 @@
   censored. The approach can identify change-points in the agreement
   of the lists, and the sequential changes of agreement as a function
   of the depth of the lists can be compared graphically to a
-  permutation based reference set or evaluated using asymptotic
+  permutation based reference set or evaluated using analytical asymptotic
   results.  The usefulness of these tools are illustrated using gene
   rankings, and using data from two Danish ovarian cancer studies
   where we assess the within and between agreement of different
@@ -132,8 +132,7 @@ of \citet{Bar-Ilan2006} where the reciprocal rank differences are used
 to calculate the similarity measure.
 
 
-
-Other more recent approaches consider the intersection of lists as the basis
+Other recent approaches consider the intersection of lists as the basis
 for a similarity measure. However, simple intersection also places
 equal weights on all depths of the list and therefore \citet{Fagin2003} and
 \citet{Webber2010} proposed weighted intersections which put more
@@ -173,15 +172,15 @@ define agreement based on the sequence of ranks from the first $d$
 items in each list. As agreement metric we adapt the limits of
 agreement known from agreement between quantitative variables
 \citep{alt:bland:1983,Carstensen2010} but any measure for agreement
-could be essentially be used. Our proposed approach allows us to
-compare more than two lists simultaneously, it provides a dynamic
-measure of agreement as a function of the depth in the lists, places
-high weight on items at the top of the list, accommodates partially
+could essentially be used. Our proposed approach allows us to
+compare multiple lists simultaneously, it provides a dynamic
+measure of agreement as a function of the depth in the lists, it places
+higher weight on items at the top of the list, it accommodates partially
 observed lists of varying lengths, and has a natural interpretation
 that directly relates to the ranks.  Graphical illustration of
 sequential rank agreement potentially allows us to infer a
 change-point, i.e., a list depth where a substantial change in the agreement of
-the lists occur but we also provide randomization-based graphical
+the lists occur but we also provide asymptotical and randomization-based graphical
 tools to compare the observed rank agreement to the expected agreement
 found in non-informative data.  In this sense our approach is a
 combination and generalization of some of the ideas of
@@ -198,7 +197,7 @@ present but just a gradual decline in agreement.
 
 The manuscript is organized as follows: In the next section we define
 sequential rank agreement for multiple ranked lists and discuss how to
-handle incomplete/censored/partial lists. In section 3 we present and
+handle incomplete lists. In section 3 we present and
 discuss approaches to evaluate the results obtained from sequential
 rank agreement. Finally we apply the sequential rank agreement to two
 Danish ovarian cancer studies before we discuss the findings along
@@ -282,7 +281,7 @@ Depth  &  $S_d$ \\ \hline
 \label{tab:example}
 \end{table}
 
-The agreement of the lists regarding the rank given to an item $X_p$
+The agreement among the lists regarding the rank given to an item $X_p$
 can be measured by the variance across the lists
 \begin{align}
   A(X_p) &= \E_Q\left[\left(R(X_p)-\E_Q R(X_p)\right)^2\right]\\
@@ -328,7 +327,7 @@ The empirical counterpart is equivalently given by
 Values of \textrm{sra} close to zero suggests that the lists agree on
 the rankings while larger values suggest disagreement.  Just like in
 method comparison studies we prefer smaller limits of agreement
-because that means that the differences between the methods is
+because that means that the differences between the rankings is
 small. If the ranked lists are identical then the value of sequential
 rank agreement will be zero for all depths $d$.  The sequential rank
 agreement is equivalent to the pooled variance of the items found in
