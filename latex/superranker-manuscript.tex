@@ -81,7 +81,7 @@
   standard deviation of the ranks to define a measure of agreement
   that both provides an intuitive interpretation and can be applied to
   any number of lists even if some or all are incomplete or
-  censored. The approach can identify change-points in the agreement
+  censored. The approach can identify changepoints in the agreement
   of the lists, and the sequential changes of agreement as a function
   of the depth of the lists can be compared graphically to a
   permutation based reference set or evaluated using analytical asymptotic
@@ -179,7 +179,7 @@ higher weight on items at the top of the list, it accommodates partially
 observed lists of varying lengths, and has a natural interpretation
 that directly relates to the ranks.  Graphical illustration of
 sequential rank agreement potentially allows us to infer a
-change-point, i.e., a list depth where a substantial change in the agreement of
+changepoint, i.e., a list depth where a substantial change in the agreement of
 the lists occur but we also provide asymptotical and randomization-based graphical
 tools to compare the observed rank agreement to the expected agreement
 found in non-informative data.  In this sense our approach is a
@@ -342,8 +342,8 @@ to the pooled standard deviation.
 \subsection{Agreement among fully observed lists}
 \label{sec:amfol}
 
-The simplest case occurs when all $L$ lists are fully observed, \ie,
-we have observed the rank of all $P$ items for all $L$ lists. Fully
+The simplest case occurs when all $L$ lists are fully observed, \ie, when
+we observe the rank of all $P$ items for all $L$ lists. Fully
 observed ranked lists are common and arise, for example, when
 different statistical analysis methods are applied to a single dataset
 to produce lists of predictors ranked according to their importance,
@@ -351,7 +351,7 @@ or if the same analysis method is applied to data from different
 populations.
 
 With fully observed lists we can plot the sequential rank agreement
-\eqref{def:sra} as a function of depth $d$. An example is seen in top
+\eqref{def:sra} as a function of depth $d$. An example is seen in the top
 panels of Figure~\ref{fig:example1} where four analysis methods were
 used to rank 3051 gene expression values measured on 38 tumor mRNA
 samples in order to classify between acute lymphoblastic leukemia
@@ -373,8 +373,8 @@ The sequential rank agreement curve plotted in Figure~\ref{fig:example1}
 roughly shows how many ranks apart we on average expect the genes found in the
 top $d$ part of the lists to be for each depth $d$.  It can be seen
 that the sequential rank agreement limits are better towards the top
-of the lists (smaller values on the $y$ axis) corresponding to
-\emph{better} agreement than towards the tails of the lists. It is clear
+of the lists (smaller values on the $y$ axis corresponds to
+\emph{better} agreement) than towards the tails of the lists. It is clear
 from the curve in Figure~\ref{fig:example1} that there is a
 substantial drop in agreement even after the first depth. Thus, if we
 were to restrict attention to a small set of predictors then we would
@@ -389,7 +389,7 @@ focus on predictors 2124, 829, and 378 as seen in Table~\ref{tab1}.
 \label{tab1}
 \begin{tabular}{rrrrr}
   \hline
-Ranking & T & LogReg & ElasticNet & MIC \\ 
+Ranking & Welsh's $t$ & LogReg & ElasticNet & MIC \\ 
   \hline
 1 & 2124 & 2124 & 829 & 378 \\ 
   2 & 896 & 896 & 2124 & 829 \\ 
@@ -415,11 +415,11 @@ Ranking & T & LogReg & ElasticNet & MIC \\
  \includegraphics[width=.49\textwidth]{paper-fig2b}
  \end{center}
  \caption{Left panels: Sequential rank agreement for 4 different
-   analysis methods applied to the 3051 genes in the Golub data /black
+   analysis methods applied to the 3051 genes in the Golub data (black
    line). Right
    panels: Corresponding sequential rank agreement for the same data
    but where only the top 20 ranked items are available and the rest
-   of the items have been censored. The blue and
+   of the items have been censored in each list. The blue and
    red areas correspond to the independent and randomized reference
    hypothesis areas, respectively. The bottom plots are identical to
    the corresponding top plots but have been zoomed in on the first
@@ -427,11 +427,12 @@ Ranking & T & LogReg & ElasticNet & MIC \\
  \label{fig:example1}
  \end{figure}
 
- If the lists agree on all items then the sequential rank agreement is
- zero for all depths. Generally, if there are changes in the level of
+% If the lists agree on all items then the sequential rank agreement is
+% zero for all depths. 
+ Generally, if there are changes in the level of
  rank agreement then this suggests that there are sets of items that
  are ranked similarly in all lists and other sets of items that have
- been assigned vastly different ranks in the lists. In gene
+ been assigned vastly different ranks in the lists. For example, in gene
  association studies we generally expect the agreement among the lists
  to be better towards the top of the lists and worse towards the end
  of the lists. In this case the sequential rank agreement curve will
@@ -446,7 +447,7 @@ the items. For example, penalized regression based on the Lasso
 provides a sparse set of predictors that have non-zero
 coefficients. There is no obvious ordering of the set of predictors
 whose coefficient has been shrunk to zero and thus we end up with a
-partial ordering. Incomplete lists also occur when the analyst decides
+partial ordering. Incomplete lists also occur if the analyst decides
 to censor all lists at depth $d$ (\ie, top $d$ lists) such that the
 measurement of agreement is restricted to the first $d$ elements of
 each list, or when the analyst only wants to consider the ranking of
@@ -471,7 +472,7 @@ predictors in the presence of censored lists because the exact rank
 for some items will be unknown. Also, recall that the rankings within
 a single list are not independent since each rank must appear exactly
 once in each list. Thus, we cannot simply assign the same number
-(e.g., the mean of the unassigned ranks) to the censored items since
+(\eg, the mean of the unassigned ranks) to the censored items since
 that would result in \emph{less} variation of the ranks and hence less
 variation of the agreement, and it would artificially introduce a
 (downward) bias of agreement for items that are censored in multiple
@@ -531,7 +532,7 @@ completely unrelated (in which case the sequential rank agreement will
 be constant at a high level) or if the lists mostly agree on the
 ranking (in which case the sequential rank agreement will also be
 constant but at a low level). For partially ranked lists we also
-expect a change-point around the depth where the lists are
+expect a changepoint around the depth where the lists are
 censored. This is an artefact stemming from the fact that we assume
 that the remainder of the lists can be replaced by a simple
 permutation of the missing items.
@@ -647,7 +648,7 @@ the methods by only requiring that there is no information in the
 ranking but that the rankings are all based on applying the
 method/approaches to the same data
 \begin{eqnarray*}
-\widetilde H_0 & :&  \text{The list rankings are based on data containing}\\
+\widetilde H_0 & :&  \text{The list rankings are based on data that contain}\\
 & &   \text{no association to the outcome.}
 \end{eqnarray*}
 
@@ -667,12 +668,12 @@ the the original lists can then be compared to, say, the pointwise
 
 To obtain the distribution under $\widetilde H_0$ the idea is to
 repeat the ranking procedures for unassociated data many times.  Thus,
-we first permute the outcome variable of the data set on which the
+we first permute the outcome variable of the dataset on which the
 rankings are based. This removes any association between the predictor
 variables and the outcome. Then we apply the methods to the permuted
-data set to generate $L$ new rankings and subsequently compute the
+dataset to generate $L$ new rankings and subsequently compute the
 sequential rank agreement. Note that we only permute the outcomes and
-preserve the structure of the candidate predictors. The randomization
+preserve the structure of the candidate predictors. This randomization
 approach requires that we have the original data available and as such
 it may not be possible to evaluate $\widetilde H_0$ in all situations.
 
@@ -694,21 +695,21 @@ logistic regression, elastic net, and MIC) generally tend to identify
 associations. The two bottom panels in Figure~\ref{fig:example1} also
 indicate that the observed sequential rank agreement (the black line)
 is better than what would be expected by chance for data that contain
-no information since it lies below the reference areas. However, the
-censored data also suggests that there may be at most 1 or 2 ranked
-items towards the top of the lists that yield a result better than
-what would be expected (the bottom-right plot).
+no information since it lies below the reference areas. The censored
+data also suggests that there may be at most 1 or 2 ranked items
+towards the top of the lists that yield a result better than what
+would be expected (the bottom-right plot).
 
 It is important to stress that neither $H_0$ nor $\widetilde H_0$ are
 related to questions regarding the association between the outcome and
-the predictors in the data set. Both hypotheses are purely considering
+the predictors in the dataset. Both hypotheses are purely considering
 how the rankings agree in a situation where there is no relevant
 information available in the data used for creating the rankings.
 
 
 \subsection{Asymptotic inference of change in agreement}\label{sec:chgpoint}
 In many applications it is of interest to estimate a list depth which
-satisfies a change point criterion since that corresponds to a change
+satisfies a changepoint criterion since that corresponds to a change
 in agreement among the list ranks. In this section we investigate the
 theoretical properties of our proposed method for this specific
 task. As in \cite{hall:schi:2012} we consider an infinite set
@@ -746,10 +747,10 @@ See Appendix \ref{sec:appA}.
 \end{proof}
 \end{theorem}
 
-We now define the change point as the first crossing point of the
+We now define the changepoint as the first crossing point of the
 sequential rank agreement and a threshold function
 $q\colon\,\{1,\ldots,P\} \mapsto \mathbb{R}_{\geq 0}$. The values of
-$q$ could be a deterministic constant, or in the experimental setting,
+$q$ could be a deterministic constant or, % in the experimental setting,
 for example, the limits-of-agreement obtained in randomly permuted
 lists corresponding to the null-hypothesis in equation
 (\ref{eq:permutationHypothesis}). We define the superlevel set of the
@@ -757,7 +758,7 @@ sequential rank agreement with respect to $q$ as
 \begin{align}
   \mathcal{L}(q) = \left\{d : \textrm{sra}(d) \geq q(d)\right\}.
 \end{align}
-A change-point $d^\ast(q)$ in the list agreement is then defined by the position
+A changepoint $d^\ast(q)$ in the list agreement is then defined by the position
 \begin{equation}
   d^\ast(q) =
   \begin{cases}
@@ -767,19 +768,19 @@ A change-point $d^\ast(q)$ in the list agreement is then defined by the position
 \end{equation}
 corresponding to the first list depth where the sequential rank
 agreement exceeds the threshold if such a position exists. Otherwise,
-the full list is in agreement according to $q$ and the change-point is
-set to the length of the lists. The empirical superlevel set is
+the full list is in agreement according to $q$ and the changepoint is
+set to the full length of the lists. The empirical superlevel set is
 similarly defined as
 \begin{align}
  \widehat{\mathcal{L}}_L(\widehat{q}_L) = \left\{d : \widehat{\textrm{sra}}_L(d) \geq \widehat{q}_L(d)\right\}
 \end{align}
 where we allow the threshold function to depend on the sample size as
-well. The estimated change-point is therefore
+well. The estimated changepoint is therefore
 \begin{align}
   \widehat{d^\ast_L}(\widehat{q}_L) &= 1(|\widehat{\mathcal{L}}_L(\widehat{q}_L)| > 0)\inf \widehat{\mathcal{L}}_L(\widehat{q}_L) + 1(|\widehat{\mathcal{L}}_L(\widehat{q}_L)| = 0)P.
 \end{align}
 
-The consistency of the estimated change-point, $\widehat{d^\ast_L}(\widehat{q}_L)$, follows from Theorem \ref{thm:consistency} by the following corollary. 
+The consistency of the estimated changepoint, $\widehat{d^\ast_L}(\widehat{q}_L)$, follows from Theorem \ref{thm:consistency} by the following corollary. 
 \begin{corollary}\label{thecor}
 Let $\widehat{q}_L$ be a positive threshold function such that $\left\|\widehat{q}_L - q\right\|_\infty = o_P(1)$ for some limiting
 function $q$.  Then, $\widehat{d^\ast_L}(\widehat{q}_L) \overset{P}{\longrightarrow} d^\ast(q)$ for $L \rightarrow \infty$.
@@ -811,10 +812,10 @@ section which makes it relevant even in small sample settings.
 
 \section{Application to ovarian cancer data}
 We now consider an application of the sequential rank agreement to two
-data sets consisting of MALDI-TOF (Matrix-Assisted Laser
+datasets consisting of MALDI-TOF (Matrix-Assisted Laser
 Desorption/Ionization Time Of Flight) mass spectra obtained from blood
 samples from patients with either benign or malignant ovarian
-tumors. The data sets are sub-samples of the Danish MALOVA and DACOVA
+tumors. The datasets are sub-samples of the Danish MALOVA and DACOVA
 study populations.
 
 The MALOVA study is a multidisciplinary Danish study on ovarian cancer
@@ -841,9 +842,9 @@ spectra individually by first removing the slow-varying baseline intensity
 with the SNIP algorithm \citep{ryan1988snip} followed by a
 normalization with respect to the total ion count. Finally, we standardize
 the $5000$ predictors to have column-wise zero mean and unit variance in
-each data set.
+each dataset.
 
-We use the two data sets to illustrate how the sequential rank
+We use the two datasets to illustrate how the sequential rank
 agreement can be applied in two different scenarios. In the first
 scenario we assess the agreement of four different statistical
 classification methods in how they rank the predictors according to
@@ -927,7 +928,7 @@ that they start low, indicating good agreement, followed by an
 increase until they approximately become constant. This has the
 interpretation that the agreement across the different sub-samples is
 higher in the top as compared to the tail of the lists for all these
-classification methods. The change-points where the curves become
+classification methods. The changepoints where the curves become
 approximately constant are the list depths where the ranks of the
 remaining items become close to uniformly random.
 
@@ -938,7 +939,7 @@ reason behind this behavior is rather subtle. Looking at the
 distribution of the absolute value of the regression coefficients we see that a large
 proportion of them are numerically very close to zero and have almost
 equal absolute value. This is a general feature of the Ridge models in
-this data set and seen for all the 1000 trained models.
+this dataset and seen for all the 1000 trained models.
 This implies that when predictors are ranked according to the
 magnitude of their coefficients, their actual order becomes more
 uncertain and more close to a random permutation. This problem can be
@@ -971,7 +972,7 @@ the subsequent censoring.
 \subsection{Agreement of individual risk predictions}
 \label{sec:airp}
 To assess the stability of the individual risk predictions we apply
-the predictors from the DACOVA data set to each of the models. The
+the predictors from the DACOVA dataset to each of the models. The
 predicted probabilities are then ranked in decreasing order such that the
 patients with the highest risk of a malignant tumor appears in the top
 of the list. Figure \ref{fig:app1} (left) shows the sequential rank
@@ -1093,7 +1094,7 @@ agreement. Two simple extensions can be pursued to make more formal
 uniform tests: one would be to use a Kolmogorov-Smirnov-like test and
 use the largest difference between the variance-weighted sequential
 rank agreement curve and the mean null rank agreement curve as a test
-statistic. Alternatively, a change-point analysis could be made on the
+statistic. Alternatively, a changepoint analysis could be made on the
 sequential rank agreement in order to determine the depths at which
 there are ``jumps'' in the rank agreement. These jumps would
 correspond to depths for which the agreement among the lists was
