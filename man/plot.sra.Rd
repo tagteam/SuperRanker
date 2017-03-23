@@ -49,4 +49,3 @@ c(mean(aa),sd(aa))
 \author{
 Thomas A. Gerds <tag@biostat.ku.dk>
 }
-

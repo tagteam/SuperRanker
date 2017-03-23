@@ -10,7 +10,7 @@
 #' @param na.strings A vector of strings/values that represent missing
 #'     values in addition to NA. Defaults to NULL which means only NA
 #'     are censored values.
-#' @param nitems Claus: please describe this argument
+#' @param nitems The total number of items in the original lists if we only have partial lists available.
 #' @param type The type of measure to use. Either sd (standard
 #'     deviation - the default) or mad (median absolute deviance)
 #' @param ... Arguments passed to methods.
@@ -195,7 +195,7 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
 #' @param B An integer giving the number of randomizations to sample
 #'     over in the case of censored observations
 #' @param n Integer: the number of permutation runs. For each permutation run we permute each of the lists in object
-#' and compute corresponding the sequential rank agreement curves 
+#' and compute corresponding the sequential rank agreement curves
 #' @param na.strings A vector of character values that represent
 #'     censored observations
 #' @param type The type of measure to use. Either sd (standard
@@ -241,12 +241,12 @@ random_list_sra <- function(object, B=1, n=1, na.strings=NULL, type=c("sd", "mad
 
 
 
-#' Smooth quantiles of a matrix of sequential ranked agreements. 
+#' Smooth quantiles of a matrix of sequential ranked agreements.
 #'
 #' @param object A matrix
 #' @param confidence the limits to compute
 #' @return A list containing two vectors for the smoothed lower and upper limits
-#' @author Claus Ekstrøm <ekstrom@@sund.ku.dk> 
+#' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
 #' @examples
 #' # setting with 3 lists
 #' mlist <- matrix(cbind(1:8,c(1,2,3,5,6,7,4,8),c(1,5,3,4,2,8,7,6)),ncol=3)
@@ -282,13 +282,13 @@ smooth_sra <- function(object, confidence=0.95) {
 #' test_sra(x,null)
 #' # compare to when we use the result of the first permutation run
 #' test_sra(null[,1],null[,-1])
-#' 
+#'
 #' @export
 test_sra <- function(object, nullobject, weights=1) {
     ## Sanity checks
     if (! (length(weights) %in% c(1, length(object))))
         stop("the vector of weights must have the same length as the number of items")
-    
+
     ## Test statistic
     T <- max(weights*abs(object - apply(nullobject, 1, mean)))
 

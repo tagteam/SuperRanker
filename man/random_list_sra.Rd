@@ -42,4 +42,3 @@ random_list_sra(mlist, n=5)
 \author{
 Claus Ekstrøm <ekstrom@sund.ku.dk>
 }
-

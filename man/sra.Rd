@@ -3,8 +3,8 @@
 \name{sra}
 \alias{sra}
 \alias{sra.default}
-\alias{sra.list}
 \alias{sra.matrix}
+\alias{sra.list}
 \title{Compute the sequential rank agreement}
 \usage{
 sra(object, B, na.strings, nitems, type, ...)
@@ -31,7 +31,7 @@ over in the case of censored observations}
 values in addition to NA. Defaults to NULL which means only NA
 are censored values.}
 
-\item{nitems}{Claus: please describe this argument}
+\item{nitems}{The total number of items in the original lists if we only have partial lists available.}
 
 \item{type}{The type of measure to use. Either sd (standard
 deviation - the default) or mad (median absolute deviance)}
@@ -76,4 +76,3 @@ sra(Clist,na.strings="z",B=10)
 \author{
 Claus Ekstrøm <ekstrom@sund.ku.dk> and Thomas A Gerds <tag@biostat.ku.dk>
 }
-

@@ -28,4 +28,3 @@ smooth_sra(null)
 \author{
 Claus Ekstrøm <ekstrom@sund.ku.dk>
 }
-

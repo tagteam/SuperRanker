@@ -18,4 +18,3 @@ Computes the overlap (number of items present in all k lists divided by the curr
 \author{
 Claus Ekstrøm <ekstrom@sund.ku.dk>
 }
-

@@ -8,4 +8,3 @@
 \description{
 SuperRanker allows you to estimate the agreement between two or more rankings of the same items.
 }
-
