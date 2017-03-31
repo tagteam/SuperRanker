@@ -197,13 +197,14 @@ present but just a gradual decline in agreement.
 
 The manuscript is organized as follows: In the next section we define
 sequential rank agreement for multiple ranked lists and discuss how to
-handle incomplete lists. In section 3 we present and
-discuss approaches to evaluate the results obtained from sequential
-rank agreement. Finally we apply the sequential rank agreement to two
-Danish ovarian cancer studies before we discuss the findings along
-with possible extensions. The approaches presented in this manuscript
-are available in the R package \texttt{SuperRanker} which can be found
-on CRAN.
+handle incomplete lists. In section 3 we present and discuss
+approaches to evaluate the results obtained from sequential rank
+agreement. Finally we apply the sequential rank agreement to two
+Danish ovarian cancer studies and compare our method to the method of
+\citet{hall:schi:2012} in a small sample simulation study before we
+discuss the findings along with possible extensions. The approaches
+presented in this manuscript are available in the R package
+\texttt{SuperRanker} which can be found on CRAN.
 % chunk 1
 
 
@@ -1050,7 +1051,102 @@ random coin toss with respect to classifying the DACOVA patients.
 In practice both concerns are of importance.
 
 
+\section{Simulation study --- comparison of list agreements}
 
+We conducted a simulation study to investigate the small sample list
+depth agreement properties for our proposed method and to compare with
+the method propsed by \citet{hall:schi:2012}. For each of the
+simulations we assumed an set of 1000 predictors and a total of 400
+observations. The predictors were independent and drawn from a
+standard Gaussian distribution. The outcome was also drawn from a
+Gaussian distribution with variance 1 but with a mean that depends
+additively on the first 15 predictors, i.e.,
+
+$$y_i = \sum_{j=1}^{15}x_{ij} + \epsilon_i,$$
+
+where $y_i$ is the $i$th response, and $x_{ij}$ is the $j$th predictor
+for the $i$th measurement, and $\epsilon_i\sim N(0, 1)$. We produce
+$L$ ranked lists from a simulated dataset by first generating
+non-parametric bootstrap copies of the data, and then for each of the
+$L$ bootstrap sample ranking the 1000 predictors according to the size
+of their marginal $t$ test statistics. Thus, the simulation results
+compare lists that are analysed with the same technique on slightly
+different versions of the same data.
+
+In the simulations we focused on two main cases:
+\begin{enumerate}
+\item The choice of threshold, $q$. Throughout the simulations we
+  assume a constant, prespecified threshold function, $q_L$, and try
+  different values for the constant. The approach by
+  \citet{hall:schi:2012} uses a window size parameter, $K$, to
+  represent the maximum difference in rankings before they consider an
+  item in two lists to be in agreement.  Because the standard
+  deviation --- which is used in the sequential rank agreement
+  definition of $\hat{A}_L$--- squares its differences, it tends to
+  give more weight to larger rank differences and less weight to
+  smaller differences compared to the mean absolute difference.  To
+  ease comparison between the sequential rank agreement and the
+  \citet{hall:schi:2012} approach we would like to use the same
+  threshold for both methods, and in order to do this we use the
+  median absolute deviance throughout the simulations in lieu of the
+  pooled standard deviation.
+ \item The impact of the number of available lists, $L$. Asymptotic
+   results are available for both methods as the number of lists
+   increases, so this will investigate how much the results might
+   change as $L$ increases. For a fixed constant threshold of $q_L=5$
+   we increase the number of available lists to investigate the
+   sensitivity of the results to $L$.
+ \end{enumerate}
+
+ For all combinations we used 1000 simulations to see the distribution
+ of the estimated depth of agreement and we also computed the average
+ number of different predictors found for the given depth.
+
+ The results for varying threshold is shown in the left-hand plot of
+ Figure~\ref{fig:example99}, where the threshold/window size is varied
+ from 3 to 10 for a fixed number of lists $L=8$. The double histograms
+ show the distribution of the estimated depth of agreement, while the
+ bold numbers show the average number of unique predictors found given
+ the estimated depth of agreement. We see that the sequential rank
+ agrement method results in a substantially lower depth of agreement
+ than the \citet{hall:schi:2012} method (denoted topK) and also that
+ the average number of unique predictors is markedly smaller. Even
+ larger differences are found if we used the Euclidian distance
+ instead of the median absolute distance for the sequential rank
+ agreement (output not shown).  Not surprisingly, the depth of
+ agreement increases when the acceptable threshold for
+ agreement/window increases.
+
+
+ \begin{figure}[htbp]
+   \begin{center}
+ \includegraphics[width=.49\textwidth]{Ksim.pdf}
+ \includegraphics[width=.49\textwidth]{Lsim}
+ \end{center}
+ \caption{Left panels: Simulation study showing distribution of
+   estimated rank agreements for sequential rank agreement and the
+   topK for varying thresholds and fixed number of lists $L=8$. The bold numbers are the average
+   number of unique predictors in the set found to be in agreement.  Right
+   panels: Simulation results for varying number of lists, and with
+   fixed threshold of $q=5$.}
+ \label{fig:example99}
+ \end{figure}
+
+ Figure~\ref{fig:example99} also shows the results when the threshold
+ is fixed at $q=5$ and the number of lists increases. The difference
+ in agreement between the two methods is still noticeable with the
+ sequential rank agreement being more conservative than topK which
+ consequently results in fewer predictors among the part of the lists,
+ where they are in agreement.  However, the number of lists, $L$,
+ seems to have little impact on the distribution of the depth of
+ agreement and consequently on the number of different predictors
+ among the parts of the lists in agreement.
+
+ For fixed $q$, the two methods are clearly different in the depth
+ they find to be in agreement with the sequential rank agreement
+ method being the more conservative.
+
+ 
 \section{Discussion}
 In this article we address the problem of comparing ranked lists of
 the same items. Our proposed method can handle both the situation

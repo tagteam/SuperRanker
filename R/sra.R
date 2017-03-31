@@ -12,7 +12,7 @@
 #'     are censored values.
 #' @param nitems The total number of items in the original lists if we only have partial lists available.
 #' @param type The type of measure to use. Either sd (standard
-#'     deviation - the default) or mad (median absolute deviance)
+#'     deviation - the default) or mad (median absolute deviance around the median)
 #' @param ... Arguments passed to methods.
 #' @return A vector of the sequential rank agreement
 ##' @examples
