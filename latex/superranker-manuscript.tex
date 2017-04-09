@@ -1055,13 +1055,27 @@ In practice both concerns are of importance.
 \section{Simulation study --- comparison of list agreements}
 
 We present results of a simulation study where we investigated the
-small sample properties of our proposed method (sra) and compared it
-with the topK method proposed by \citet{hall:schi:2012} with respect
-to list depth agreement. In each simulation run, we generated a
-dataset with 1000 predictors and 400 observations. The predictors were
-drawn independently from a standard Gaussian distribution. The outcome
-was drawn from a Gaussian distribution with variance 1 and mean that
-depended additively on the first 15 predictors, i.e.,
+small sample properties of the sequential rank agreement and compared
+it with the topK method \citep{hall:schi:2012} with respect to list
+depth agreement. For the sequential rank agreement we use the function
+\texttt{sra} of the \texttt{R} package \texttt{SuperRanker} with the
+\texttt{"mad"} option (median absolute distance). To define the depth
+of agreement we set a constant threshold function to an integer \(q\)
+and report the first crossing point, i.e., the smallest list depth
+where sra exceeds \(q\). For topK we use the function
+\texttt{j0.multi} which is implemented in the \texttt{R} package
+\texttt{TopKLists}. Specifically, we set the tuning parameter
+\texttt{v} of \texttt{j0.multi} to the value 6 and the window
+parameter \texttt{d} to \(q\) and report the output parameter
+\texttt{maxK} as the depth of agreement. Thus, to make this comparison
+we assume that the first crossing point of sra and the result of the
+topK method measure the same underlying feature.
+
+In each simulation run, we generated a dataset with 1000 predictors
+and 400 observations. The predictors were drawn independently from a
+standard Gaussian distribution. The outcome was drawn from a Gaussian
+distribution with variance 1 and mean that depended additively on the
+first 15 predictors, i.e.,
 
 $$y_i = \sum_{j=1}^{15}x_{ij} + \epsilon_i,$$
 
@@ -1070,17 +1084,19 @@ for the $i$th measurement, and $\epsilon_i\sim N(0, 1)$. In each
 simulation run we obtained \(L\) ranked lists of the 1000 predictors.
 This was done by first drawing \(L\) bootstrap samples (with
 replacement) and then in each bootstrap sample ranking the 1000
-predictors according to their marginal $t$ test statistics. Thus, the
-simulation results compare lists that are obtained with the same
-technique on bootstrap versions of the same dataset. We report results
-from two sets of simulations (each based on 1000 simulated datasets):
+predictors according to their marginal $t$ test statistics. Thus, we
+assessed the depth of agreement among lists that are ranked with the
+same statistical method on bootstrap versions of the same dataset. We
+report simulation results from two scenarios where each is based on
+1000 simulated datasets:
 \begin{enumerate}
-\item[] Scenario I: \(L=8\) and $q\in\{3,4,5,6,7,8,9,10\}$.
-\item[] Scenario II: \(q=5\) and $L\in\{3,5,10,50\}$.
+\item[] Scenario I: Fix \(L=8\) and vary $q\in\{3,4,5,6,7,8,9,10\}$.
+\item[] Scenario II: Fix \(q=5\) and vary $L\in\{3,5,10,50\}$.
 \end{enumerate}
-In both scenarios, we summarized the distribution of the estimated
-depth of agreement and the average number of different predictors
-found at a given depth.
+In both scenarios we summarized the distribution of the estimated
+depth of agreement and the average number of unique predictors found
+in the set of predictors which is selected by the estimated depth of
+agreement.
  % Asymptotic results are available for both methods as the number of
  % lists increases, so this will investigate how much the results might
  % change as $L$ increases. For a fixed constant threshold of $q_L=5$ we
@@ -1105,15 +1121,15 @@ found at a given depth.
  % distribution of the estimated depth of agreement and the average
  % number of different predictors found at a given depth.
 The results from Scenario I are shown in the left panel of
-Figure~\ref{fig:example99}. The double histograms show the
-distribution of the estimated depth of agreement. We see that sra
-results in a substantially lower depth of agreement than the topK
-method. Also the average numbers of unique predictors (bold numbers in
-the double histograms) are markedly smaller for sra. Even larger
-differences are found if we used the Euclidean distance instead of the
-median absolute distance for the sequential rank agreement (results
-not shown). As expected the depth of agreement increases when the
-threshold for agreement/window increases.
+Figure~\ref{fig:example99}. The violin plots (with rectangular kernel)
+show the distributions of the estimated depths of agreement for both
+methods. We see that sra results in a substantially lower depth of
+agreement than the topK method. Also the average numbers of unique
+predictors (bold numbers inside the plots) are markedly smaller for
+sra. Even larger differences were found when we used the Euclidean
+distance instead of the median absolute distance for the sequential
+rank agreement (results not shown). As expected the depth of agreement
+increased when the threshold for agreement/window increased.
 \begin{figure}[htbp]
    \begin{center}
  \includegraphics[width=.49\textwidth]{Ksim.pdf}
@@ -1122,16 +1138,17 @@ threshold for agreement/window increases.
  \caption{Left panel: Simulation study showing distribution of
    estimated rank agreements for sra and topK for varying thresholds
    and fixed number of lists $L=8$. The bold numbers are the average
-   number of unique predictors in the set found to be in
-   agreement. Right panel: Simulation results for varying number of
-   lists, and with fixed threshold of $q=5$.}
+   number of unique predictors included in the set where the lists
+   agree. Right panel: Simulation results for varying number of lists
+   and with fixed threshold of $q=5$.}
  \label{fig:example99}
- \end{figure}
- The right panel of Figure~\ref{fig:example99} shows the results from
- Scenario II. The number of lists has little impact but at all depths
- sra is more conservative than topK. As a consequence we also see that
- sra systematically selects fewer predictors in the parts of
- agreement.
+\end{figure}
+
+The right panel of Figure~\ref{fig:example99} shows the results from
+Scenario II. The number of lists has little impact on the
+results. Generally, sra is more conservative than topK and as a
+consequence sra includes fewer predictors in the selected set where
+the lists agree.
  
 \section{Discussion}
 In this article we address the problem of comparing ranked lists of
