@@ -80,15 +80,15 @@
   measures of agreement among two or more ordered lists. We use the
   standard deviation of the ranks to define a measure of agreement
   that both provides an intuitive interpretation and can be applied to
-  any number of lists even if some or all are incomplete or
-  censored. The approach can identify changepoints in the agreement
-  of the lists, and the sequential changes of agreement as a function
-  of the depth of the lists can be compared graphically to a
-  permutation based reference set or evaluated using analytical asymptotic
-  results.  The usefulness of these tools are illustrated using gene
-  rankings, and using data from two Danish ovarian cancer studies
-  where we assess the within and between agreement of different
-  statistical classification methods.
+  any number of lists even if some or all are incomplete. The approach
+  can identify changepoints in the agreement of the lists, and the
+  sequential changes of agreement as a function of the depth of the
+  lists can be compared graphically to a permutation based reference
+  set or evaluated using analytical asymptotic results.  The
+  usefulness of these tools are illustrated using gene rankings, and
+  using data from two Danish ovarian cancer studies where we assess
+  the within and between agreement of different statistical
+  classification methods.
 \end{abstract}
 
 Key words: sequential rank agreement, partial ranking, order
@@ -330,13 +330,14 @@ the rankings while larger values suggest disagreement.  Just like in
 method comparison studies we prefer smaller limits of agreement
 because that means that the differences between the rankings is
 small. If the ranked lists are identical then the value of sequential
-rank agreement will be zero for all depths $d$.  The sequential rank
-agreement is equivalent to the pooled variance of the items found in
-$S(d)$, and it can be interpreted as the average distance of the
-individual rankings of the lists from the average ranking for each of
-the items we have seen until depth $d$.  For an easier interpretation
-we suggest to plot $\sqrt{\widehat{\textrm{sra}}_L(d)}$ corresponding
-to the pooled standard deviation.
+rank agreement will be zero for all position or depths $d$ down the
+lists.  The sequential rank agreement is equivalent to the pooled
+variance of the items found in $S(d)$, and it can be interpreted as
+the average distance of the individual rankings of the lists from the
+average ranking for each of the items we have seen until depth $d$.
+For an easier interpretation we suggest to plot
+$\sqrt{\widehat{\textrm{sra}}_L(d)}$ corresponding to the pooled
+standard deviation.
 
 
 
@@ -370,23 +371,24 @@ ordered by absolute correlation which resulted in the top rankings
 seen in Table~\ref{tab1}.
 
 
-The sequential rank agreement curve plotted in Figure~\ref{fig:example1}
-roughly shows how many ranks apart we on average expect the genes found in the
-top $d$ part of the lists to be for each depth $d$.  It can be seen
-that the sequential rank agreement limits are better towards the top
-of the lists (smaller values on the $y$ axis corresponds to
-\emph{better} agreement) than towards the tails of the lists. It is clear
-from the curve in Figure~\ref{fig:example1} that there is a
-substantial drop in agreement even after the first depth. Thus, if we
-were to restrict attention to a small set of predictors then we would
-focus on predictors 2124, 829, and 378 as seen in Table~\ref{tab1}.
+The sequential rank agreement curve shown in the two left plots of
+Figure~\ref{fig:example1} roughly indicates the average distance in
+ranks for the genes found among the first $d$ positions in the $4$
+lists.  It can be seen that the sequential rank agreement limits are
+better towards the top of the lists (smaller values on the $y$ axis
+corresponds to \emph{better} agreement) than towards the bottom of the
+lists. It is clear from the curve in Figure~\ref{fig:example1} that
+there is a substantial drop in agreement (higher sra) even after the
+first depth. Thus, if we were to restrict attention to a small set of
+predictors then we would focus on predictors 2124, 829, and 378 as
+seen in Table~\ref{tab1}.
 
 
 % latex table generated in R 3.2.3 by xtable 1.8-2 package
 % Fri Apr  8 10:22:58 2016
 \begin{table}[tb]
 \centering
-\caption{Top 10 list of ranked results from the Golub data. Numbers indicate the predictor/gene for the given ranking and method} 
+\caption{List of ranked results from the Golub data. Numbers indicate the predictor/gene for the given ranking and method. Only the top 10 ranks are shown in the table.} 
 \label{tab1}
 \begin{tabular}{rrrrr}
   \hline
@@ -417,10 +419,9 @@ Ranking & Welsh's $t$ & LogReg & ElasticNet & MIC \\
  \end{center}
  \caption{Left panels: Sequential rank agreement for 4 different
    analysis methods applied to the 3051 genes in the Golub data (black
-   line). Right
-   panels: Corresponding sequential rank agreement for the same data
-   but where only the top 20 ranked items are available and the rest
-   of the items have been censored in each list. The blue and
+   line). Right panels: Corresponding sequential rank agreement for
+   the same data but where only the top 20 ranked items are available
+   and the rank of the remaining items are not available. The blue and
    red areas correspond to the independent and randomized reference
    hypothesis areas, respectively. The bottom plots are identical to
    the corresponding top plots but have been zoomed in on the first
@@ -440,7 +441,7 @@ Ranking & Welsh's $t$ & LogReg & ElasticNet & MIC \\
  start at a low level and then increase until it levels off as seen in
  Figure~\ref{fig:example1}.
 
-\subsection{Analysis of partial/censored lists}
+\subsection{Analysis of incomplete lists}
 Incomplete or partial lists are a common occurrence that arise, for
 example, in case of missing data (items), when comparing top $d$ list
 results from publications, or when some methods only rank a subset of
@@ -448,17 +449,15 @@ the items. For example, penalized regression based on the Lasso
 provides a sparse set of predictors that have non-zero
 coefficients. There is no obvious ordering of the set of predictors
 whose coefficient has been shrunk to zero and thus we end up with a
-partial ordering. Incomplete lists also occur if the analyst decides
-to censor all lists at depth $d$ (\ie, top $d$ lists) such that the
-measurement of agreement is restricted to the first $d$ elements of
-each list, or when the analyst only wants to consider the ranking of
-items that have been found to be statistically significant.
+partial ordering.  Incomplete lists also occur if the analyst
+restricts attention to the ranks of items that have been found to be
+statistically significant.
 
-Sequential rank agreement can be generalized to partial lists in the
-following way. Let $\Lambda_l\subset X$ be the subset of $d_l$ items
-that have been ranked highest in list $l$.  The case where all lists are
-censored at the same depth $d$ corresponds to $d_1=\cdots=d_L=d$. For
-incomplete/censored lists the rank function becomes
+Sequential rank agreement can be generalized to incomplete lists in
+the following way. Let $\Lambda_l\subset X$ be the subset of $d_l$
+items that have been ranked highest in list $l$.  The case where all
+lists are incomplete at the same depth $d$ corresponds to
+$d_1=\cdots=d_L=d$. For incomplete lists the rank function becomes
 \begin{equation}
 	\widetilde R_l(X_p) = \begin{cases}
 	     \{R_l(X_p)\} & \text{for } X_p\in \Lambda_l\\
@@ -469,14 +468,14 @@ where we only know that the rank for the unobserved items in list $l$
 must be larger than the largest rank observed in that list.
 
 The agreement, $A(X_p)$, cannot be computed directly for all
-predictors in the presence of censored lists because the exact rank
+predictors in the presence of incomplete lists because the exact rank
 for some items will be unknown. Also, recall that the rankings within
 a single list are not independent since each rank must appear exactly
 once in each list. Thus, we cannot simply assign the same number
-(\eg, the mean of the unassigned ranks) to the censored items since
+(\eg, the mean of the unassigned ranks) to the missing items since
 that would result in \emph{less} variation of the ranks and hence less
 variation of the agreement, and it would artificially introduce a
-(downward) bias of agreement for items that are censored in multiple
+(downward) bias of agreement for items that are missing in multiple
 lists.
 
 Instead we randomize the ranks $\{d_{l}+1,\dots,P\}$ to the items that
@@ -489,11 +488,11 @@ agreements. The algorithm is described in detail in
 Algorithm~\ref{sra-algorithm}.
 
 \begin{algorithm}
-\caption{Sequential rank agreement algorithm for censored lists}
+\caption{Sequential rank agreement algorithm for incomplete lists}
 \label{sra-algorithm}
 \begin{algorithmic}[1]
-  \Procedure{Censored rank agreement}{} \State Let $B$ be the number
-  of permutations to use \For{each $b \in B$} \For{each censored list
+  \Procedure{Incomplete list rank agreement}{} \State Let $B$ be the number
+  of permutations to use \For{each $b \in B$} \For{each list
     $l \in L$}
   \State \parbox[t]{\dimexpr\linewidth-\algorithmicindent-1.7cm}{Permute
     the unassigned ranks, $\{d_l+1, \ldots, P\}$, and assign them
@@ -511,7 +510,7 @@ filled out lists.}
 
 The proposed approach is based on two assumptions: 1) that the most
 interesting items are found in the top of the lists, and 2) that the
-censored rankings provide so little information that it is reasonable
+ranks that are missing from the lists provide so little information that it is reasonable
 to assume that they can be represented by a random order. The first
 assumption is justifiable because we have already accepted that it is
 reasonable to rank the items in the first place. The second assumption
@@ -520,23 +519,32 @@ is fair in the light of the first assumption provided that we have a
 
 When the two assumptions are satisfied then it is clear that the
 interesting part of the sequential rank agreement curves is restricted
-to the depths where the number of censored items is
+to the depths where the number of items without ranks available is
 low. Generally, without additional prior knowledge about the
-distribution of the censored items it seems reasonable to restrict the
-attention of the sequential rank agreement to depths smaller than
-$\max(d_1, \ldots, d_L)$ where at least one list provides an
-uncensored item.
+underlying distribution of the ranks it seems reasonable to restrict
+attention of the sequential rank agreement to lists no longer than the
+longest of the $L$ lists examined.
 
 Like for fully observed lists we generally expect the sequential rank
 agreement to start low and then increase unless the lists are
 completely unrelated (in which case the sequential rank agreement will
 be constant at a high level) or if the lists mostly agree on the
 ranking (in which case the sequential rank agreement will also be
-constant but at a low level). For partially ranked lists we also
+constant but at a low level). For incomplete ranked lists we also
 expect a changepoint around the depth where the lists are
-censored. This is an artefact stemming from the fact that we assume
+become incomplete. This is an artefact stemming from the fact that we assume
 that the remainder of the lists can be replaced by a simple
 permutation of the missing items.
+
+The two right-most plots of Figure~\ref{fig:example1} show the impact
+of restricting the Golub data such that only top-20 lists are
+available instead of full lists of length 1000 (20 was chosen to
+resemble the list lengths that might be published in a
+manuscript). The sequential rank agreement increases much quicker
+because the incomplete lists introduce more noise in the estimation of
+the agreement, but it is still possible to see that the top of the
+list has a sequantial rank agreement that is not substantially
+different from the full lists.
 
 
 
@@ -641,17 +649,24 @@ H_0  & : &  \text{The list rankings correspond to completely randomly}\label{eq:
        &  & \text{permuted lists}\nn
 \end{eqnarray}
 which not only assumes that there is no information in the data on
-which the rankings are based but also that the methods are completely
-independent.
+which the rankings are based but also that the methods used to provide
+the rankings are completely independent.
 
 Alternatively, we can remove the restriction on the independence among
-the methods by only requiring that there is no information in the
-ranking but that the rankings are all based on applying the
-method/approaches to the same data
+the methods used to generate the individuals rankings in the $L$ lists
+by only requiring that there is no information contained in the ranking but that
+the rankings are all based on applying the method/approaches to the
+same data
 \begin{eqnarray*}
 \widetilde H_0 & :&  \text{The list rankings are based on data that contain}\\
 & &   \text{no association to the outcome.}
 \end{eqnarray*}
+
+This alternative null hypothesis addresses the fact that some ranking
+methods are more likely to provide similar rankings of the same data
+because the ranking methods focus on the same features of the data
+rather than because of any information contained in the data.
+
 
 \subsection{Permutation-based inference}
 
@@ -660,12 +675,12 @@ realizations from that null hypothesis simply by permuting the items
 within each list and then computing the sequential rank agreement for
 the permuted lists. In the fully observed case each experiment
 contains $L$ lists of random permutations of the items in $X$. For the
-censored/partially observed case we first permute the items
-$X_1,\dots,X_P$ and then censor list $l$ at $d_l$ (\ie, each list so
-it has the same number of observed rankings as was observed for list
-$l$ in the original dataset). The sequential rank agreement curve from
-the the original lists can then be compared to, say, the pointwise
-95\% quantiles of the observed rank agreements obtained under $H_0$.
+incomplete case we first permute the items $X_1,\dots,X_P$ and then assign missing ranks
+for list $l$ from  $d_l$ to $P$ (\ie, each list so it has the same number of
+observed rankings as was observed for list $l$ in the original
+dataset). The sequential rank agreement curve from the original
+lists can then be compared to, say, the pointwise 95\% quantiles of
+the observed rank agreements obtained under $H_0$.
 
 To obtain the distribution under $\widetilde H_0$ the idea is to
 repeat the ranking procedures for unassociated data many times.  Thus,
@@ -696,7 +711,7 @@ logistic regression, elastic net, and MIC) generally tend to identify
 associations. The two bottom panels in Figure~\ref{fig:example1} also
 indicate that the observed sequential rank agreement (the black line)
 is better than what would be expected by chance for data that contain
-no information since it lies below the reference areas. The censored
+no information since it lies below the reference areas. The incomplete
 data also suggests that there may be at most 1 or 2 ranked items
 towards the top of the lists that yield a result better than what
 would be expected (the bottom-right plot).
@@ -792,7 +807,7 @@ See Appendix \ref{sec:appB}.
 \end{corollary}
 
 
-Corollary \ref{thecor} indicates that we can use the a threshold
+Corollary \ref{thecor} indicates that we can use the threshold
 function $\widehat{q}_L$ estimated under the null hypothesis as
 discussed in the previous section as a limiting threshold function for
 inferring the depth $d$, where the observed sequential rank agreement
@@ -800,9 +815,9 @@ first crosses the threshold of the null threshold, \ie, the depth
 until which the observed ranked lists are in better agreement than
 expected under the null hypothesis. In that sense the threshold
 function serves the same role as the limits of agreement in method
-comparison studies, except that the threshold funciton is not constant
+comparison studies, except that the threshold function is not constant
 but can accommodate the changing nature of the number of items used
-for the computation of the equential rank agreement for a given depth.
+for the computation of the sequential rank agreement for a given depth.
 
 In practice we can compute an estimate of the threshold function under
 the null using the permutation approach sketched in the previous
@@ -887,7 +902,7 @@ The implementation of Lasso and Ridge regression in the
 optimization criteria for the penalty parameter: total deviance,
 classification accuracy and area under ROC. We apply all three
 criteria to our data to investigate their effect on the agreements.
-Note also that the Lasso models produce censored lists depending on
+Note also that the Lasso models produce incomplete lists depending on
 the value of the penalty parameter.
 
 
@@ -937,35 +952,38 @@ A not expected shape of the agreement curves is seen for the Ridge
 models for all three tuning criteria. They all show higher
 disagreement in the top of the lists followed by a decrease. The
 reason behind this behavior is rather subtle. Looking at the
-distribution of the absolute value of the regression coefficients we see that a large
-proportion of them are numerically very close to zero and have almost
-equal absolute value. This is a general feature of the Ridge models in
-this dataset and seen for all the 1000 trained models.
+distribution of the absolute value of the regression coefficients we
+see that a large proportion of them are numerically very close to zero
+and have almost equal absolute value. This is a general feature of the
+Ridge models in this dataset and seen for all the 1000 trained models.
 This implies that when predictors are ranked according to the
 magnitude of their coefficients, their actual order becomes more
 uncertain and more close to a random permutation. This problem can be
-alleviated by truncating all predictors with absolute coefficient values
-below a given threshold thereby introducing an artificial censoring of the lists.
-For the Ridge models tuned with the deviance criterion, Figure \ref{fig:app2} (left) shows the
-the sequential rank agreement where for each of the 1000 trained
-models the predictors were artificially censored when their absolute
+alleviated by truncating all predictors with absolute coefficient
+values below a given threshold thereby introducing an artificial
+incompletion of the lists.  For the Ridge models tuned with the
+deviance criterion, Figure \ref{fig:app2} (left) shows the the
+sequential rank agreement where for each of the 1000 trained models
+the predictors were artificially censored when their absolute
 coefficient value was lower than the $0.1\%$ quantile of the 5000
-absolute coefficient values. The curve was calculated
-using Algorithm \ref{sra-algorithm} with $B=1000$ and $P=5000$. The corresponding
-curve from Figure \ref{fig:app1} (right panel) is shown for comparison.
-Even though the number of censored predictors is very small compared to the total
-number of predictors, the effect on the sequential rank agreement is
-substantial and with the artificial censoring the shape of the curves
-is as expected, starting low and then increasing.
+absolute coefficient values. The curve was calculated using Algorithm
+\ref{sra-algorithm} with $B=1000$ and $P=5000$. The corresponding
+curve from Figure \ref{fig:app1} (right panel) is shown for
+comparison.  Even though the number of predictors with missing ranks is very
+small compared to the total number of predictors, the effect on the
+sequential rank agreement is substantial and with the artificial
+censoring the shape of the curves is as expected, starting low and
+then increasing.
 
-Looking at the agreement curves for the Lasso models in Figure \ref{fig:app1}
-(right) we clearly see the effect of the sparsity inducing penalization giving
-rise to censored lists. These curves were similarly calculated using \ref{sra-algorithm}
-and $1000$ random permutations. Under the deviance optimization criterion the
-median number of non-zero coefficients was 33 (range 16 to 50) and for the
-class accuracy criterion 14 (range 4 to 56). These values correspond to
-the list depths where the agreement curves become constant as a result of
-the subsequent censoring.
+Looking at the agreement curves for the Lasso models in Figure
+\ref{fig:app1} (right) we clearly see the effect of the sparsity
+inducing penalization giving rise to incomplete lists. These curves
+were similarly calculated using \ref{sra-algorithm} and $1000$ random
+permutations. Under the deviance optimization criterion the median
+number of non-zero coefficients was 33 (range 16 to 50) and for the
+class accuracy criterion 14 (range 4 to 56). These values correspond
+to the list depths where the agreement curves become constant as a
+result of the subsequent censoring.
 
 
 
@@ -1007,7 +1025,7 @@ all the ranks will be ties.
 \includegraphics[width=.49\textwidth]{pics/aucPlot}
 \end{center}
 \caption{Left panel: Sequential rank agreement for Ridge regression
-  obtained by artificially censoring predictors when their absolute
+  obtained by artificially censoring predictor ranks when their absolute
   coefficient values are lower than the 0.1\% quantile. Right panel:
   Box plots of AUC values across the $1000$ sub-samples with respect
   to the known class labels of the DACOVA data.}
@@ -1027,7 +1045,7 @@ ranking predictors. This reason for the latter is the high
 auto-correlation between the intensities in the mass spectra which
 leads to collinearity issues in the regression models. It is
 well-known that variable selection with the Lasso penalty does not
-preform very well when the predictors are highly correlated. The
+perform very well when the predictors are highly correlated. The
 collinearity does, however, not affect the agreement of the risk
 predictions, as seen on the left panel of Figure \ref{fig:app1}, since
 it is not so important which specific variable that gets selected from
@@ -1054,19 +1072,19 @@ In practice both concerns are of importance.
 
 \section{Simulation study --- comparison of list agreements}
 
-We present results of a simulation study where we investigated the
+We present results from a simulation study where we investigated the
 small sample properties of the sequential rank agreement and compared
-it with the topK method \citep{hall:schi:2012} with respect to list
+it to the topK method \citep{hall:schi:2012} with respect to list
 depth agreement. For the sequential rank agreement we use the function
 \texttt{sra} of the \texttt{R} package \texttt{SuperRanker} with the
 \texttt{"mad"} option (median absolute distance). To define the depth
-of agreement we set a constant threshold function to an integer \(q\)
+of agreement we set a constant threshold function to an integer $q$
 and report the first crossing point, i.e., the smallest list depth
-where sra exceeds \(q\). For topK we use the function
+where sra exceeds $q$. For topK we use the function
 \texttt{j0.multi} which is implemented in the \texttt{R} package
 \texttt{TopKLists}. Specifically, we set the tuning parameter
 \texttt{v} of \texttt{j0.multi} to the value 6 and the window
-parameter \texttt{d} to \(q\) and report the output parameter
+parameter \texttt{d} to $q$ and report the output parameter
 \texttt{maxK} as the depth of agreement. Thus, to make this comparison
 we assume that the first crossing point of sra and the result of the
 topK method measure the same underlying feature.
@@ -1081,8 +1099,8 @@ $$y_i = \sum_{j=1}^{15}x_{ij} + \epsilon_i,$$
 
 where $y_i$ is the $i$th response, and $x_{ij}$ is the $j$th predictor
 for the $i$th measurement, and $\epsilon_i\sim N(0, 1)$. In each
-simulation run we obtained \(L\) ranked lists of the 1000 predictors.
-This was done by first drawing \(L\) bootstrap samples (with
+simulation run we obtained $L$ ranked lists of the 1000 predictors.
+This was done by first drawing $L$ bootstrap samples (with
 replacement) and then in each bootstrap sample ranking the 1000
 predictors according to their marginal $t$ test statistics. Thus, we
 assessed the depth of agreement among lists that are ranked with the
@@ -1155,7 +1173,7 @@ In this article we address the problem of comparing ranked lists of
 the same items. Our proposed method can handle both the situation
 where the underlying data to generate the ranked lists are available
 and the situation where the only available data is the actual ranked
-lists. In addition, censored ranked lists where only the ranks of the
+lists. In addition, incomplete ranked lists where only the ranks of the
 top $k$ ranked items are known can be accommodated as well. The
 proposed agreement measure can be interpreted as the average distance
 between an item's rank and the average rank assigned to that item
@@ -1201,15 +1219,13 @@ substantially worse and could serve as indicators for when the lists
 no longer agree sufficiently satisfactory.
 
 Finally, we have --- whenever possible --- used all available ranks
-from the lists.  We could choose to censor the rankings of all the
-items that were deemed not to be significant if information on both
-rankings and the corresponding evidence for significance was
-available. That would ensure that there would be put less emphasis on
-the agreement of the non-significant items and it would be easier to
-identify a change in agreement among the items that were deemed to
-be relevant. In our application section we have successfully introduced
-such an artificial censoring for the predictor rankings obtained with
-ridge regression.
+from the lists.  We could choose to restrict attention to the rank of
+items which show evidence for significance in their models. That would
+ensure that there would be put less emphasis on the agreement of the
+non-significant items and it would be easier to identify a change in
+agreement among the items that were deemed to be relevant. In our
+application section we have successfully introduced such an artificial
+censoring for the predictor rankings obtained with ridge regression.
 
 We note that the sequential rank agreement is still marred by problems
 that generally apply to ranking of items and/or
