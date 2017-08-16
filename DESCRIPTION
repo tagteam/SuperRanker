@@ -13,5 +13,5 @@ Imports:
     Rcpp (>= 0.11.5),
     prodlim (>= 1.5.7)
 LinkingTo: Rcpp
-RoxygenNote: 5.0.1.9000
+RoxygenNote: 6.0.1
 Encoding: UTF-8
