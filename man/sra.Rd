@@ -7,15 +7,16 @@
 \alias{sra.list}
 \title{Compute the sequential rank agreement}
 \usage{
-sra(object, B, na.strings, nitems, type, ...)
+sra(object, B, na.strings, nitems, type, epsilon = 0, ...)
 
-\method{sra}{default}(object, B, na.strings, nitems, type, ...)
+\method{sra}{default}(object, B, na.strings, nitems, type, epsilon = 0, ...)
 
 \method{sra}{matrix}(object, B = 1, na.strings = NULL,
-  nitems = nrow(object), type = c("sd", "mad"), ...)
+  nitems = nrow(object), type = c("sd", "mad"), epsilon = 0, ...)
 
 \method{sra}{list}(object, B = 1, na.strings = NULL,
-  nitems = max(sapply(object, length)), type = c("sd", "mad"), ...)
+  nitems = max(sapply(object, length)), type = c("sd", "mad"),
+  epsilon = 0, ...)
 }
 \arguments{
 \item{object}{Either matrix where each column is a ranked list of

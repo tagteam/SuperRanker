@@ -47,19 +47,19 @@
 #'
 #' @rdname sra
 #' @export
-sra <- function(object,B,na.strings,nitems,type,...) {
+sra <- function(object,B,na.strings,nitems,type,epsilon=0,...) {
   UseMethod("sra")
 }
 
 #' @rdname sra
 #' @export
-sra.default <- function(object,B,na.strings,nitems,type,...) {
+sra.default <- function(object,B,na.strings,nitems,type,epsilon=0,...) {
     stop("Input must be either a matrix, a data.frame or a list.")
 }
 
 #' @rdname sra
 #' @export
-sra.matrix <- function(object, B=1, na.strings=NULL, nitems=nrow(object), type=c("sd", "mad"),...) {
+sra.matrix <- function(object, B=1, na.strings=NULL, nitems=nrow(object), type=c("sd", "mad"),epsilon=0,...) {
     if (!is.matrix(object))
         stop("Input object must be a matrix")
 
@@ -81,14 +81,14 @@ sra.matrix <- function(object, B=1, na.strings=NULL, nitems=nrow(object), type=c
         object <- rbind(object, glue)
     }
     object <- lapply(1:NCOL(object),function(j)object[,j]) # Convert matrix to list
-    sra.list(object, B=B, nitems=nitems, type=type)
+    sra.list(object, B=B, nitems=nitems, type=type, epsilon=epsilon)
 }
 
 
 
 #' @rdname sra
 #' @export
-sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, length)), type=c("sd", "mad"),...) {
+sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, length)), type=c("sd", "mad"),epsilon=0,...) {
     # Make sure that the input object ends up as a matrix with integer columns all
     # consisting of elements from 1 and up to listlength
 
@@ -169,7 +169,7 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
         })
         ## bind lists
         rankmat <- do.call("cbind",obj.b)
-        res <- sracppfull(rankmat, type=itype)
+        res <- sracppfull(rankmat, type=itype, epsilon=epsilon)$sra
         res
     })
     if (itype==0) {
@@ -181,8 +181,24 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
     class(agreement) <- "sra"
     attr(agreement, "B") <- B
     attr(agreement, "type") <- type
+    attr(agreement, "epsilon") <- epsilon
+    if (B==1) {
+        # Refit once more to get the depths
+        obj.b <- lapply(1:nlists,function(j){
+            list <- object[[j]]
+            if (nmiss[[j]]>0){
+                list[list==0] <- resample(missing.items[[j]])
+            }
+            list
+        })
+        ## bind lists                                                                                                                                                      
+        rankmat <- do.call("cbind",obj.b)
+        
+        attr(agreement, "whenIncluded") <- sracppfull(rankmat, type=itype, epsilon=epsilon)$whenIncluded
+    } else {
+        attr(agreement, "whenIncluded") <- NA
+    }
     agreement
-
 }
 
 
@@ -212,7 +228,7 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
 #' random_list_sra(mlist, n=5)
 #'
 #' @export
-random_list_sra <- function(object, B=1, n=1, na.strings=NULL, type=c("sd", "mad")) {
+random_list_sra <- function(object, B=1, n=1, na.strings=NULL, type=c("sd", "mad"), epsilon=0) {
 
     type <- match.arg(type)
 

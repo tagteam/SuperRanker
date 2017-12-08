@@ -33,7 +33,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // sracppfull
-NumericVector sracppfull(IntegerMatrix rankMat, int type, NumericVector epsilon);
+List sracppfull(IntegerMatrix rankMat, int type, NumericVector epsilon);
 RcppExport SEXP _SuperRanker_sracppfull(SEXP rankMatSEXP, SEXP typeSEXP, SEXP epsilonSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

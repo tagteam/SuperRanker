@@ -234,12 +234,13 @@ NumericVector sracpp(IntegerMatrix rankMat, int maxlength, int B, IntegerVector 
 //' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
 //' @encoding UTF-8 
 // [[Rcpp::export]]
-NumericVector sracppfull(IntegerMatrix rankMat, int type=0, NumericVector epsilon=NumericVector::create(0)) {
+List sracppfull(IntegerMatrix rankMat, int type=0, NumericVector epsilon=NumericVector::create(0)) {
 
   // The number of lists
   int nLists = rankMat.ncol();
   int maxlength=rankMat.nrow();
-  NumericVector useEpsilon(maxlength);;
+  NumericVector useEpsilon(maxlength);
+  IntegerVector whenIncluded(maxlength, maxlength);
 
   // Check too big
   // Check length  
@@ -296,24 +297,26 @@ NumericVector sracppfull(IntegerMatrix rankMat, int type=0, NumericVector epsilo
       // Add variable to keep
       // -1 below because lists starts from 0 in C++
       //      keepDepth[x(depth, l)-1] = TRUE;
-      itemWeight[x(depth, l)-1] += 1.0;  // Should be 1/maxlength but multiply that below	  
+      itemWeight[x(depth, l)-1] += 1.0;  // Should be 1/maxlength but multiply that below
+      if (itemWeight[x(depth, l)-1] > useEpsilon[depth]*nLists) {
+	keepDepth[x(depth, l)-1] = TRUE;
+	whenIncluded[x(depth, l)-1] = std::min(whenIncluded[x(depth, l)-1], depth+1);
+      }
     }
 
-    Rcout << itemWeight << "    iii    " ; 
-
-    Rcout << useEpsilon << "  " ;
-    keepDepth = (itemWeight > useEpsilon*nLists);
-
-    Rcout << keepDepth << "    -->   for depth " << (depth+1) << std::endl ; 
-
-
+    // Rcout << keepDepth << "    -->   for depth " << (depth+1) << std::endl ; 
     
     // Now weigh the metrics together
     res = itemMetric[keepDepth];
     returnVector[depth] = mean(res);
   }
+
+  return List::create(Rcpp::Named("sra")=returnVector,
+		      Rcpp::Named("whenIncluded")=whenIncluded
+		      );
   
-  return(returnVector);
+  
+  //  return(returnVector);
 }
 
 

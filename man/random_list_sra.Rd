@@ -5,7 +5,7 @@
 \title{Simulate sequential rank agreement for randomized unrelated lists}
 \usage{
 random_list_sra(object, B = 1, n = 1, na.strings = NULL, type = c("sd",
-  "mad"))
+  "mad"), epsilon = 0)
 }
 \arguments{
 \item{object}{A matrix or list of vectors representing ranked lists.}
