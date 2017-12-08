@@ -37,6 +37,8 @@ are censored values.}
 \item{type}{The type of measure to use. Either sd (standard
 deviation - the default) or mad (median absolute deviance around the median)}
 
+\item{epsilon}{A non-negative numeric vector that contains the minimum limit in proportion of lists that must show the item. Defaults to 0. If a single number is provided then the value will be recycles to the number of items.}
+
 \item{...}{Arguments passed to methods.}
 }
 \value{
