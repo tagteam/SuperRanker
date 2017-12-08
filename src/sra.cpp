@@ -81,17 +81,19 @@ NumericVector SdPerRow(NumericMatrix obj, int type) {
 }
 
 
-// ' Compute the sequential rank agreement between k ranked lists
-// ' 
-// ' @description Computes the sequential rank agreement (number of items present in all k lists divided by the current rank) for each rank in the k lists
-// ' @param rankMat A matrix with k columns corresponding to the k ranked lists. Elements of each column are integers between 1 and the length of the lists
-// ' @param maxlength The maximum depth that are needed XXX
-// ' @param B The number of resamples to use in the presence of censored lists
-// ' @param cens A vector of integer values that
-// ' @param type The type of distance measure to use: 0 (the default) is the variance while 1 is MAD (median absolute deviation)
-// ' @return A vector of the same length as the rows in rankMat containing the squared (!) sequential rank agreement between the lists for each depth. If the MAD type was chosen then the sequential MAD values are returned
-// ' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
-// ' [[ Rcpp::export]]
+//' Compute the sequential rank agreement between k ranked lists
+//' 
+//' @description Computes the sequential rank agreement (number of items present in all k lists divided by the current rank) for each rank in the k lists
+//' @param rankMat A matrix with k columns corresponding to the k ranked lists. Elements of each column are integers between 1 and the length of the lists
+//' @param maxlength The maximum depth that are needed XXX
+//' @param B The number of resamples to use in the presence of censored lists
+//' @param cens A vector of integer values that
+//' @param type The type of distance measure to use: 0 (the default) is the variance while 1 is MAD (median absolute deviation)
+//' @param epsilon A non-negative numeric vector that contains the minimum limit in proportion of lists that must show the item. Defaults to 0. If a single number is provided then the value will be recycles to the number of items.
+//' @return A vector of the same length as the rows in rankMat containing the squared (!) sequential rank agreement between the lists for each depth. If the MAD type was chosen then the sequential MAD values are returned
+//' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
+//' @encoding UTF-8 
+// [[Rcpp::export]]
 NumericVector sracpp(IntegerMatrix rankMat, int maxlength, int B, IntegerVector cens, int type=0, NumericVector epsilon=NumericVector::create(0)) {
 
   // The number of lists
@@ -227,8 +229,10 @@ NumericVector sracpp(IntegerMatrix rankMat, int maxlength, int B, IntegerVector 
 //' @description Computes the sequential rank agreement (number of items present in all k lists divided by the current rank) for each rank in the k lists
 //' @param rankMat A matrix with k columns corresponding to the k ranked lists. Elements of each column are integers between 1 and the length of the lists
 //' @param type The type of distance measure to use: 0 (the default) is the variance while 1 is MAD (mean absolute deviation)
+//' @param epsilon A non-negative numeric vector that contains the minimum limit in proportion of lists that must show the item. Defaults to 0. If a single number is provided then the value will be recycles to the number of items.
 //' @return A vector of the same length as the rows in rankMat containing the sequential rank agreement between the lists for each depth (squared for type=0)
 //' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
+//' @encoding UTF-8 
 // [[Rcpp::export]]
 NumericVector sracppfull(IntegerMatrix rankMat, int type=0, NumericVector epsilon=NumericVector::create(0)) {
 
