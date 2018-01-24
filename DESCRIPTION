@@ -1,7 +1,7 @@
 Package: SuperRanker
 Type: Package
 Title: Sequential Rank Agreement
-Version: 2017.12.08
+Version: 1.1.0
 Author: Claus Thorn Ekstrøm and Thomas Alexander Gerds
 Maintainer: Claus Thorn Ekstrøm <ekstrom@sund.ku.dk>
 Description: Tools for analysing the agreement of two or more rankings of the same items. Examples are importance rankings of predictor variables and risk predictions of subjects. Benchmarks for agreement are computed based on random permutation and bootstrap.

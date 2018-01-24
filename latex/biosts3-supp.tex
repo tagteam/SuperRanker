@@ -1,0 +1,219 @@
+\documentclass[oupdraft]{bio}
+%\usepackage[colorlinks=true, urlcolor=citecolor, linkcolor=citecolor, citecolor=citecolor]{hyperref}
+% \documentclass[12pt,a4paper]{article}
+\pdfoutput=1
+\usepackage[utf8]{inputenc}
+%\usepackage[]{graphicx}
+%\usepackage{amsmath}
+%\usepackage{amssymb}
+%\usepackage[]{color}
+%\usepackage{subcaption}
+% \usepackage{natbib}
+%\usepackage{xspace}
+%\usepackage{calc}
+% \usepackage[noae]{Sweave}
+%\usepackage{algorithm}
+%\usepackage{algpseudocode}
+% \usepackage{enumitem}
+
+% \usepackage{authblk}
+
+% \usepackage[nolists,nomarkers]{endfloat}
+
+
+%\usepackage{geometry}
+%\geometry{a4paper, portrait, margin=1in}
+%
+% New commands
+%
+%\newcommand{\ie}{\emph{i.e.}\@\xspace}
+%\newcommand{\eg}{\emph{e.g.}\@\xspace}
+
+\newcommand{\nn}{\nonumber}
+
+% \newcommand{\mcomment}[1]{\textcolor{red}{\textbf{#1}}}
+
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\newcommand{\argmin}{\operatornamewithlimits{arg\,min}}
+\newcommand{\plim}{\operatornamewithlimits{plim}}
+
+%\usepackage[amsthm,thmmarks]{ntheorem}
+% \theoremstyle{plain}
+% \newtheorem{theorem}{Theorem}
+%\newtheorem{definition}{Definition}
+%\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}[section]
+%\newtheorem{lemma}{Lemma}
+%\newtheorem{assumption}{Assumption}
+%\newtheorem{example}{Example}
+%\renewcommand\proofSymbol{\ensuremath{\blacksquare}}
+
+
+
+%%% RSS specific items
+
+%\title{Sequential rank agreement methods for comparison of ranked lists}
+%\author{Claus Thorn Ekstrøm}
+%\author{Thomas Alexander Gerds}
+%\author{Andreas Kryger Jensen}
+%\author{Kasper Brink-Jensen}
+%\affil{Biostatistics, University of Copenhagen}
+%\renewcommand{\topfraction}{.85}
+%\renewcommand{\bottomfraction}{.7}
+%\renewcommand{\textfraction}{.15}
+%\renewcommand{\floatpagefraction}{.66}
+%\renewcommand{\dbltopfraction}{.66}
+%\renewcommand{\dblfloatpagefraction}{.66}
+%\setcounter{topnumber}{9}
+%\setcounter{bottomnumber}{9}
+%\setcounter{totalnumber}{20}
+%\setcounter{dbltopnumber}{9}
+
+
+\renewcommand{\topfraction}{.85}
+\renewcommand{\bottomfraction}{.7}
+\renewcommand{\textfraction}{.15}
+\renewcommand{\floatpagefraction}{.66}
+\renewcommand{\dbltopfraction}{.66}
+\renewcommand{\dblfloatpagefraction}{.66}
+\setcounter{topnumber}{9}
+\setcounter{bottomnumber}{9}
+\setcounter{totalnumber}{20}
+\setcounter{dbltopnumber}{9}
+
+
+\begin{document}
+
+
+\title{Supplementary material for Sequential rank agreement methods for comparison of ranked lists}
+
+\author{CLAUS THORN EKSTRØM$^\ast$, THOMAS ALEXANDER GERDS, ANDREAS KRYGER JENSEN\\[4pt]
+%
+\textit{%
+Biostatistics, Department of Public Health,
+University of Copenhagen,
+Øster Farimagsgade 5 B, P.O.B. 2099,
+DK-1014 Copenhagen K, Denmark}
+\\[2pt]
+% E-mail address for correspondence
+{ekstrom@sund.ku.dk}}
+
+
+
+% Use square brackets for numbering affiliations
+
+
+% Running headers of paper:
+\markboth%
+% First field is the short list of authors
+{C. T. Ekstrøm and others}
+% Second field is the short title of the paper
+{Supplementary material for ``Sequential rank agreement for comparison of ranked lists''}
+
+\maketitle
+
+
+This document provides proofs of the theorem and corollary shown in the main manuscript.
+
+\appendix
+
+% \newpage
+\section{Proof of Theorem 3.1}
+\label{sec:appA}
+
+We start by defining the following cadlag function
+\begin{align}
+  N(p; d) = \sum_{s=1}^p 1\left(Q(R(X_s) \leq d) > \varepsilon\right), \quad p = 1,\ldots, P
+\end{align}
+which runs through the list elements in an arbitrary order and counts
+how many list elements that have a positive probability $>\varepsilon$ to have
+rank less than or equal to $d$ under the probability measure $Q$ for some prespecified constant $\varepsilon\in[0, 1)$.
+Note that the cardinality of the set $S(d)$ in equation
+(2.3) is equal to the counting process evaluated at the last element: $|S(d)| = N(P;d)$.
+The empirical counterpart of the counting process is given by
+\begin{align}
+  \widehat{N}_L(p; d) &= \sum_{s=1}^p 1\left( \frac{1}{L} \sum_{l=1}^L 1(R_l(X_s) \leq d) > \varepsilon\right)\\
+        &= \sum_{s=1}^p 1\left(\widehat{Q}_L(R(X_s) \leq d) > \varepsilon\right)\nn.
+\end{align}
+The joint law of the sequence
+$\{\widehat{N}_L(p;d)\}_{1\leq p \leq P}$ is completely determined by
+the finite set of the jump times of $N(p;d)$. Since
+$\{1(R_l(X_s) \leq d); l=1,\dots, L\}$ consists of independent and
+identically Bernoulli distributed variables with expectation
+$Q(R(X_s) \leq d)$ and finite variance it follows from the law of large numbers that
+$\widehat{Q}_L(R(X_p) \leq d) \overset{P}{\longrightarrow} Q(R(X_p)
+\leq d)$ for every $p$ and $d$ as $L \rightarrow \infty$. 
+Therefore, we have
+\begin{align}
+  \sup_{d \in 1,\ldots,P}\sup_{p \in 1,\ldots, P} \left|\widehat{N}_L(p; d) - N(p; d)\right| = o_P(1).\label{eq:countingConv}
+\end{align}
+
+The sequential rank agreement given in equation
+(2.5) may therefore be rewritten as the following integral
+with respect to $N$
+\begin{align}
+  \textrm{sra}(d) = \int_{1}^P \frac{A(X_p)}{N(P; d)} 1(N(P;d)>0)\mathrm dN(p; d).
+\end{align}
+The empirical sequential rank agreement is similarly given by
+\begin{align}
+  \widehat{\textrm{sra}}_L(d) &= \int_1^P \frac{\widehat{A}_L(X_p)}{\widehat{N}_L(P; d)} 1(N(P;d)>0) \mathrm d \widehat{N}_L(p; d) 
+\end{align}
+and it follows that
+\begin{align}
+  \sup_{d \in 1,\ldots,P}\left|\widehat{\textrm{sra}}_L(d) - \textrm{sra}(d)\right| \leq \sup_{d \in 1,\ldots,P}\left|U_L(d)\right| - \sup_{d \in 1,\ldots,P}\left|V_L(d)\right|
+\end{align}
+where
+\begin{align}
+  U_L(d) &= \int_1^P\frac{A(X_p)}{N(P;d)} 1(N(P;d)>0) \mathrm d\left(\widehat{N}_L(p; d) - N(p; d)\right)\\
+  V_L(d) &=  \int_1^P \left(\frac{\widehat{A}_L(X_p)}{\widehat{N}_L(P; d)} - \frac{A(X_p)}{N(P;d)}\right) 1(N(P;d)>0) \mathrm d\widehat{N}_L(p; d)
+\end{align}
+The conclusion of the proof therefore follows if each of these two
+terms are uniformly of order $o_P(1)$ in $d$.  For the first term we
+have that
+\begin{align}
+  \left|U_L(d)\right| \leq \left(\sup_{p \in 1,\ldots,P}\left|\frac{A(X_p)}{N(P;d)} 1(N(P;d)>0) \right|\right)\left(\widehat{N}_L(p; d) - N(p; d)\right)\biggr\rvert_1^P
+\end{align}
+where the second factor is $o_P(1)$ uniformly in $d$ by equation
+(\ref{eq:countingConv}). The first factor is $O(1)$ since $N(P;d)>0$
+uniformly in $d$ and because $A(X_p) = O(P^2)$ uniformly in $p$ by the Cauchy-Schwarz inequality. It
+thus follows that $\left|U_L(d)\right| = o_P(1)$ uniformly in $d$.
+
+Similarly we derive an upper bound for $V_L(d)$ by
+\begin{align}
+ V_L(d) &\leq \sup_{p \in 1,\ldots,P}\left|\left(\frac{\widehat{A}_L(X_p)}{\widehat{N}_L(P; d)} - \frac{A(X_p)}{N(P;d)}\right) 1(N(P;d)>0) \right| \int_1^P \left|\mathrm d\widehat{N}_L(p; d)\right|\label{eq:secondTerm}
+\end{align}
+and it follows directly from the law of large numbers that
+$\widehat{A_L}(X_p) = A(X_p) + o_P(1)$ uniformly in $p$ since
+$R_i(X_p)$ in equation (2.2) for $i=1,\ldots,L$ are
+independent and $Q$-identically distributed random variables with
+finite second moment. Again, $\widehat{N}_L(P; d) = N(P;d) + o_P(1)$ uniformly in $d$ by equation
+(\ref{eq:countingConv}) and $N(P;d)>0$ so by the continuous mapping theorem the first factor
+in equation (\ref{eq:secondTerm}) is of order $o_P(1)$ uniformly in
+$p$ and $d$. The result then follows by noting that the second factor
+is bounded by $P$ uniformly in $d$. 
+
+
+
+
+\section{Proof of Corollary 3.1}
+\label{sec:appB}
+Recall that $\mathcal{L}$ is the superlevel set of list positions
+where the sequential rank agreement exceeds the threshold function
+$q$. Let $A \triangle B = (A \setminus B) \cup (B \setminus A)$ be the
+symmetric difference between sets $A$ and $B$. It is then sufficient
+to show that $\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \mathcal{L}(q) \overset{P}{\longrightarrow} \emptyset$
+for $L \rightarrow \infty$ where $\emptyset$ denotes the empty set.
+We have that
+\begin{align}
+  \plim_{L \rightarrow \infty}\left(\widehat{\mathcal{L}}_L(\widehat{q}_L) \triangle \mathcal{L}(q)\right) &=   \left(\plim_{L \rightarrow \infty}\widehat{\mathcal{L}}_L(\widehat{q}_L)\right) \triangle \mathcal{L}(q)\\
+  &= \left\{d : \plim_{L\rightarrow \infty} \left(\widehat{\textrm{sra}}_L(d) - \widehat{q}_L(d)\right)\geq 0\right\} \triangle \mathcal{L}(q)\nn\\
+  &= \left\{d : \textrm{sra}(d) - q(d) \geq 0\right\}\triangle \mathcal{L}(q)\nn\\
+  &= \mathcal{L}(q)\triangle \mathcal{L}(q)\nn\\
+  &= \emptyset\nn
+\end{align}
+as a consequence of Theorem 3.1, the assumption that $\left\|\widehat{q}_L - q\right\|_\infty = o_P(1)$ and the continuous mapping theorem. This completes the proof.
+
+\end{document}
+

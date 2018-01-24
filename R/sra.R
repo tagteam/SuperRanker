@@ -217,7 +217,7 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
 #'     censored observations
 #' @param type The type of measure to use. Either sd (standard
 #'     deviation - the default) or mad (median absolute deviance)
-#' @param epsilon A non-negative numeric vector that contains the minimum limit in proportion of lists that must show the item. Defaults to 0. If a single number is provided then the value will be recycles to the number of items.   
+#' @param epsilon A non-negative numeric vector that contains the minimum limit in proportion of lists that must show the item. Defaults to 0. If a single number is provided then the value will be recycles to the number of items. Should usually be low.  
 #' @return A matrix with n columns and the same number of rows as for the input object. Each column contains one
 #' simulated sequential rank agreement curve from one permutation run.
 #' @author Claus Ekstrøm <ekstrom@@sund.ku.dk>
@@ -251,7 +251,7 @@ random_list_sra <- function(object, B=1, n=1, na.strings=NULL, type=c("sd", "mad
         for (j in 1:ncol(object)) {
             object[,j] <- c(sample(nitems, size=notmiss[j]), rep(NA, nitems-notmiss[j]))
         }
-        sra(object, B=B, type=type)
+        sra(object, B=B, type=type, epsilon=epsilon)
     })
     res
 

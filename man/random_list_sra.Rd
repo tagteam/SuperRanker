@@ -22,7 +22,7 @@ censored observations}
 \item{type}{The type of measure to use. Either sd (standard
 deviation - the default) or mad (median absolute deviance)}
 
-\item{epsilon}{A non-negative numeric vector that contains the minimum limit in proportion of lists that must show the item. Defaults to 0. If a single number is provided then the value will be recycles to the number of items.}
+\item{epsilon}{A non-negative numeric vector that contains the minimum limit in proportion of lists that must show the item. Defaults to 0. If a single number is provided then the value will be recycles to the number of items. Should usually be low.}
 }
 \value{
 A matrix with n columns and the same number of rows as for the input object. Each column contains one
