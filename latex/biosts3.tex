@@ -183,28 +183,31 @@ samples.  \added{Two common research questions are of interest when
 
 
 In this article we introduce sequential rank agreement for measuring
-agreement among  ranked lists.  The general idea is to
-define agreement based on the sequence of ranks from a subset of the first $d$
-items in each list. As agreement metric we adapt the limits of
-agreement known from agreement between quantitative variables
+agreement among ranked lists.  The general idea is to define agreement
+based on the sequence of ranks from a subset of the first $d$ items in
+each list. As agreement metric we adapt the limits of agreement known
+from agreement between quantitative variables
 \citep{alt:bland:1983,Carstensen2010} but any measure for agreement
-could essentially be used. Our proposed approach allows us to
-compare multiple lists simultaneously, it provides a dynamic
-measure of agreement as a function of the depth in the lists, it places
-higher weight on items at the top of the list, it accommodates partially
+could essentially be used. Our proposed approach allows us to compare
+multiple lists simultaneously, it provides a dynamic measure of
+agreement as a function of the depth in the lists, it places higher
+weight on items at the top of the list, it accommodates partially
 observed lists of varying lengths, and has a natural interpretation
 that directly relates to the ranks.  Graphical illustration of
-sequential rank agreement allows us to infer any
-changepoints, i.e., a list depth where a substantial change in the agreement of
-the lists occur but we also provide asymptotical and randomization-based graphical
-tools to compare the observed rank agreement to the expected agreement
-found in non-informative data.  In this sense our approach is a
-combination and generalization of some of the ideas of
-\citet{Carterette2009} and \citet{Boulesteix2009}. The former compares
-two rankings based on the distance between them as measured by a
-multivariate Gaussian distribution and the latter presents an overview
-of approaches for aggregation of ranked lists including bootstrap and
-leave-one-out jackknife approaches. We show the asymptotic
+sequential rank agreement allows us to infer any changepoints, i.e., a
+list depth where a substantial change in the agreement of the lists
+occur but we also provide asymptotical and randomization-based
+graphical tools to compare the observed rank agreement to the expected
+agreement found in non-informative data.  In this sense our approach
+is a combination and generalization of some of the ideas of
+\added{\citet{iriz:etal:2005}}, \citet{Carterette2009}, and
+\citet{Boulesteix2009}. \citet{Carterette2009} compares two rankings
+based on the distance between them as measured by a multivariate
+Gaussian distribution and the latter presents an overview of
+approaches for aggregation of ranked lists including bootstrap and
+leave-one-out jackknife approaches. \added{\citet{iriz:etal:2005}
+  proposes a plot which is a special case of our setting where the
+  agreement metric is the overlap proportion}. We show the asymptotic
 distribution of the endpoint of agreement and discuss how to infer the
 distribution in small-sample situations using computational
 methods. This enables us to make inferences about the endpoint of
@@ -229,11 +232,11 @@ present but just a gradual decline in agreement.
 % to calculate the similarity measure.
 
 
-Other recent approaches consider the intersection of lists as the basis
-for a similarity measure. However, simple intersection also places
-equal weights on all depths of the list and therefore \citet{Fagin2003} and
-\citet{Webber2010} proposed weighted intersections which put more
-emphasis on the top of the lists. 
+Other recent approaches consider the intersection of lists as the
+basis for a similarity measure \citep{iriz:etal:2005}. However, simple
+intersection also places equal weights on all depths of the list and
+therefore \citet{Fagin2003}, and \citet{Webber2010} proposed weighted
+intersections which put more emphasis on the top of the lists.
 % One proposal is denoted the average overlap (AO) and used for
 % comparison later on. 
 Specifically, \citet{Webber2010} define their rank-biased overlap
