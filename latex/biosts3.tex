@@ -162,24 +162,22 @@ samples.  \added{Two common research questions are of interest when
   through the lists, and 2) Is it possible to identify an optimal rank
   until which the lists agree on the items?
 
-  A typical situation where
-  these questions arise is in high-dimensional genomics studies such
-  as genome-wide association studies where several analysis methods
-  (e.g., regression methods, lasso, random forest) can be used
-  identify and rank millions of gene variants according to their
-  association with the outcome. The importance (i.e., ranking) of each
-  gene variant may vary from method to method and a consensus summary
-  of agreement of the findings is needed to determine which gene
-  variants to investigate more closely in subsequent validation
-  studies. To minimiize expenses it is only of interest to consider
-  gene variants that have high ranking across the different methods.
-  Another situation where multiple ranked lists appear is in machine
+  A typical situation where these questions arise is in
+  high-dimensional genomics studies such as genome-wide association
+  studies where several analysis methods (e.g., regression methods,
+  lasso, random forest) can be used identify and rank millions of gene
+  variants according to their association with the outcome. The
+  ranking of each gene variant may vary from method to method and a
+  consensus summary of agreement of the findings is needed to
+  determine which gene variants to investigate more closely in
+  subsequent validation studies. To minimiize expenses it is only of
+  interest to consider gene variants that have high ranking across the
+  different methods.  Multiple ranked lists also appear in machine
   learning where the stability of the ranks produced by a
-  ``black-box''-technique can be evaluted by bootstrapping the data
-  repeatedly and comparing the ranks obtained from training the models
-  on the bootstrapped data. Assessing which items are stable (i.e.,
-  consistant across bootstrap samples) will help to weed out possible
-  fluke findings.}
+  ``black-box''-technique can be evaluted by bootstrapping the
+  data. Assessing which items are stable (i.e., consistant rankings
+  across bootstrap samples) will help to weed out possible fluke
+  findings.}
 
 
 In this article we introduce sequential rank agreement for measuring
@@ -187,7 +185,7 @@ agreement among ranked lists.  The general idea is to define agreement
 based on the sequence of ranks from a subset of the first $d$ items in
 each list. As agreement metric we adapt the limits of agreement known
 from agreement between quantitative variables
-\citep{alt:bland:1983,Carstensen2010} but any measure for agreement
+\citep{alt:bland:1983} but any measure for agreement
 could essentially be used. Our proposed approach allows us to compare
 multiple lists simultaneously, it provides a dynamic measure of
 agreement as a function of the depth in the lists, it places higher
@@ -206,13 +204,20 @@ based on the distance between them as measured by a multivariate
 Gaussian distribution and the latter presents an overview of
 approaches for aggregation of ranked lists including bootstrap and
 leave-one-out jackknife approaches. \added{\citet{iriz:etal:2005}
-  proposes a plot which is a special case of our setting where the
-  agreement metric is the overlap proportion}. We show the asymptotic
-distribution of the endpoint of agreement and discuss how to infer the
-distribution in small-sample situations using computational
-methods. This enables us to make inferences about the endpoint of
-agreement even for situations where there is no actual changepoint
-present but just a gradual decline in agreement.
+  proposes a plot based on the intersection of lists which is a
+  special case of our setting where the agreement metric is the
+  overlap proportion}. However, simple intersection also places equal
+weights on all depths of the list and therefore \citet{Fagin2003}, and
+\citet{Webber2010} proposed weighted intersections which put more
+emphasis on the top of the lists.  Specifically, \citet{Webber2010}
+define their rank-biased overlap (RBO) by weighting with a converging
+series to ensure that the top is weighted higher than the potentially
+non-informative bottom of the lists.  It is possible to use the
+existing methods to calculate agreement of lists until a given depth,
+i.e., limited to the $d$ items of each list. However, the
+interpretation may not be straightforward, especially in the case of
+more than two lists, and they may not accommodate partial rankings.
+
 
 
 
@@ -232,21 +237,6 @@ present but just a gradual decline in agreement.
 % to calculate the similarity measure.
 
 
-Other recent approaches consider the intersection of lists as the
-basis for a similarity measure \citep{iriz:etal:2005}. However, simple
-intersection also places equal weights on all depths of the list and
-therefore \citet{Fagin2003}, and \citet{Webber2010} proposed weighted
-intersections which put more emphasis on the top of the lists.
-% One proposal is denoted the average overlap (AO) and used for
-% comparison later on. 
-Specifically, \citet{Webber2010} define their rank-biased overlap
-(RBO) by weighting with a converging series to ensure that the top is
-weighted higher than the potentially non-informative bottom of the
-lists.  It is possible to use the existing methods to calculate
-agreement of lists until a given depth, i.e., limited to the $d$ items
-of each list. However, the interpretation may not be straightforward,
-especially in the case of more than two lists, and they may not
-accommodate partial rankings.
 
 
 Very recently, \citet{hall:schi:2012} proposed a method for comparing
@@ -270,14 +260,19 @@ is a situation that is only relevant in special cases, whereas the
 
 The manuscript is organized as follows: The next section defines
 sequential rank agreement for multiple ranked lists and discuss how to
-handle incomplete lists. In section 3 we discuss approaches to
-evaluate the results obtained from sequential rank agreement. Finally
-we apply the sequential rank agreement to two Danish ovarian cancer
-studies and compare our method to the method of \citet{hall:schi:2012}
-in a small sample simulation study before we discuss the findings
-along with possible extensions. The approaches presented in this
-manuscript are available in the R package \texttt{SuperRanker} which
-can be found on CRAN.
+handle incomplete lists. In section 3 we show the asymptotic
+distribution of the endpoint of agreement and discuss approaches to
+evaluate the results obtained from sequential rank agreement.
+%infer the
+%distribution in small-sample situations using computational
+%methods. This enables us to make inferences about the endpoint of
+%agreement even for situations where there is no actual changepoint
+%present but just a gradual decline in agreement.
+Finally we apply the sequential rank agreement to two Danish ovarian
+cancer studies and compare our method to the method of
+\citet{hall:schi:2012} in a small sample simulation study before we
+discuss the findings and possible extensions. The approaches
+presented are implemented in the R package \texttt{SuperRanker}  found on CRAN.
 % chunk 1
 
 
@@ -292,7 +287,7 @@ the set of items $X$.  Panels (a) and (b) of Table~\ref{tab:example}
 show a schematic example of these mappings. Thus if
 $R_l^{-1}(1)=X_{34}$ then item $X_{34}$ is ranked first in list $l$
 and similarly $R_l(X_{34})=1$.
-
+% 
 In all what follows we consider a fixed set of items and consider the
 ranking function to be a random variable. Thus, let
 $R_1(X),\dots,R_L(X)$, $L\geq2$, be a sample of $L$ independent
@@ -317,7 +312,7 @@ $\E_Q R(X_p)=\sum_{r\in\Pi} r(X_p)Q(r)$. The empirical counterpart is
 For each item, the function $\widehat{A}_L$ has an interpretation as the expected
 Euclidean distance of the individual rankings from the expected
 ranking over the $L$ lists, and it corresponds to the same measure
-that is used in method comparison studies to compute the limits of
+that is used to compute the limits of
 agreement \citep{alt:bland:1983}.
 
 For an integer $1\le d\le P$ we define the expected set of unique
@@ -339,7 +334,7 @@ expected agreement of the items found in the set $S(d)$:
 \begin{equation}
 \added{  \textrm{sra}(d) = \left\{\begin{array}{cl}\frac{1}{|S(d)|}\sum_{p \in S(d)}A(X_p)  & \text{when $|S(d)|>0$} \\ 0 & \text{otherwise}\end{array}  \right.}\label{def:sra}
 \end{equation}
-where $|S(d)|$ is the cardinality of the set $S(d)$. \added{As stated, we are only interested in sra($d$) when $|S(d)|>0$ so the value 0 above is somewhat arbitrary.}
+where $|S(d)|$ is the cardinality of the set $S(d)$. \added{As stated, we are only interested in sra($d$) when $|S(d)|>0$.}
 The empirical counterpart when $|S(d)|>0$ is equivalently given by
 \begin{equation}
   \widehat{\textrm{sra}}_L(d) = \frac{\sum_{\{p \in \widehat{S}_{L}(d)\}}(L-1)\widehat{A}_L(X_p)}{(L-1)|\widehat {S}_{L}(d)|}.\label{def:sraEst}
@@ -349,9 +344,10 @@ Values of \textrm{sra} close to zero when $|S(d)|>0$ suggest that the
 lists agree on the rankings while larger values suggest
 disagreement. \added{If $|S(d)|=0$ then no items were sufficiently
   frequent among the observed lists and we can conclude that the lists
-  do not agree above the threshold $\varepsilon$.  } If the ranked
-lists are identical then the value of sequential rank agreement will
-be zero for all values of $d$. %position or depths $d$ down the lists.
+  do not agree above the threshold $\varepsilon$.  } The sequential rank agreement will be zero for all values of $d$
+when the ranked
+lists are identical.
+ %position or depths $d$ down the lists.
 
 
 \subsection{Interpreting and applying sequential rank agreement}
@@ -371,15 +367,15 @@ $\sqrt{\widehat{\textrm{sra}}_L(d)}$ corresponding to the pooled SD
 against $d$.
 
 
-As an example consider the data by \citet{Golub1999} (also found in
+As an example consider the data by \citet{Golub1999} (found in
 \citet{Dudoit2002}) where 3051 gene expression values measured on 38
 tumor mRNA samples were used to classify between acute lymphoblastic
-leukemia (ALL) and acute myeloid leukemia (AML). Several possible
-analysis methods can be used for this for example marginal unequal
+leukemia (ALL) and acute myeloid leukemia (AML). Several 
+analysis methods are possible for these data for example marginal unequal
 variances two-sample $t$ tests, marginal logistic regression analyses,
 elastic net logistic regression \citep{friedman2010regularization},
 and marginal maximum information content correlations (MIC)
-\citep{Reshef2011}, and we would like to identify a set of genes that
+\citep{Reshef2011}, and we want to identify a set of genes that
 consistently are most likely to be associated to leukemia.
 
 \added{
@@ -421,8 +417,7 @@ average distance in ranks for the genes considered among the first $d$
 positions. Not surprisingly, the sequential rank agreement is better
 towards the top of the lists (smaller values on the $y$ axis
 corresponds to \emph{better} agreement) than towards the bottom of the
-lists. It is clear from the curve in Figure~\ref{fig:example1} that
-there is a substantial deterioration in agreement (higher sra) after
+lists. Figure~\ref{fig:example1} shows a substantial deterioration in agreement (higher sra) after
 depth 5. Thus, if we were to restrict attention to a small set of
 predictors then our prime focus would be on the items found among the
 top-5 lists from Table~\ref{tab1}). The choice of which depth until
@@ -444,9 +439,9 @@ given.}
 % zero for all depths. 
 Generally, changes in the level of rank agreement suggest that there
 are sets of items that are ranked similarly in all lists while other
-items constitute set(s) that have been assigned vastly different
+items constitute set(s) with vastly different
 ranks. When the lists are likely to agree on a few top ranked items
-then the sequential rank agreement curve will start at a low level and
+then the sequential rank agreement curve will start low and
 then increase until it levels off exactly as is seen in
 Figure~\ref{fig:example1}.
 
@@ -494,7 +489,7 @@ list. By randomizing a large number of times we can compute
 \eqref{def:sra} for each realization, and then compute the sequential
 rank agreement as the pointwise (for each depth) average of the rank
 agreements. The algorithm is described in detail in
-Algorithm~\ref{sra-algorithm}.
+Algorithm~C in the appendix.
 
 
 The proposed approach is based on two assumptions: 1) that the most
@@ -646,10 +641,15 @@ which the rankings are based but also that the methods used to provide
 the rankings are completely independent.
 
 Alternatively, we can remove the restriction of the independence among
-the methods used to generate the $L$ ranked lists and only require
-that there is no information contained in the rankings but that the
-rankings are all based on applying the method/approaches to the same
-data
+the methods used to generate the $L$ ranked lists under the null
+hypothesis that any association to the outcome is removed in the
+data.
+
+
+%and only require
+%that there is no information contained in the rankings but that the
+%rankings are all based on applying the method/approaches to the same
+%data
 \begin{eqnarray*}
 \widetilde H_0 & :&  \text{The list rankings are based on data that contain}\\
 & &   \text{no association to the outcome.}
@@ -718,23 +718,22 @@ than what would be expected (the bottom-right plot). Not surprisingly,
 the sequential rank agreement under $\widetilde H_0$ is lower than the
 sequential rank agreement under $H_0$ because the four methods used to
 rank the data ($t$ test, logistic regression, elastic net, and MIC)
-generally tend to identify (and rank) similar predictors even if there
-are only spurious associations.
+generally tend to identify the same predictors.
+%even if there are only spurious associations.
 
 
 
 \added{It is important to stress that neither $H_0$ nor
   $\widetilde H_0$ are related to questions regarding the association
   between the outcome and the predictors in the dataset. Both
-  hypotheses are purely considering how the rankings agree in a
-  situation where there is no relevant information available in the
-  data used for creating the rankings. It is also worth pointing out,
-  that if the lists are short ($P$ low) and there are few lists ($L$
-  low) then the number of possible different permutations under the
-  null is small and the $p$ value obtained may be fluctuating if the
-  number of permutations is small. We have found that a number of
-  permutations over 500 works well for smaller samples. The number of
-  permutations can be lowered for larger data sizes.}
+  hypotheses are purely considering how the rankings agree in
+  situations where the data contains no information for creating the
+  rankings. It is also worth pointing out, that if the lists are short
+  ($P$ low) and there are few lists ($L$ low) then the number of
+  possible different permutations under the null is small and the $p$
+  value obtained may be fluctuating if the number of permutations is
+  small. We have found that a number of permutations over 500 works
+  well even for smaller samples.}
 
 
 \subsection{Asymptotic inference of change in agreement}\label{sec:chgpoint}
@@ -772,12 +771,12 @@ estimator of $\textrm{sra}$ for $L \rightarrow \infty$.
 
 \begin{theorem}
   Assume that $\{R_l(X)\}_{l=1}^L$ are independent draws from a
-  probability distribution $Q$ on the set of lists $\Pi$. Then,
+  probability distribution $Q$ on the set of lists $\Pi$. Then
   $\left\|\widehat{\textrm{sra}}_L - \textrm{sra}\right\|_\infty =
   o_P(1)$.
 \label{thm:consistency}
 \begin{proof}
-See Appendix A in the supplementary material.%\ref{sec:appA}.
+See App. A in the supplement.%ary% material.%\ref{sec:appA}.
 \end{proof}
 \end{theorem}
 
@@ -808,8 +807,9 @@ similarly defined as
 \begin{align}
  \widehat{\mathcal{L}}_L(\widehat{q}_L) = \left\{d : \widehat{\textrm{sra}}_L(d) \geq \widehat{q}_L(d)\right\}
 \end{align}
-where we allow the threshold function to depend on the sample size as
-well. The estimated changepoint is therefore
+where the threshold function may depend on the sample size.
+% as well.
+The estimated changepoint is% therefore
 \begin{align}
   \widehat{d^\ast_L}(\widehat{q}_L) &= 1(|\widehat{\mathcal{L}}_L(\widehat{q}_L)| > 0)\inf \widehat{\mathcal{L}}_L(\widehat{q}_L) + 1(|\widehat{\mathcal{L}}_L(\widehat{q}_L)| = 0)P.
 \end{align}
@@ -817,10 +817,10 @@ well. The estimated changepoint is therefore
 The consistency of the estimated changepoint, $\widehat{d^\ast_L}(\widehat{q}_L)$, follows from Theorem \ref{thm:consistency} by the following corollary. 
 \begin{corollary}\label{thecor}
 Let $\widehat{q}_L$ be a positive threshold function such that $\left\|\widehat{q}_L - q\right\|_\infty = o_P(1)$ for some limiting
-function $q$.  Then, $\widehat{d^\ast_L}(\widehat{q}_L) \overset{P}{\longrightarrow} d^\ast(q)$ for $L \rightarrow \infty$.
+function $q$.  Then $\widehat{d^\ast_L}(\widehat{q}_L) \overset{P}{\longrightarrow} d^\ast(q)$ for $L \rightarrow \infty$.
 \label{cor:consistency}
 \begin{proof}
-See Appendix B in supplementary material.%\ref{sec:appB}.
+See App. B in supplement.%ary material.%\ref{sec:appB}.
 \end{proof}
 \end{corollary}
 
@@ -852,7 +852,7 @@ samples from patients with either benign or malignant ovarian
 tumors. The datasets are sub-samples of the Danish MALOVA and DACOVA
 study populations.
 
-The MALOVA study is a multidisciplinary Danish study on ovarian cancer
+The MALOVA study is a Danish study on ovarian cancer
 \citep{Hogdall:2004:Cancer:15160342} where all Danish women diagnosed
 with an ovarian tumor and referred for surgery from the participating
 departments of gynecology were enrolled continuously from December
@@ -860,14 +860,14 @@ departments of gynecology were enrolled continuously from December
 sub-sample of $119$ patients with a total of $58$ patients with
 malignant ovarian cancers as cases and $61$ patients with benign
 ovarian tumors as controls. The DACOVA study is another
-multidisciplinary Danish study on ovarian cancer which included about
+Danish study on ovarian cancer which included about
 $66\%$ of the female population of Denmark
 \citep{bertelsen1991protocol}. The study aimed to continuously enroll
 all patients that were referred to surgery of an ovarian tumor
 clinically suspected to be cancer during the period from 1984 to
-1990. Similarly, we use a random sub-sample from the DACOVA study of
-$113$ patients with a total of $54$ malignant ovarian cancers and $59$
-benign ovarian tumors/gynecologic disorders.
+1990. We use a random sub-sample from the DACOVA study of $54$
+malignant ovarian cancers and $59$ benign ovarian tumors/gynecologic
+disorders.
 
 Each spectrum consists of $49642$ samples over a range of mass-to-charge ratios
 between $800$ to $20000$ Dalton which we downsample on an equidistant grid of
@@ -911,18 +911,19 @@ search with respect to minimizing the Out-of-Bag classification error estimate.
 In both scenarios we use the MALOVA data to train the statistical
 models, and in both situations the agreements are assessed with
 respect to perturbations of the training data in the following
-manner. We repeatedly draw a random sub-sample (without replication)
+manner. We draw 1000 random sub-samples (without replication)
 consisting of 90\% of the MALOVA observations and train the four
-models on each sub-sample. We use 1000 iterations for the sub-sampling
-procedure.
+models on each sub-sample.
+%We use 1000 iterations for the sub-sampling
+%procedure.
 
 
 The implementation of Lasso and Ridge regression in the
 \texttt{glmnet} package offers three different cross-validated
 optimization criteria for the penalty parameter: total deviance,
 classification accuracy and area under ROC. We apply all three
-criteria to our data to investigate their effect on the agreements.
-Note also that the Lasso models produce incomplete lists depending on
+criteria to investigate their effect on the sra.
+Note that these models produce incomplete lists depending on
 the value of the penalty parameter.
 
 
@@ -938,15 +939,15 @@ predictors is based on a weighted sum of the absolute coefficients
 where the weights are proportional to the reduction in the sums of
 squares across the components.
 
-The right panel of Figure \ref{fig:app1} shows the sequential rank
+The top right panel of Figure \ref{fig:app1} shows the sequential rank
 agreement of the estimated importance of the 5000 predictors.  For
 clarity of presentation we zoom in on the agreement up to list depth
 600. At deeper list depths all agreement curves are approximately constant.
 %
 As expected, most of the sequential rank agreement curves start low,
-indicating good agreement, followed by an increase until they
-approximately become constant. This has the interpretation that the
-agreement across the different sub-samples is higher in the top as
+indicating good agreement, followed by an increase until they become
+approximately constant. This has the interpretation that the
+agreement across the sub-samples is higher in the top as
 compared to the tail of the lists for all these classification
 methods. The changepoints where the curves become approximately
 constant are the list depths where the ranks of the remaining items
@@ -966,13 +967,13 @@ uncertain and more close to a random permutation. This problem can be
 alleviated by truncating all predictors with absolute coefficient
 values below a given threshold thereby introducing an artificial
 incompletion of the lists.  For the Ridge models tuned with the
-deviance criterion, Figure \ref{fig:app2} (left) shows the the
+deviance criterion, Figure \ref{fig:app1} (bottom left) shows the the
 sequential rank agreement where for each of the 1000 trained models
 the predictors were artificially censored when their absolute
 coefficient value was lower than the $0.1\%$ quantile of the 5000
 absolute coefficient values. The curve was calculated using Algorithm
-\ref{sra-algorithm} with $B=1000$ and $P=5000$. The corresponding
-curve from Figure \ref{fig:app1} (right panel) is shown for
+1 from the appendix with $B=1000$ and $P=5000$. The corresponding
+curve from Figure \ref{fig:app1} (top right) is shown for
 comparison.  Even though the number of predictors with missing ranks is very
 small compared to the total number of predictors, the effect on the
 sequential rank agreement is substantial and with the artificial
@@ -980,9 +981,9 @@ censoring the shape of the curves is as expected, starting low and
 then increasing. 
 
 Looking at the agreement curves for the Lasso models in Figure
-\ref{fig:app1} (right) we clearly see the effect of the sparsity
+\ref{fig:app1} (top right) we clearly see the effect of the sparsity
 inducing penalization giving rise to incomplete lists. These curves
-were similarly calculated using \ref{sra-algorithm} and $1000$ random
+were similarly calculated using the algorithm and $1000$ random
 permutations. Under the deviance optimization criterion the median
 number of non-zero coefficients was 33 (range 16 to 50) and for the
 class accuracy criterion 14 (range 4 to 56). These values correspond
@@ -998,7 +999,7 @@ To assess the stability of the individual risk predictions we apply
 the predictors from the DACOVA dataset to each of the models. The
 predicted probabilities are then ranked in decreasing order such that
 the patients with the highest risk of a malignant tumor appears in the
-top of the list. Figure \ref{fig:app1} (left) shows the sra separately
+top of the list. Figure \ref{fig:app1} (top left) shows the sra separately
 for each method, based on the 1000 risk predictions obtained from the
 models trained in the same $1000$ random sub-samples of the MALOVA
 data.
@@ -1024,7 +1025,7 @@ rank agreement for the predicted probabilities becomes undefined since
 all the ranks will be ties.
 
 
-Comparing the left and right panels of Figure \ref{fig:app1} it can
+Comparing the top left and right panels of Figure \ref{fig:app1} it can
 further be seen that some of the methods show better agreement with
 respect to the predicted probabilities than for ranking the importance
 of the predictors and vice versa. Ridge regression shows higher agreement across training
@@ -1039,7 +1040,7 @@ leads to collinearity issues in the regression models. It is
 well-known that variable selection with the Lasso does not
 perform very well when the predictors are highly correlated. The
 collinearity does, however, not affect the agreement of the risk
-predictions (Figure \ref{fig:app1}, left panel), since
+predictions (Figure \ref{fig:app1}, top left), since
 the specific variable selected is not that important for 
 % it is not so important which specific variable that gets selected from
 a group of highly correlated predictors when the purpose is risk
@@ -1053,8 +1054,8 @@ concerned with the agreement of the risk predictions across
 sub-samples and not with the actual accuracy of the risk
 predictions. Thus, we also computed the AUC values for the different models
 based on the DACOVA data. The distributions across the $1000$
-sub-samples for a selection of the models is shown in the right panel
-of Figure \ref{fig:app2}.  Here we see that PLS-DA attains the highest
+sub-samples for a selection of the models is shown in the bottom right panel
+of Figure \ref{fig:app1}.  Here we see that PLS-DA attains the highest
 AUC values with a median value of $0.70$ while the Ridge model with
 the AUC criterion attains a median AUC of $0.49$. This implies that
 while Ridge regression optimized with respect to the AUC criterion
@@ -1065,24 +1066,21 @@ In practice both concerns are of importance.
 
 \section{Simulation study --- comparison of list agreements}
 
-We present results from a simulation study where we investigated the
-small sample properties of the sequential rank agreement and compared
-it to the topK method \citep{hall:schi:2012} with respect to list
-depth agreement.
-
+We present results from a simulation study where we compare the small
+sample properties of the sequential rank agreement to the topK method
+\citep{hall:schi:2012}.
 \added{The purpose of the simulations were twofold: First we want to
   investigate the rank agreement as it changes with threshold $q$ and
-  number of lists $L$. Secondly, we want to compare the results (and
-  conclusions) from sra with the topK for a realistic situation where
+  number of lists $L$. Secondly, we want to compare the results from sra with the topK for a realistic situation where
   the true, underlying agreement is not governed by a simple
   probability distribution. Thus, we are interested in two features of
   the methods: the depth until which they agree, and the number of
-  unique predictors found in that set.
+  unique predictors found.
 
   To define the depth of agreement for sra we set a constant threshold
   function to an integer $q$ and report the first crossing point,
   i.e., the smallest list depth where sra exceeds $q$ (as implemented
-  in the \texttt{sra} function from package \texttt{SuperRanker} using
+  in the \texttt{sra} function from our package \texttt{SuperRanker} using
   the median absolute distance argument). For topK we use the function
   \texttt{j0.multi} which is implemented in the \texttt{R} package
   \texttt{TopKLists}. Specifically, we set the tuning parameter
@@ -1163,9 +1161,7 @@ the median absolute distance for the sequential rank agreement
 shows the results from Scenario II. The number of lists has little
 impact on the results, and again the sra is more conservative than
 topK and as a consequence sra includes fewer predictors in the
-selected set where the lists agree.
-
-Note that the effect sizes of the 15 predictors in the model is the
+selected set where the lists agree. The effect sizes of the 15 predictors in the model is the
 same and in practice we observe that the majority of the 15 predictors
 are generally picked in each sample but that their individual rankings
 vary substantially in the top 15 within each bootstrap sample. If the
@@ -1206,7 +1202,7 @@ purely concerned with consistency/stability of the rankings among the
 lists, and consequently we cannot determine if the rankings are good but only
 whether they agree. The sequential rank agreement curve can be
 compared visually to the curves obtained under either of the null
-distributions and simple point-wise $p$-values can be obtained for
+distributions and point-wise $p$-values can be obtained for
 each depth by counting the number of sequential rank agreements under
 the null hypothesis that is less than or equal to the observed rank
 agreement.
@@ -1223,12 +1219,15 @@ agreement.
 
 Finally, we have --- whenever possible --- used all available ranks
 from the lists.  We could choose to restrict attention to the rank of
-items which show evidence for significance in their models. That would
-ensure that there would be put less emphasis on the agreement of the
+items which show evidence for significance in their models. That
+ensures that less emphasis is put on the agreement of the
 non-significant items and it would be easier to identify a change in
-agreement among the items that were deemed to be relevant. In our
-application section we have successfully introduced such an artificial
-censoring for the predictor rankings obtained with ridge regression.
+agreement among the items that were deemed to be relevant.  Artificial
+censoring was successfully introduced in the ridge regression
+application.
+%In our
+%application section we have successfully introduced such an artificial
+%censoring for the predictor rankings obtained with ridge regression.
 
 We note that the sequential rank agreement is still marred by problems
 that generally apply to ranking of items and/or
@@ -1236,22 +1235,22 @@ individuals. Collinearity in particular can be a huge problem when
 bootstrapping data or when comparing different analysis methods. For
 example, marginal analyses where each item is analyzed separately will
 assign similar ranks to two highly correlated predictors while methods
-that provide a sparse solution such as the Lasso will just rank one of
-the two predictors high while the other might have a very low rank.
-Thus in such a scenario we would expect low agreement of the rankings
-from Lasso and marginal analyses simply because of the way correlated
-predictors are handled. This is not a shortcoming of the sequential
-rank agreement but is a problem general to all ranked lists.
+that provide a sparse solution such as the Lasso will just rank a
+single of the two predictors high.  Thus in such a scenario we would
+expect low agreement of the rankings from Lasso and marginal analyses
+simply because of the way correlated predictors are handled. This is
+general problem for ranked lists and not a shortcoming of the
+sequential rank agreement. %but is a problem
+%general to all ranked lists.
 
 Another caveat with the way the sequential rank agreement is defined
 is the use of the standard deviation to measure agreement. The
 standard deviation is an integral part of the limits-of-agreement as
-discussed by \citet{alt:bland:1983}. However, the standard deviation
-can also be unstable when the number of observations is low and
-alternative measures such as the median absolute deviance may prove more
-stable in some situations. However, the current definition using the
-standard deviation is analogous to the approach used for agreement in
-method comparison studies so we have used that.
+discussed by \citet{alt:bland:1983} which is why we have followed the
+analogous path. However, the standard deviation is unstable
+when the number of observations is low and alternatives such
+as the median absolute deviance may prove more stable in some
+situations.
 
 In conclusion we have introduced a method for evaluation of ranked
 (partial/censored) lists that can be easily interpreted and that can
@@ -1268,7 +1267,7 @@ the mixing proportion between the $L_1$ and the $L_2$ penalty.
 %Finally, the proposed method may be adapted (with some additional
 %assumptions) to the situation where the lists are subsets of each
 %other.
-We will be investigating these extensions further in the future.
+%We will be investigating these extensions further in the future.
 
 \section{Supplementary Materials}
 \label{sec5}
@@ -1387,7 +1386,7 @@ technical appendices and proofs.
  \includegraphics[width=.49\textwidth]{newfig1a}
  \includegraphics[width=.49\textwidth]{newfig1b}
 % \includegraphics[width=.49\textwidth]{paper-fig1b}
-% \includegraphics[width=.49\textwidth]{paper-fig2b}
+% \includegraphics[width=.49\textwidth]{paper-fig2b} 
  \end{center}
  \caption{Left panel: Sequential rank agreement for 4 different
    analysis methods applied to the 3051 genes in the Golub data (black
@@ -1407,31 +1406,39 @@ technical appendices and proofs.
 \begin{center}
 \includegraphics[width=.49\textwidth]{pics/riskAgreementPlot}%
 \includegraphics[width=.49\textwidth]{pics/predictorAgreementPlot}
-\end{center}
-\caption{Left panel: Sequential rank agreement of 1000 rankings of the
-  predicted risks of malignant tumor. For each method the different
-  rankings were obtained by first training models in 1000 random
-  sub-samples of the MALOVA data and then predicting the risk of
-  malignant tumor in the 113 DACOVA patients. Right panel: Sequential
-  rank agreement of 1000 rankings of the 5000 predictors. The rankings
-  were obtained from the same 1000 trained models.}
- \label{fig:app1}
-\end{figure}
-
-\newpage
-
-\begin{figure}[htbp]
-\begin{center}
 \includegraphics[width=.49\textwidth]{pics/ridgeCensoring}%
 \includegraphics[width=.49\textwidth]{pics/aucPlot}
 \end{center}
-\caption{Left panel: Sequential rank agreement for Ridge regression
+\caption{Top left panel: Sequential rank agreement of 1000 rankings of the
+  predicted risks of malignant tumor. For each method the different
+  rankings were obtained by first training models in 1000 random
+  sub-samples of the MALOVA data and then predicting the risk of
+  malignant tumor in the 113 DACOVA patients. Top right panel: Sequential
+  rank agreement of 1000 rankings of the 5000 predictors. The rankings
+  were obtained from the same 1000 trained models.
+Bottom left panel: Sequential rank agreement for Ridge regression
   obtained by artificially censoring predictor ranks when their absolute
-  coefficient values are lower than the 0.1\% quantile. Right panel:
+  coefficient values are lower than the 0.1\% quantile. Bottom right panel:
   Box plots of AUC values across the $1000$ sub-samples with respect
-  to the known class labels of the DACOVA data.}
- \label{fig:app2}
+  to the known class labels of the DACOVA data.
+}
+ \label{fig:app1}
 \end{figure}
+
+%\newpage
+%
+%\begin{figure}[htbp]
+%\begin{center}
+%\includegraphics[width=.49\textwidth]{pics/ridgeCensoring}%
+%\includegraphics[width=.49\textwidth]{pics/aucPlot}
+%\end{center}
+%\caption{Left panel: Sequential rank agreement for Ridge regression
+%  obtained by artificially censoring predictor ranks when their absolute
+%  coefficient values are lower than the 0.1\% quantile. Right panel:
+%  Box plots of AUC values across the $1000$ sub-samples with respect
+%  to the known class labels of the DACOVA data.}
+% \label{fig:app2}
+%\end{figure}
 
 \newpage
 
@@ -1539,29 +1546,6 @@ Ranking & Welsh's $t$ & LogReg & ElasticNet & MIC \\
 \end{tabular}
 \end{table}
 
-
-\newpage
-
-\begin{algorithm}
-\caption{Sequential rank agreement algorithm for incomplete lists}
-\label{sra-algorithm}
-\begin{algorithmic}[1]
-  \Procedure{Incomplete list rank agreement}{} \State Let $B$ be the number
-  of permutations to use \For{each $b \in B$} \For{each list
-    $l \in L$}
-  \State \parbox[t]{\dimexpr\linewidth-\algorithmicindent-1.7cm}{Permute
-    the unassigned ranks, $\{d_l+1, \ldots, P\}$, and assign them
-    randomly to the items \emph{not} found in the list, i.e.,
-    $\Lambda^\complement=X\setminus\Lambda_l$. Combine the
-    result with $\Lambda_l$ to fill out the list.}
-\EndFor
-\State \parbox[t]{\dimexpr\linewidth-\algorithmicindent-1cm}{Let sra($b$) be the sequential rank agreement computed from the
-filled out lists.}
-\EndFor
-\State Return element-wise averages across all $B$ permutations of sra($b$).
-\EndProcedure
-\end{algorithmic}
-\end{algorithm}
 
 
 \end{document}

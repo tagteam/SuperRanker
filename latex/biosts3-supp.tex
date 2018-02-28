@@ -3,6 +3,8 @@
 % \documentclass[12pt,a4paper]{article}
 \pdfoutput=1
 \usepackage[utf8]{inputenc}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 %\usepackage[]{graphicx}
 %\usepackage{amsmath}
 %\usepackage{amssymb}
@@ -115,7 +117,7 @@ DK-1014 Copenhagen K, Denmark}
 \maketitle
 
 
-This document provides proofs of the theorem and corollary shown in the main manuscript.
+This document provides proofs of the theorem and corollary shown in the main manuscript as well as details about the algorithm for incomplete lists.
 
 \appendix
 
@@ -214,6 +216,33 @@ We have that
   &= \emptyset\nn
 \end{align}
 as a consequence of Theorem 3.1, the assumption that $\left\|\widehat{q}_L - q\right\|_\infty = o_P(1)$ and the continuous mapping theorem. This completes the proof.
+
+
+\section{Algorithm for sequential rank agreement for incomplete lists}
+\label{sec:appA}
+
+
+
+\begin{algorithm}
+\caption{Sequential rank agreement algorithm for incomplete lists}
+\label{sra-algorithm}
+\begin{algorithmic}[1]
+  \Procedure{Incomplete list rank agreement}{} \State Let $B$ be the number
+  of permutations to use \For{each $b \in B$} \For{each list
+    $l \in L$}
+  \State \parbox[t]{\dimexpr\linewidth-\algorithmicindent-1.7cm}{Permute
+    the unassigned ranks, $\{d_l+1, \ldots, P\}$, and assign them
+    randomly to the items \emph{not} found in the list, i.e.,
+    $\Lambda^\complement=X\setminus\Lambda_l$. Combine the
+    result with $\Lambda_l$ to fill out the list.}
+\EndFor
+\State \parbox[t]{\dimexpr\linewidth-\algorithmicindent-1cm}{Let sra($b$) be the sequential rank agreement computed from the
+filled out lists.}
+\EndFor
+\State Return element-wise averages across all $B$ permutations of sra($b$).
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
 
 \end{document}
 
