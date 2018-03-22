@@ -20,7 +20,7 @@ sra(mlist)
 
 ### Comparisons between sra and the topK method
 
-See [this script](https://www.github.com) for a comparison between sequential rank agreement the topK method. This corresponds to section 5 of the manuscript
+See [this script](https://raw.githubusercontent.com/tagteam/SuperRanker/master/inst/topK.Rmd) for a comparison between sequential rank agreement the topK method. This corresponds to section 5 of the manuscript.
 
 
 ### Long example
