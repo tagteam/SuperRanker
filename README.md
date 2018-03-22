@@ -18,11 +18,14 @@ sra(mlist)
 ```
 
 
+### Comparisons between sra and the topK method
+
+See [this script](https://www.github.com) for a comparison between sequential rank agreement the topK method. This corresponds to section 5 of the manuscript
 
 
 ### Long example
 
-The following code produces the results for the Table and Figure 1 in the manuscript. They do take some time to run,
+The following code produces the results for the Table and Figure 1 in the manuscript. They do take some time to run. This reproduces the results in section 3 of the paper.
 
 
 ```{r}
