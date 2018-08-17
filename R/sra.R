@@ -215,6 +215,7 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
 #' and compute corresponding the sequential rank agreement curves
 #' @param na.strings A vector of character values that represent
 #'     censored observations
+#' @param nitems The total number of items in the original lists if we only have partial lists available. Will be derived from the unique elements of the object if set to \code{NULL} (the default)
 #' @param type The type of measure to use. Either sd (standard
 #'     deviation - the default) or mad (median absolute deviance)
 #' @param epsilon A non-negative numeric vector that contains the minimum limit in proportion of lists that must show the item. Defaults to 0. If a single number is provided then the value will be recycles to the number of items. Should usually be low.  
@@ -230,7 +231,7 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
 #' random_list_sra(mlist, n=5)
 #'
 #' @export
-random_list_sra <- function(object, B=1, n=1, na.strings=NULL, type=c("sd", "mad"), epsilon=0) {
+random_list_sra <- function(object, B=1, n=1, na.strings=NULL, nitems=NULL, type=c("sd", "mad"), epsilon=0) {
 
     type <- match.arg(type)
 
@@ -244,14 +245,17 @@ random_list_sra <- function(object, B=1, n=1, na.strings=NULL, type=c("sd", "mad
         object[object %in% na.strings] <- NA
     }
 
-    nitems <- nrow(object)
+    listlengths <- nrow(object)
+    if (is.null(nitems)) {
+        nitems <- length(unique(as.vector(object)))
+    }
     notmiss <- apply(object, 2, function(x) {sum(!is.na(x))} )
     res <- sapply(1:n, function(i) {
         ## Do a permutation with the same number of missing
         for (j in 1:ncol(object)) {
-            object[,j] <- c(sample(nitems, size=notmiss[j]), rep(NA, nitems-notmiss[j]))
+            object[,j] <- c(sample(nitems, size=notmiss[j]), rep(NA, listlengths-notmiss[j]))
         }
-        sra(object, B=B, type=type, epsilon=epsilon)
+        sra(object, B=B, nitems=nitems, type=type, epsilon=epsilon)
     })
     res
 
@@ -308,12 +312,12 @@ test_sra <- function(object, nullobject, weights=1) {
         stop("the vector of weights must have the same length as the number of items")
 
     ## Test statistic
-    T <- max(weights*abs(object - apply(nullobject, 1, mean)))
+    T <- max(weights*abs(object - rowMeans(nullobject)))
 
     ## Now compute the individual jackknife variations from the null object
     B <- ncol(nullobject)
     nullres <- sapply(1:B, function(i) {
-        max(weights*abs(nullobject[,i] - apply(nullobject[,-i], 1, mean)))
+        max(weights*abs(nullobject[,i] - rowMeans(nullobject[,-i])))
     })
 
     res <- sum(nullres>=T)/(B+1)
