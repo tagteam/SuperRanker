@@ -16,34 +16,34 @@
 #' @param epsilon A non-negative numeric vector that contains the minimum limit in proportion of lists that must show the item. Defaults to 0. If a single number is provided then the value will be recycles to the number of items.   
 #' @param ... Arguments passed to methods.
 #' @return A vector of the sequential rank agreement
-##' @examples
-##'
-##' mlist <- matrix(cbind(1:8,c(1,2,3,5,6,7,4,8),c(1,5,3,4,2,8,7,6)),ncol=3)
-##' sra(mlist)
-##'
-##' mlist <- matrix(cbind(1:8,c(1,2,3,5,6,7,4,8),c(1,5,3,4,2,8,7,6)),ncol=3)
-##' sra(mlist, nitems=20, B=10)
-##'
-##' alist <- list(a=1:8,b=sample(1:8),c=sample(1:8))
-##' sra(alist)
-##'
-##' blist <- list(x1=letters,x2=sample(letters),x3=sample(letters))
-##' sra(blist)
-##'
-##' ## censored lists are either too short
-##' clist <- list(x1=c("a","b","c","d","e","f","g","h"),
-##'               x2=c("h","c","f","g","b"),
-##'               x3=c("d","e","a"))
-##' set.seed(17)
-##' sra(clist,na.strings="z",B=10)
-##'
-##' ## or use a special code for missing elements
-##' Clist <- list(x1=c("a","b","c","d","e","f","g","h"),
-##'               x2=c("h","c","f","g","b","z","z","z"),
-##'               x3=c("d","e","a","z","z","z","z","z"))
-##' set.seed(17)
-##' sra(Clist,na.strings="z",B=10)
-##'
+#' @examples
+#'
+#' mlist <- matrix(cbind(1:8,c(1,2,3,5,6,7,4,8),c(1,5,3,4,2,8,7,6)),ncol=3)
+#' sra(mlist)
+#'
+#' mlist <- matrix(cbind(1:8,c(1,2,3,5,6,7,4,8),c(1,5,3,4,2,8,7,6)),ncol=3)
+#' sra(mlist, nitems=20, B=10)
+#'
+#' alist <- list(a=1:8,b=sample(1:8),c=sample(1:8))
+#' sra(alist)
+#'
+#' blist <- list(x1=letters,x2=sample(letters),x3=sample(letters))
+#' sra(blist)
+#'
+#' ## censored lists are either too short
+#' clist <- list(x1=c("a","b","c","d","e","f","g","h"),
+#'               x2=c("h","c","f","g","b"),
+#'               x3=c("d","e","a"))
+#' set.seed(17)
+#' sra(clist,na.strings="z",B=10)
+#'
+#' ## or use a special code for missing elements
+#' Clist <- list(x1=c("a","b","c","d","e","f","g","h"),
+#'               x2=c("h","c","f","g","b","z","z","z"),
+#'               x3=c("d","e","a","z","z","z","z","z"))
+#' set.seed(17)
+#' sra(Clist,na.strings="z",B=10)
+#'
 #' @author Claus Ekstrøm <ekstrom@@sund.ku.dk> and Thomas A Gerds <tag@@biostat.ku.dk>
 #'
 #' @rdname sra
@@ -235,19 +235,24 @@ random_list_sra <- function(object, B=1, n=1, na.strings=NULL, nitems=NULL, type
 
     type <- match.arg(type)
 
-    ## Make sure that the input object ends up as a matrix with integer columns all
-    ## consisting of elements from 1 and up to listlength
-    if (!is.matrix(object))
-        object <- as.matrix(do.call("cbind",object))
-
+    
     ## Convert all missing types to NAs
     if (!is.null(na.strings)) {
         object[object %in% na.strings] <- NA
     }
 
+    ## Make sure that all elements have the same length if input object is a list for the
+    ## conversion below to work
+
+    ## Make sure that the input object ends up as a matrix with integer columns all
+    ## consisting of elements from 1 and up to listlength
+    if (!is.matrix(object)) {        
+        object <- as.matrix(do.call("cbind",object))
+    }
+
     listlengths <- nrow(object)
     if (is.null(nitems)) {
-        nitems <- length(unique(as.vector(object)))
+        nitems <- sum(!is.na(unique(as.vector(object))))
     }
     notmiss <- apply(object, 2, function(x) {sum(!is.na(x))} )
     res <- sapply(1:n, function(i) {
