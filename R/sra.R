@@ -208,7 +208,7 @@ sra.list <- function(object, B=1, na.strings=NULL, nitems=max(sapply(object, len
 #' Simulate sequential rank agreement from completely uninformative lists (ie., raw permutations of items) and compute the corresponding sequential rank agreement curves.
 #' The following attributes are copied from the input object: number of lists, number of items and amount of censoring.
 #'
-#' @param object A matrix or list of vectors representing ranked lists.
+#' @param object A matrix of numbers or list of vectors representing ranked lists.
 #' @param B An integer giving the number of randomizations to sample
 #'     over in the case of censored observations
 #' @param n Integer: the number of permutation runs. For each permutation run we permute each of the lists in object
@@ -235,32 +235,41 @@ random_list_sra <- function(object, B=1, n=1, na.strings=NULL, nitems=NULL, type
 
     type <- match.arg(type)
 
-    
-    ## Convert all missing types to NAs
-    if (!is.null(na.strings)) {
-        object[object %in% na.strings] <- NA
-    }
-
-    ## Make sure that all elements have the same length if input object is a list for the
-    ## conversion below to work
-
     ## Make sure that the input object ends up as a matrix with integer columns all
     ## consisting of elements from 1 and up to listlength
-    if (!is.matrix(object)) {        
-        object <- as.matrix(do.call("cbind",object))
-    }
+    if (is.list(object)) {
 
-    listlengths <- nrow(object)
+        ## Find largst length
+        largest <- max(sapply(object, function(i) { length(i)}))
+
+        ## Unique non-missing elements
+        obj <- matrix(rep(NA, largest*length(object)), ncol=length(object))
+
+        for (i in 1:length(object)) {
+            obj[1:length(object[[i]]), i] <- object[[i]]
+        }
+
+        ## Convert all missing types to NAs
+        if (!is.null(na.strings)) {
+            obj[obj %in% na.strings] <- NA
+        }
+    } else {
+      obj <- as.matrix(object)
+    }   
+
+    listlengths <- nrow(obj)
     if (is.null(nitems)) {
-        nitems <- sum(!is.na(unique(as.vector(object))))
+        nitems <- 1
     }
-    notmiss <- apply(object, 2, function(x) {sum(!is.na(x))} )
+    nitems <- max(nitems, NROW(obj), sum(!is.na(unique(as.vector(obj)))))
+    
+    notmiss <- apply(obj, 2, function(x) {sum(!is.na(x))} )
     res <- sapply(1:n, function(i) {
         ## Do a permutation with the same number of missing
-        for (j in 1:ncol(object)) {
-            object[,j] <- c(sample(nitems, size=notmiss[j]), rep(NA, listlengths-notmiss[j]))
+        for (j in 1:ncol(obj)) {
+            obj[,j] <- c(sample(nitems, size=notmiss[j]), rep(NA, listlengths-notmiss[j]))
         }
-        sra(object, B=B, nitems=nitems, type=type, epsilon=epsilon)
+        sra(obj, B=B, nitems=nitems, type=type, epsilon=epsilon)
     })
     res
 

@@ -8,7 +8,7 @@ random_list_sra(object, B = 1, n = 1, na.strings = NULL, nitems = NULL,
   type = c("sd", "mad"), epsilon = 0)
 }
 \arguments{
-\item{object}{A matrix or list of vectors representing ranked lists.}
+\item{object}{A matrix of numbers or list of vectors representing ranked lists.}
 
 \item{B}{An integer giving the number of randomizations to sample
 over in the case of censored observations}
