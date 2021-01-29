@@ -3,7 +3,6 @@
 \docType{package}
 \name{SuperRanker}
 \alias{SuperRanker}
-\alias{SuperRanker-package}
 \title{Functions related to comparison of ranked lists}
 \description{
 SuperRanker allows you to estimate the agreement between two or more rankings of the same items.

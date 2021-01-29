@@ -4,8 +4,15 @@
 \alias{random_list_sra}
 \title{Simulate sequential rank agreement for randomized unrelated lists}
 \usage{
-random_list_sra(object, B = 1, n = 1, na.strings = NULL,
-  nitems = NULL, type = c("sd", "mad"), epsilon = 0)
+random_list_sra(
+  object,
+  B = 1,
+  n = 1,
+  na.strings = NULL,
+  nitems = NULL,
+  type = c("sd", "mad"),
+  epsilon = 0
+)
 }
 \arguments{
 \item{object}{A matrix of numbers or list of vectors representing ranked lists.}

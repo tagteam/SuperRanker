@@ -5,8 +5,7 @@
 \alias{sracpp}
 \title{Compute the sequential rank agreement between k ranked lists}
 \usage{
-sracpp(rankMat, maxlength, B, cens, type = 0L,
-  epsilon = as.numeric(c(0)))
+sracpp(rankMat, maxlength, B, cens, type = 0L, epsilon = as.numeric(c(0)))
 }
 \arguments{
 \item{rankMat}{A matrix with k columns corresponding to the k ranked lists. Elements of each column are integers between 1 and the length of the lists}

@@ -1,19 +1,47 @@
 #include <Rcpp.h>
+#include <utility>
+#include <Rmath.h>
 using namespace Rcpp;
 
+/*int randWrapper(const int n) 
+{
+    return floor(unif_rand() * n); 
+}
+*/
 
 // wrapper around R's RNG such that we get a uniform distribution over
 // [0,n) as required by the STL algorithm
 inline int randWrapper(const int n) { return floor(unif_rand()*n); }
 
+
+
+/** equivalent of std::shuffle with an R generator
+ */
+template <class RandomAccessIterator>
+void Rshuffle(RandomAccessIterator first, RandomAccessIterator last)
+{
+  for (auto i = (last-first) - 1;  i > 0; --i) {
+    std::swap (first[i], first[randWrapper(i + 1)]);
+  }
+}
+
+
+
 IntegerVector randomShuffle(IntegerVector a) {
     // already added by sourceCpp(), but needed standalone
-    RNGScope scope;             
+    RNGScope scope;
+
+    // AS per 6.3 in Writing R extensions
+    GetRNGstate();
 
     // clone a into b to leave a alone
     IntegerVector b = clone(a);
 
-    std::random_shuffle(b.begin(), b.end(), randWrapper);
+    // Replaced with an R version due to problems
+    // std::random_shuffle(b.begin(), b.end(), randWrapper);
+    Rshuffle(b.begin(), b.end());
+
+    PutRNGstate();
 
     return b;
 }

@@ -4,8 +4,15 @@
 \alias{plot.sra}
 \title{Plot sequential rank agreement}
 \usage{
-\method{plot}{sra}(x, xlim, ylim, xlab = "List depth",
-  ylab = "Sequential rank agreement", add = FALSE, ...)
+\method{plot}{sra}(
+  x,
+  xlim,
+  ylim,
+  xlab = "List depth",
+  ylab = "Sequential rank agreement",
+  add = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{Agreement object}
