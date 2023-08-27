@@ -1,13 +1,10 @@
-#' @keywords internal 
-"_PACKAGE"
-
-
 #' Functions related to comparison of ranked lists
 #'
 #' SuperRanker allows you to estimate the agreement between two or more rankings of the same items.
 #'
 #' @docType package
 #' @name SuperRanker
+#' @aliases SuperRanker-package
 #' @useDynLib SuperRanker
 #' @importFrom Rcpp sourceCpp
 #' @importFrom stats quantile
