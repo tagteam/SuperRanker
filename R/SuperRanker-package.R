@@ -1,3 +1,7 @@
+#' @keywords internal 
+"_PACKAGE"
+
+
 #' Functions related to comparison of ranked lists
 #'
 #' SuperRanker allows you to estimate the agreement between two or more rankings of the same items.
